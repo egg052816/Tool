@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>XTS Waiver List</title>
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+  >
+
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+  />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e5f0ff 0%, #f9fafb 40%, #f5f5f5 100%);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-size: 1.5rem;
+    }
+
+    .page-wrap {
+      width: 96%;
+      max-width: 1600px;
+      margin: 20px auto 40px;
+    }
+
+    .suite-block {
+      background: #fff;
+      padding: 15px 15px 12px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      word-wrap: break-word;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f4f6;
+      text-align: center;
+    }
+
+    /* 🌟 表格寬度: 修正後最終版 */
+    th:nth-child(1), td:nth-child(1) { width: 12%; }
+    th:nth-child(2), td:nth-child(2) { width: 20%; }
+    th:nth-child(3), td:nth-child(3) { width: 45%; }
+    th:nth-child(4), td:nth-child(4) { width: 15%; }
+    th:nth-child(5), td:nth-child(5) { width: 8%; text-align: center; }
+
+    .bug-link {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+        display: block;
+        text-align: left;
+    }
+    .bug-link:hover {
+        text-decoration: underline;
+    }
+
+    .add-btn {
+      margin-top: 8px;
+      padding: 5px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      background: #22c55e;
+      color: white;
+      border: 1px solid #16a34a;
+      cursor: pointer;
+    }
+    .add-btn:hover {
+      background: #10b981;
+    }
+
+    .note-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* 操作按鈕容器 - 水平排列 */
+    .action-buttons-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        height: 100%;
+        padding: 0;
+    }
+
+    /* 操作按鈕樣式 */
+    .action-btn {
+      padding: 5px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .action-btn.edit-btn {
+      background-color: #3b82f6;
+      color: white;
+      border: 1px solid #2563eb;
+    }
+    .action-btn.delete-btn {
+      background-color: #ef4444;
+      color: white;
+      border: 1px solid #dc2626;
+    }
+
+    .action-btn:hover { filter: brightness(0.9); }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>XTS Waiver List</h1>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#waiverModal" data-id="new">
+        + 新增 Waiver 紀錄
+    </button>
+  </div>
+
+  <p class="note-text">點擊 Waivers 列表中的 <span class="badge bg-primary"><i class="fas fa-pencil-alt"></i></span> 或 <span class="badge bg-danger"><i class="fas fa-times"></i></span> 按鈕來修改/刪除既有的紀錄。</p>
+
+  <div id="waiver-container">
+    <div class="suite-block">
+      <h2>CTS Waivers</h2>
+      <table id="cts-table" data-suite="CTS">
+        <thead>
+          <tr>
+            <th>Waiver ID</th>
+            <th>Module</th>
+            <th>TestCase</th>
+            <th>Comments</th>
+            <th>Edit / Delete</th>
+          </tr>
+        </thead>
+        <tbody id="cts-tbody">
+          <tr><td colspan="5" class="text-center">載入中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="suite-block">
+      <h2>GTS Waivers</h2>
+      <table id="gts-table" data-suite="GTS">
+        <thead>
+          <tr>
+            <th>Waiver ID</th>
+            <th>Module</th>
+            <th>TestCase</th>
+            <th>Comments</th>
+            <th>Edit / Delete</th>
+          </tr>
+        </thead>
+        <tbody id="gts-tbody">
+          <tr><td colspan="5" class="text-center">載入中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="suite-block">
+      <h2>STS Waivers</h2>
+      <table id="sts-table" data-suite="STS">
+        <thead>
+          <tr>
+            <th>Waiver ID</th>
+            <th>Module</th>
+            <th>TestCase</th>
+            <th>Comments</th>
+            <th>Edit / Delete</th>
+          </tr>
+        </thead>
+        <tbody id="sts-tbody">
+          <tr><td colspan="5" class="text-center">載入中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="suite-block">
+      <h2>GSI Waivers</h2>
+      <table id="gsi-table" data-suite="GSI">
+        <thead>
+          <tr>
+            <th>Waiver ID</th>
+            <th>Module</th>
+            <th>TestCase</th>
+            <th>Comments</th>
+            <th>Edit / Delete</th>
+          </tr>
+        </thead>
+        <tbody id="gsi-tbody">
+          <tr><td colspan="5" class="text-center">載入中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="suite-block">
+      <h2>VTS Waivers</h2>
+      <table id="vts-table" data-suite="VTS">
+        <thead>
+          <tr>
+            <th>Waiver ID</th>
+            <th>Module</th>
+            <th>TestCase</th>
+            <th>Comments</th>
+            <th>Edit / Delete</th>
+          </tr>
+        </thead>
+        <tbody id="vts-tbody">
+          <tr><td colspan="5" class="text-center">載入中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="waiverModal" tabindex="-1" aria-labelledby="waiverModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="waiverModalLabel">Waiver 紀錄</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="waiverForm">
+                    <input type="hidden" id="waiver_id_pk" value="">
+
+                    <div class="mb-3">
+                        <label for="suite" class="form-label">Suite (必填)</label>
+                        <select id="suite" class="form-select" required>
+                            <option value="CTS">CTS</option>
+                            <option value="GTS">GTS</option>
+                            <option value="STS">STS</option>
+                            <option value="GSI">GSI</option>
+                            <option value="VTS">VTS</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bug_id" class="form-label">Waiver ID (必填)</label>
+                        <input type="text" class="form-control" id="bug_id" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="module" class="form-label">Module (必填)</label>
+                        <input type="text" class="form-control" id="module" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="test_case" class="form-label">Test Case (必填)</label>
+                        <textarea class="form-control" id="test_case" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Comments</label>
+                        <textarea class="form-control" id="note" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveWaiverBtn">儲存</button>
+            </div>
+        </div>
+    </div>
+</div> <div class="back-link" style="max-width: 1600px; margin: 20px auto;">
+    <a href="/">← 回到首頁</a>
+</div>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
+
+<script>
+    const API_URL = '/api/waiver';
+    const SUITES = ['CTS', 'GTS', 'STS', 'GSI', 'VTS'];
+    const modalElement = document.getElementById('waiverModal');
+    const waiverModal = new bootstrap.Modal(modalElement);
+    const saveButton = document.getElementById('saveWaiverBtn');
+
+    // 取得所有 input/select/textarea 元素
+    const formFields = {
+        id: document.getElementById('waiver_id_pk'),
+        suite: document.getElementById('suite'),
+        waiver_id: document.getElementById('bug_id'),
+        module: document.getElementById('module'),
+        test_case: document.getElementById('test_case'),
+        note: document.getElementById('note')
+    };
+
+    // ==========================================================
+    // 1. 載入 (READ) 函式
+    // ==========================================================
+    async function loadWaivers() {
+        // 清空所有表格，並顯示載入狀態
+        SUITES.forEach(suite => {
+            const tbody = document.getElementById(`${suite.toLowerCase()}-tbody`);
+            if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="text-center">載入中...</td></tr>';
+        });
+
+        const fetchPromises = SUITES.map(suite =>
+            fetch(`${API_URL}/list/${suite}`)
+                .then(res => res.json())
+                .then(data => ({ suite, data }))
+                .catch(err => {
+                    console.error(`Error fetching ${suite}:`, err);
+                    return { suite, data: null };
+                })
+        );
+
+        const results = await Promise.all(fetchPromises);
+
+        results.forEach(({ suite, data }) => {
+            const tbody = document.getElementById(`${suite.toLowerCase()}-tbody`);
+
+            if (!tbody) return;
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center">目前沒有 ${suite} 的 Waiver 紀錄。</td></tr>`;
+                return;
+            }
+
+            // 遍歷資料並建立表格列
+            tbody.innerHTML = data.map(waiver => `
+                <tr data-id="${waiver.id}">
+                    <td><a href="https://issuetracker.google.com/${waiver.waiver_id}" class="bug-link" target="_blank">${waiver.waiver_id}</a></td>
+                    <td>${waiver.module}</td>
+                    <td>${waiver.test_case}</td>
+                    <td>${waiver.note || '-'}</td>
+                    <td class="text-center">
+                        <div class="action-buttons-wrapper">
+                            <button type="button" class="action-btn edit-btn" onclick="openModalForEdit(${waiver.id}, event)" title="編輯">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button type="button" class="action-btn delete-btn" onclick="deleteWaiver(${waiver.id}, event)" title="刪除">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        });
+    }
+
+    // ==========================================================
+    // 2. 新增/編輯 (CREATE/UPDATE) 邏輯
+    // ==========================================================
+
+    // 2.1 透過表格資料，開啟編輯 Modal
+    function openModalForEdit(id, event) {
+        event.stopPropagation();
+
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        if (!row) return;
+
+        const cells = row.querySelectorAll('td');
+
+        document.getElementById('waiverModalLabel').textContent = `編輯 Waiver 紀錄 (ID: ${id})`;
+
+        formFields.id.value = id;
+        formFields.suite.value = row.closest('table').dataset.suite;
+        formFields.waiver_id.value = cells[0].querySelector('.bug-link').textContent;
+
+        // 欄位順序 ( cells[0]:WaiverID, cells[1]:Module, cells[2]:TestCase, cells[3]:Comments )
+        formFields.module.value = cells[1].textContent;
+        formFields.test_case.value = cells[2].textContent;
+        formFields.note.value = cells[3].textContent === '-' ? '' : cells[3].textContent;
+
+        waiverModal.show();
+    }
+
+    // 2.2 儲存 (新增或更新) 資料
+    saveButton.addEventListener('click', async () => {
+        const id = formFields.id.value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/update/${id}` : `${API_URL}/add`;
+
+        if (!formFields.suite.value || !formFields.waiver_id.value || !formFields.module.value || !formFields.test_case.value) {
+            alert('請填寫所有必填欄位 (Suite, Waiver ID, Module, Test Case)。');
+            return;
+        }
+
+        const data = {
+            suite: formFields.suite.value,
+            waiver_id: formFields.waiver_id.value,
+            module: formFields.module.value,
+            test_case: formFields.test_case.value,
+            note: formFields.note.value
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+
+            if (result.status === 'ok') {
+                alert('Waiver 紀錄已儲存成功！');
+                waiverModal.hide();
+                loadWaivers(); // 重新載入列表
+            } else {
+                alert(`儲存失敗: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('儲存 Waiver 紀錄時發生錯誤:', error);
+            alert('儲存 Waiver 紀錄時發生錯誤。');
+        }
+    });
+
+    // ==========================================================
+    // 3. 刪除 (DELETE) 邏輯
+    // ==========================================================
+    async function deleteWaiver(id, event) {
+        event.stopPropagation();
+        if (!confirm('確定要刪除這筆 Waiver 紀錄嗎？')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/delete/${id}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+
+            if (result.status === 'ok') {
+                alert('Waiver 紀錄已成功刪除！');
+                loadWaivers(); // 重新載入列表
+            } else {
+                alert(`刪除失敗: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('刪除 Waiver 紀錄時發生錯誤:', error);
+            alert('刪除 Waiver 紀錄時發生錯誤。');
+        }
+    }
+
+    // ==========================================================
+    // 4. Modal 事件處理 (清空表單)
+    // ==========================================================
+    modalElement.addEventListener('show.bs.modal', event => {
+        // 如果是點擊 "新增" 按鈕，清空表單
+        if (event.relatedTarget && event.relatedTarget.dataset.id === 'new') {
+            document.getElementById('waiverModalLabel').textContent = '新增 Waiver 紀錄';
+            for (const key in formFields) {
+                // 排除 hidden ID 欄位
+                if (formFields[key] && key !== 'id') formFields[key].value = '';
+            }
+            formFields.suite.value = 'CTS'; // 預設 Suite 為 CTS
+        }
+    });
+
+
+    // ==========================================================
+    // 5. 初始載入
+    // ==========================================================
+    document.addEventListener('DOMContentLoaded', loadWaivers);
+
+    // 🌟 暴露到全域
+    window.openModalForEdit = openModalForEdit;
+    window.deleteWaiver = deleteWaiver;
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+## path
+/home/fih/USER/QA/Ken/GTSI/GTS_13/android-gts-13-R1-13392877/android-gts/tools/gts-tradefed run gts-interactive
+## path(Preview)
+/home/fih/USER/QA/Ken/GTSI/GTS_13_PREVIEW/android-gts-13-R2-Preview16-13788151/android-gts/tools/gts-tradefed run gts-interactive -m 
+
+## exclude
+run gts-interactive --exclude-filter GtsInteractiveElsSdkTestCases  --exclude-filter GtsInteractiveMadachecklistTestCases  --exclude-filter GtsInteractiveMadachecklistSetupWizardTestCases --exclude-filter GtsInteractiveUsbTestCases --exclude-filter GtsInteractiveNfcHceMultiDeviceTestCases
+
+/home/fih/USER/QA/Ken/GTSI/android-gts-13-R1-13392877/android-gts/tools/gts-tradefed run gts-interactive -m GtsInteractiveGeminiTestCases
+
+
+## run single model
+run gts-interactive -m GtsInteractiveMadachecklistSetupWizardTestCases
+
+
+## model which need to run one by one
+GtsInteractiveMadachecklistTestCases -> will take screenshot after press "Done"
+GtsInteractiveMadachecklistSetupWizardTestCases -> Need to take picture
+GtsInteractiveUsbTestCases -> usb over wifi
+GtsInteractiveNfcHceMultiDeviceTestCases -> PC Need to connect nfc dongle
+
+
+## usb over wifi command
+adb pair
+adb connect xxx.xxx.xxx.xxx:xxxx
+
+
+run gts-interactive -m GtsInteractiveUsbTestCases 
+
+
+/home/fih/USER/QA/Ken/Getac/GTS_13/android-gts-13-R1-13392877/android-gts/tools/gts-tradefed run gts-interactive -m GtsInteractiveDevicePolicyTestCases
+
+/home/fih/USER/QA/Ken/Getac/GTS_13_PREVIEW/android-gts-13-R2-Preview16-13788151/android-gts/tools/gts-tradefed run gts-interactive -m GtsInteractiveDevicePolicyTestCases

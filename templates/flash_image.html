@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>XTS Retry List</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .flash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .flash-header-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .flash-header-subtitle {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .flash-suite-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid #22c1c3;
+      font-size: 13px;
+      color: #e5e7eb;
+    }
+
+    .flash-section {
+      margin-top: 18px;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: #020617;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.55);
+      border: 1px solid #1e293b;
+    }
+
+    .flash-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .flash-section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .flash-section-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34,193,195,0.12);
+      color: #22c1c3;
+    }
+
+    .flash-section p {
+      margin: 4px 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #e5e7eb;
+    }
+
+    .flash-section ul,
+    .flash-section ol {
+      margin: 6px 0 4px 1.4rem;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #e5e7eb;
+    }
+
+    .flash-flow-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+      border: 1px solid #334155;
+    }
+
+    .flash-flow-table th,
+    .flash-flow-table td {
+      padding: 8px 10px;
+      border-top: 1px solid #334155;
+      vertical-align: top;
+    }
+
+    .flash-flow-table th {
+      background: #0b1220;
+      color: #e2e8f0;
+      text-align: left;
+      border-bottom: 1px solid #475569;
+    }
+
+    .flash-flow-table tbody tr:hover {
+      background: rgba(148,163,184,0.08);
+      transition: background 0.16s ease;
+    }
+
+    .flash-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #0b1120;
+      margin-right: 4px;
+    }
+    .flash-badge-cts { background:#fbbf24; }
+    .flash-badge-gts { background:#22c1c3; }
+    .flash-badge-sts { background:#f97316; }
+    .flash-badge-vts { background:#38bdf8; }
+
+    .flash-note {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .flash-code {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      color: #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flash-header">
+    <div>
+      <div class="flash-header-title">Flash SW Flow / 燒錄流程</div>
+      <div class="flash-header-subtitle">
+        ◎ 除了 STS 以外，所有 XTS 測試（包含 Pretest）一律先燒錄 <strong>User Build</strong> 再進行測試。
+      </div>
+    </div>
+    <div class="flash-suite-tag">XTS TEST – FLASH SW FLOW</div>
+  </div>
+
+  <!-- 整體原則 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">整體原則 / 版本差異</div>
+      <span class="flash-section-tag">General Rules</span>
+    </div>
+    <p>1. <strong>除了 STS 外，所有 XTS 測試項目（CTS / CTS Verifier / GTS / GTS-Interactive / GTS-Root / CTS-on-GSI / VTS…）以及 Pretest，一律先燒錄 User Build SW。</strong></p>
+    <p>2. <strong>STS</strong> 測試專用 <strong>Userdebug SW</strong>，不要混用在其他項目。</p>
+    <p>3. 本流程圖為 <strong>Android 15（A15）以上版本</strong> 使用：</p>
+    <ul>
+      <li>A15 以上：需依圖燒錄 <strong>GTS-Root</strong> 進行測試。</li>
+      <li>A15 以下：<strong>不需要</strong> 燒錄 GTS-Root，其他流程相同。</li>
+    </ul>
+  </div>
+
+  <!-- Flash Flow 對照表 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">Flash Flow 對照表</div>
+      <span class="flash-section-tag">From Partner Submit → 各項 XTS</span>
+    </div>
+
+    <table class="flash-flow-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">起點 / SW 類型</th>
+          <th style="width: 28%;">燒錄組合</th>
+          <th style="width: 30%;">對應測試項目</th>
+          <th>備註</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3">Partner Submit<br>→ <strong>User Build SW</strong></td>
+          <td>User Build SW 單獨</td>
+          <td>
+            <span class="flash-badge flash-badge-cts">CTS</span>
+            <span class="flash-badge flash-badge-cts">CTS VERIFIER</span>
+          </td>
+          <td>最基本的合規測試組合。</td>
+        </tr>
+        <tr>
+          <td>User Build SW 單獨</td>
+          <td>
+            <span class="flash-badge flash-badge-gts">GTS</span>
+          </td>
+          <td>一般 GTS 測試流程，沒有 root / debug 要求。</td>
+        </tr>
+        <tr>
+          <td>User Build SW + Vendor-Boot Debug</td>
+          <td>
+            <span class="flash-badge flash-badge-gts">GTS INTERACTIVE</span><br>
+            <span class="flash-badge flash-badge-gts">GTS-ROOT</span>（A15↑）
+          </td>
+          <td>需額外燒錄 Vendor-Boot Debug；A15 以上才需要 GTS-Root。</td>
+        </tr>
+
+        <tr>
+          <td rowspan="2">Partner Submit<br>→ User Build SW + Google GSI</td>
+          <td>User Build SW + Google GSI</td>
+          <td>
+            <span class="flash-badge flash-badge-cts">CTS-ON-GSI</span>
+          </td>
+          <td>需依專屬流程下載 GSI 並修改 fastboot bat 檔（見下方 CTS-on-GSI 章節）。</td>
+        </tr>
+        <tr>
+          <td>User Build SW + Google GSI + Vendor-Boot Debug</td>
+          <td>
+            <span class="flash-badge flash-badge-vts">VTS</span>
+          </td>
+          <td>在 CTS-on-GSI 基礎上再加 Vendor-Boot Debug 以進行 VTS 測試。</td>
+        </tr>
+
+        <tr>
+          <td>Partner Submit<br>→ <strong>Userdebug SW</strong></td>
+          <td>Userdebug SW 單獨</td>
+          <td>
+            <span class="flash-badge flash-badge-sts">STS</span>
+          </td>
+          <td>僅 STS 測試使用，不與其他 XTS 項目共用。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flash-note">
+      提醒：實務上建議先以 User Build 完成 Pretest / CTS / GTS 等基本測試後，再依需求追加 GSI / Vendor-Boot Debug 等組合。
+    </div>
+  </div>
+
+  <!-- CTS-on-GSI 專區 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">CTS-on-GSI 燒錄流程</div>
+      <span class="flash-section-tag">CTS-ON-GSI</span>
+    </div>
+
+    <p>CTS-on-GSI 需要額外從內網下載 Google GSI，並修改 fastboot bat 檔中的 system image 路徑，步驟如下：</p>
+
+    <ol>
+      <li>
+        開啟內網網站：<strong>http://10.57.42.97/XTS/</strong> → 進入 <strong>VTS</strong> 資料夾。<br>
+        依照 JiRA 上標示的 Android 版本選擇，例如 Android 12.1：<br>
+        <code>VTS-12.1_r14/</code> → 再進到底下的 <code>R14</code> 子資料夾。
+      </li>
+      <li>
+        在資料夾中找到對應架構的 <strong>signed GSI zip</strong>，例如：<br>
+        <code>signed-gsi_arm64-img-13267304.zip</code><br>
+        下載並解壓縮後，裡面會有一個 system image，名稱類似：<br>
+        <code>gsi_r11__system.img</code>（通常會看到有兩個底線 <code>__system.img</code>）。
+      </li>
+      <li>
+        將這個 <strong>system image</strong> 複製到「客戶提供版本」的資料夾中（與原本 fastboot bat 同一層），<br>
+        找到對應的 bat 檔，例如：<br>
+        <code>fastboot-flash-xts-gsi-cts-on-gsi.bat</code>
+      </li>
+      <li>
+        使用文字編輯器打開該 bat 檔，搜尋 / 找到 <strong>flash system</strong> 相關指令，<br>
+        將原本的 system.img 檔名，改成剛剛複製過來的 <strong>__system.img</strong>，例如：<br>
+        <code>fastboot flash system gsi_r11__system.img</code>
+      </li>
+      <li>
+        儲存 bat 檔後，依照 SOP 執行該 bat 檔，完成 CTS-on-GSI 燒錄。
+      </li>
+    </ol>
+
+    <div class="flash-code">
+    範例：
+    fastboot-flash-xts-gsi-cts-on-gsi.bat 內原本可能是：
+        fastboot flash system system.img
+
+    修改為：
+        fastboot flash system gsi_r11__system.img
+    </div>
+
+    <div class="flash-note">
+      建議將實際使用的 GSI 版本與檔名記錄在 Waiver / 測試紀錄中，以便後續追蹤。
+    </div>
+  </div>
+
+  <!-- PM 版本來源 & SOP 區 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">版本來源與 Flash SOP</div>
+      <span class="flash-section-tag">Image &amp; SOP</span>
+    </div>
+
+    <p><strong>客戶提供的版本 Image：</strong></p>
+    <ul>
+      <li>PM 會將客戶提供之版本放置於：<br>
+        <code>\\10.57.45.213\3pl</code>
+      </li>
+    </ul>
+
+    <p><strong>若客戶未提供燒錄 SOP：</strong></p>
+    <ul>
+      <li>PM 也會將整理好的通用 Flash SOP 放在：<br>
+        <code>\\10.57.45.213\3pl\Ready_to_GoogleDrive\Flash_sop</code>
+      </li>
+      <li>實際執行時，仍需依照「客戶 / 專案」的要求選擇正確的 SOP 流程。</li>
+    </ul>
+  </div>
+
+  <!-- Driver 注意事項 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">Driver / 連線問題注意事項</div>
+      <span class="flash-section-tag">Driver Tips</span>
+    </div>
+
+    <p><strong>不同客戶可能使用不同 Driver：</strong></p>
+    <ul>
+      <li>若客戶沒有特別提供 Driver 安裝包，可以先嘗試公司預設版本：<br>
+        <code>\\10.57.41.153\user$\QA\XTS</code>
+      </li>
+      <li>若仍無法正確被 PC / ATS 辨識，請儘早詢問 PM 或 RD，確認該專案是否有客製 Driver 或特殊安裝步驟。</li>
+    </ul>
+
+    <div class="flash-note">
+      建議在第一次接手專案時，就把「實際使用的 Driver 版本、安裝路徑」記錄在專案筆記或 Waiver 工具中，之後換人支援也能快速上手。
+    </div>
+  </div>
+
+</body>
+</html>

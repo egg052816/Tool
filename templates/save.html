@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>手動測試說明 - GTS-I & CTS Verifier</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f4f7fb;
+      color: #111827;
+    }
+
+    header {
+      background: #2563eb;
+      color: #ffffff;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    header .subtitle {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1080px;
+      margin: 24px auto 32px;
+      padding: 0 16px;
+    }
+
+    /* 🔹 新增 / 編輯 / 刪除 工具列 */
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .toolbar button {
+      border: 1px solid #d1d5db;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      background: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
+    }
+
+    .toolbar button:hover {
+      background: #eff6ff;
+      border-color: #2563eb;
+    }
+
+    .toolbar button.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: #1f2933;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span.tag {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e5e7eb;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .card small {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .card ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .note {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #374151;
+      background: #eff6ff;
+      border-radius: 6px;
+      padding: 6px 8px;
+      border-left: 3px solid #2563eb;
+    }
+
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .back-link {
+      margin-top: 24px;
+      font-size: 13px;
+    }
+
+    .back-link a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>手動測試說明</h1>
+    <div class="subtitle">GTS-I / CTS Verifier 相關項目備註整理</div>
+  </div>
+</header>
+
+<main>
+  <!-- 🔹 新增 / 編輯 / 刪除 工具列 -->
+  <div class="toolbar">
+    <button type="button" class="active" data-mode="create">＋ 新增</button>
+    <button type="button" data-mode="edit">✎ 編輯</button>
+    <button type="button" data-mode="delete">🗑 刪除</button>
+  </div>
+
+  <!-- 這個區塊以後你可以依照 mode 去決定顯示什麼表單 / 表格 -->
+
+  <!-- GTS-I 區塊 -->
+  <h2 class="section-title">
+    GTS-I 手動測試
+    <span class="tag">GTS-I</span>
+  </h2>
+
+  <div class="card">
+    <div class="card-title">1. Android Auto 測試方式</div>
+    <small>Test item：AndroidAuto / AutoOverUsb</small>
+    <ul>
+      <li>測試 Android Auto 時，需要建立 <b>Wi-Fi 連線</b>。</li>
+      <li>請使用 <b>AutoOverUsb</b> 模式進行測試。</li>
+    </ul>
+    <div class="note">
+      建議紀錄：測試時是否有同時啟用 Wi-Fi 與 USB 連線、畫面是否可正常投影至車機。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Madachecklist SetupWizard - QRCode / NFC Tag</div>
+    <small>Test item：Madachecklist SetupWizard（第 2 / 第 3 張截圖）</small>
+    <ul>
+      <li>第 2 與第 3 張截圖需要使用：
+        <ul>
+          <li><code>&lt;qrcode&gt;</code>：已附在測試資料夾 (Folder) 中。</li>
+          <li><code>&lt;nfc tag&gt;</code>：RD 另外提供一張 NFC Tag。</li>
+        </ul>
+      </li>
+      <li>以上兩種方式皆用於 <b>work provisioning</b> 測試。</li>
+    </ul>
+    <div class="note">
+      測試前確認：手機支援 NFC、已開啟 NFC 功能，並確認使用的是專案提供之 QRCode / NFC Tag。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3. SetupWizard 無網路版本截圖</div>
+    <small>Test item：SetupWizard（倒數第 2 張截圖）</small>
+    <ul>
+      <li>該截圖需提供「<b>完全不連網路</b>」的 SetupWizard 版本。</li>
+      <li>測試時請關閉：
+        <ul>
+          <li>Wi-Fi</li>
+          <li>行動數據 / SIM 網路</li>
+          <li>任何 Hotspot / Tethering</li>
+        </ul>
+      </li>
+    </ul>
+    <div class="note">
+      測試時需確認：裝置從開機到 SetupWizard 全程未連上任何網路，畫面內容需與截圖一致。
+    </div>
+  </div>
+
+  <!-- CTS Verifier 區塊 -->
+  <h2 class="section-title">
+    CTS Verifier 手動測試
+    <span class="tag">CTS Verifier</span>
+  </h2>
+
+  <div class="card">
+    <div class="card-title">1. Audio Loopback Latency Test</div>
+    <small>Test item：Audio Loopback Latency Test</small>
+    <ul>
+      <li>第 2 個子項的 <b>Analog 測試</b> 需要使用 <b>3.5mm loopback dongle</b>。</li>
+      <li>需將已封起來的回收用 loopback dongle <b>接在耳機孔</b> 做 loopback 測試。</li>
+    </ul>
+    <div class="note">
+      測試時確認：線材接觸良好、音量設定符合文件要求，以免影響 Latency 結果。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Voicemail Broadcast Test</div>
+    <small>Test item：Voicemail Broadcast Test</small>
+    <ul>
+      <li>台灣地區 <b>未支援 Voicemail 服務</b>。</li>
+      <li>需搭配 <b>NowSMS Server</b> 進行模擬測試。</li>
+      <li>目前 NowSMS Server 相關設定與連線問題尚未完全解決，測試狀態請視專案最新結論更新。</li>
+    </ul>
+    <div class="note">
+      建議於報告中註明：使用 NowSMS 模擬，實網路側不支援 Voicemail；若因環境問題無法完成，需標註原因。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3. ITS Test - Sensor Fusion</div>
+    <small>Test item：ITS Test &gt; Sensor Fusion</small>
+    <ul>
+      <li>從 A15 版本之後，Sensor Fusion 測試會多出額外的 <b>Test Pattern 測項</b>。</li>
+      <li>若 Test Pattern 測試無法通過：
+        <ul>
+          <li>需到 Google CTS Verifier 官方文件 / 項目說明中，查詢對應的範例圖片。</li>
+          <li>依照官方提供的圖片與說明，確認測試步驟與畫面是否正確。</li>
+        </ul>
+      </li>
+    </ul>
+    <div class="note">
+      測試失敗時，請記錄：Pattern 類型、實際畫面截圖、測試環境 (光線 / 姿態) 供 RD 與 Google 進一步分析。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">4. Java MIDI Test / Native MIDI Test</div>
+    <small>Test item：Java MIDI Test / Native MIDI Test</small>
+    <ul>
+      <li><code>MIDI_BLE.apk</code> 已附在測試 Folder 中。</li>
+      <li>只需安裝並使用 <b>1.11 版本</b> 即可。</li>
+      <li>不需要另外到 Google Play 商店下載最新版。</li>
+    </ul>
+    <div class="note">
+      測試前確認：裝置已允許安裝不明來源 APK，並使用 Folder 中提供的指定版本。
+    </div>
+  </div>
+
+  <div class="back-link">
+    <a href="/">← 回到首頁</a>
+  </div>
+</main>
+
+<script>
+  // 很單純：切換按鈕外觀，之後你要接 Flask / 後端 API 再補就好
+  document.querySelectorAll(".toolbar button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".toolbar button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      // 這裡之後可以依照 data-mode 切換顯示不同區塊
+      // const mode = btn.dataset.mode;  // create / edit / delete
+    });
+  });
+</script>
+</body>
+</html>

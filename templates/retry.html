@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>XTS Retry List</title>
+  <style>
+    /* Retry Tips 區塊樣式 */
+    .retry-section {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-radius: 10px;
+      background: #0f172a;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+
+    .retry-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .retry-section-title h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #e5e7eb;
+    }
+
+    .retry-section-tag {
+      font-size: 0.8rem;
+      color: #22c1c3;
+      background: rgba(34,193,195,0.12);
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .retry-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 17px;
+    }
+
+    .retry-table th,
+    .retry-table td {
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 10px 8px;
+      vertical-align: top;
+    }
+
+    .retry-table th {
+      background: #1e293b;
+      color: #e2e8f0;
+      text-align: left;
+    }
+
+    .retry-table td {
+      color: #e5e7eb;
+    }
+
+    /* 新增行用的 input 樣式 */
+    .retry-table input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      background: transparent;
+      border: 1px solid #1f2937;
+      border-radius: 4px;
+      color: #e5e7eb;
+      font-size: 13px;
+      padding: 4px 6px;
+    }
+
+    .retry-add-row {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* 按鈕：低調版，跟整體風格比較不突兀 */
+    .retry-btn {
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+    }
+
+    .retry-btn:hover {
+      background: #111827;
+      border-color: #22c1c3;
+      transform: translateY(-1px);
+    }
+
+    .retry-btn:active {
+      transform: translateY(0);
+    }
+
+    /* 小提示文字 */
+    .retry-hint {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tab-pane fade" id="retry" role="tabpanel" aria-labelledby="retry-tab">
+    <div class="tab-title"> Retry 方法 </div>
+    <div class="tab-subtitle">
+      有遇到相同 fail 可以先對一下，有遇到新的手法也希望能新增。
+    </div>
+
+    <!-- Basic 區 -->
+    <div class="retry-section">
+      <div class="retry-section-title">
+        <h3>Basic 測項</h3>
+        <span class="retry-section-tag">SIM / Host / Permission 類</span>
+      </div>
+
+      <table class="retry-table" id="basic-table">
+        <thead>
+          <tr>
+            <th style="width: 34%;">模組 / 測項</th>
+            <th style="width: 33%;">關鍵條件 / 環境</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Radio</td>
+            <td>實體 SIM</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Adoptable Host</td>
+            <td>SD 卡</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>CarrierApiTestCases</td>
+            <td>Test SIM</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Libcore</td>
+            <td>IPv4 測項</td>
+            <td>建議連 FIH-Free / 內網等穩定 IPv4 網路</td>
+          </tr>
+          <tr>
+            <td>CtsPermission</td>
+            <td>實體 SIM</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>VCN</td>
+            <td>實體 SIM</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>MbaPrivilegedPermission</td>
+            <td>Factory Reset</td>
+            <td>重置後再跑一次測項</td>
+          </tr>
+          <tr>
+            <td>Dialeraudio</td>
+            <td>實體 SIM</td>
+            <td>記得開 LTE / 4G</td>
+          </tr>
+          <tr>
+            <td>SimAppDialog</td>
+            <td>Test SIM</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="retry-add-row">
+        <button class="retry-btn" type="button" onclick="addRow('basic-table')">＋ 新增 Basic 條目</button>
+        <span class="retry-hint">之後可以改成跳出表單，填模組 / 條件 / 備註後加入上表。</span>
+      </div>
+
+    </div>
+
+    <!-- GTS 區 -->
+    <div class="retry-section">
+      <div class="retry-section-title">
+        <h3>GTS 測項</h3>
+        <span class="retry-section-tag">GTS</span>
+      </div>
+
+      <table class="retry-table" id="gts-table">
+        <thead>
+          <tr>
+            <th style="width: 34%;">模組 / 測項</th>
+            <th style="width: 33%;">關鍵條件 / 環境</th>
+            <th>備註 / Retry 技巧</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GtsGmscoreHostTestCases</td>
+            <td>audioservice / Camera 相關</td>
+            <td>
+              測 audioservice 時外接麥克風。若為 Camera 相關測項，記得外接 Camera。
+            </td>
+          </tr>
+          <tr>
+            <td>GtsPermissionTestCases</td>
+            <td>SecurityPath ＋ CtsScopedStorageHostTest</td>
+            <td>
+              兩者會互相干擾，遇到兩邊都 fail 時，建議使用：<br>
+              <code>--exclude-filter CtsScopedStorageHostTest</code> 重跑一次 GtsPermission。
+            </td>
+          </tr>
+          <tr>
+            <td>GtsBackupTestCases</td>
+            <td>Factory Reset 後，在 SetupWizard 不連網</td>
+            <td>
+              Factory Reset 後在開機設定精靈中不要連網，直接進系統，<br>
+              再 Retry 一次，不讓 Device 自動下載套件，通常就會 PASS。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="retry-add-row">
+        <button class="retry-btn" type="button" onclick="addRow('gts-table')">＋ 新增 GTS 條目</button>
+      </div>
+
+    </div>
+
+    <!-- CTS 區 -->
+    <div class="retry-section">
+      <div class="retry-section-title">
+        <h3>CTS 測項</h3>
+        <span class="retry-section-tag">CTS</span>
+      </div>
+
+      <table class="retry-table" id="cts-table">
+        <thead>
+          <tr>
+            <th style="width: 40%;">模組 / 測項</th>
+            <th style="width: 30%;">關鍵條件 / 環境</th>
+            <th>備註 / Retry 方法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Test SIM / Secure Element -->
+          <tr>
+            <td>signed-CtsSecureElementAccessControlTestCases1~3<br>signed-CtsOmapiTestCases</td>
+            <td>Test SIM（RD 有貼 Google 標籤的那兩張）</td>
+            <td>所有 Secure Element / OMAPI 系列建議統一用 Test SIM 來測。</td>
+          </tr>
+
+          <!-- Net -->
+          <tr>
+            <td>CtsNetTestCases</td>
+            <td>DNS 相關測項</td>
+            <td>只要跟 DNS 相關，讓 Device 連自己手機的 Hotspot 通常就會 PASS。</td>
+          </tr>
+          <tr>
+            <td>CtsNetworkStackHostTestCases</td>
+            <td>連上 FIH-Free，Network usage 設為 metered</td>
+            <td>測前確認目前連線為 FIH-Free，並將該網路標記為「計量（metered）」。</td>
+          </tr>
+
+          <!-- Autofill -->
+          <tr>
+            <td>CtsAutoFillServiceTestCases<br>testDatasetAuthResponseWhileAutofilledAppIsLifecycled</td>
+            <td>Device owner 設定</td>
+            <td>需要把裝置中的 owner 刪乾淨，只保留一個主要 owner 再跑測項。</td>
+          </tr>
+
+          <!-- TOT 特殊 Case -->
+          <tr>
+            <td>1. arm64-v8a CtsWindowManagerDeviceTestCases android.server.wm.PinnedStackTests - testTranslucentActivityOnTopOfPinnedTask<br>
+                2. arm64-v8a CtsWindowManagerDeviceTestCases android.server.wm.PinnedStackTests - testAutoEnterPictureInPictureOverPip<br>
+            </td>
+            <td>使用 TOT build</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="retry-add-row">
+        <button class="retry-btn" type="button" onclick="addRow('cts-table')">＋ 新增 CTS 條目</button>
+      </div>
+
+    </div>
+
+    <!-- Android 10 CTS 區 -->
+    <div class="retry-section">
+      <div class="retry-section-title">
+        <h3>Android 10 CTS（憑證 / Security 系列）</h3>
+        <span class="retry-section-tag">CTS / Android 10</span>
+      </div>
+
+      <table class="retry-table" id="android10-table">
+        <thead>
+          <tr>
+            <th style="width: 50%;">模組 / 測項</th>
+            <th style="width: 25%;">關鍵條件 / 環境</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1. CtsLibcoreOjTestCases / test.java.security.cert.AKISerialNumberTest#main<br>
+              2. CtsLibcoreTestCases / com.android.org.conscrypt.CertBlacklistTest#testBlacklistedIntermediateFallback<br>
+              3. CtsLibcoreTestCases / libcore.java.security.cert.X509CertificateTest#test_Provider<br>
+              4. arm64-v8a CtsSecurityTestCases / android.security.cts.CertBlacklistTest#testBlacklistedIntermediateFallback
+            </td>
+            <td>憑證系列（用 TOT）</td>
+            <td>憑證相關 Security 測項建議統一使用 TOT build，避免客製憑證 / Mainline 版本影響。</td>
+          </tr>
+          <tr>
+            <td>CtsOsHostTestCases</td>
+            <td>Factory Reset 後不要連 Wi-Fi</td>
+            <td>重置後直接進系統，不連 Wi-Fi，再 Retry 測項。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="retry-add-row">
+        <button class="retry-btn" type="button" onclick="addRow('android10-table')">＋ 新增 Android 10 條目</button>
+      </div>
+
+    </div>
+
+    <!-- 特殊情況區（Getac 等） -->
+    <div class="retry-section">
+      <div class="retry-section-title">
+        <h3>特殊情況 / 特定機種（Getac 等）</h3>
+        <span class="retry-section-tag">Special Cases</span>
+      </div>
+
+      <div style="color:#e5e7eb; font-size:16px; line-height:1.7;">
+            1. <strong>Getac 系列需開啟 Perform Setting</strong>：否則部分 Camera 測項會無法通過。<br>
+            2. <strong>Getac 第一次測試需插 Docker</strong>：首次測試需要透過 Docker，否則可能發生 Port 掉線問題。<br>
+            3. <strong>PhotoPicker 測項需登入 Google 帳號並升級 Mainline</strong>：更新完成後再進行測試。<br>
+            4. <strong>Battery 測項需拔電池並插 Docker</strong>：符合 Getac 需求的測試流程。<br>
+            5. <strong>Getac GSI GPS 測項可能需使用貼有 VTS 貼紙的 Device</strong>：部分板子可能 GPS 不穩，可更換另一台測試以提高 PASS 率。
+          </div>
+
+          <div class="retry-add-row" style="margin-top:10px;">
+            <button class="retry-btn" type="button">＋ 新增 Getac 條目</button>
+          </div>
+
+        </div>
+
+
+      <div class="retry-add-row">
+        <button class="retry-btn" type="button" onclick="addRow('special-table')">＋ 新增特殊情況</button>
+      </div>
+
+    </div>
+
+    <!-- 其他提醒 -->
+    <div class="retry-section">
+      <div class="retry-section-title">
+        <h3>其他通用提醒</h3>
+        <span class="retry-section-tag">ATS / General</span>
+      </div>
+
+      <div style="color:#e5e7eb; font-size:16px;">
+        ※ ATS 測試完後若遇到 DeviceInfo 的 json 檔有缺少欄位：<br>
+        1. 把 full test 的 zip 解壓縮。<br>
+        2. 用 terminal 建立 subplan，再 retry。<br>
+        3. 記得把 MCTS 關掉（Dynamic）再重跑。<br>
+      </div>
+
+      <div class="retry-add-row">
+        <button class="retry-btn" type="button">＋ 新增 ATS 提醒</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function addRow(tableId) {
+      const table = document.getElementById(tableId);
+      if (!table) return;
+      const tbody = table.getElementsByTagName("tbody")[0];
+      const colCount = table.querySelectorAll("thead tr th").length;
+      const row = document.createElement("tr");
+      for (let i = 0; i < colCount; i++) {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = "text";
+        td.appendChild(input);
+        row.appendChild(td);
+      }
+      tbody.appendChild(row);
+    }
+  </script>
+</body>
+</html>
