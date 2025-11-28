@@ -1,0 +1,24 @@
+source ITS.sh 14                 # adb shell getprop ro.build.version.release
+
+cd /home/fih/USER/QA/Ken/CTSV/ITS_14/android-cts-verifier-14_r8-linux_x86-arm/android-cts-verifier/CameraITS
+# cd ~/USER/ITS_14/android-cts-verifier-14_r8-linux_x86-arm/android-cts-verifier/CameraITS
+
+source build/envsetup.sh    
+
+adb -s RQ1XXZ0134 shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier
+adb -s RQ1XXZ0134 install /home/fih/USER/QA/Ken/CTSV/ITS_15/android-cts-verifier-15_r4-linux_x86-arm/android-cts-verifier/jetpack-camera-app.apk
+
+
+python tools/run_all_tests.py camera=0 scenes=1
+adb shell dumpsys media.camera            # camera=1 (front camera)
+
+
+'/home/fih/USER/FIHtoolMiniITS.sh' RPAXXZ0313
+python tools/run_all_tests.py camera=1 scenes=5
+
+
+
+python run_webcam_test.py -c config.yml
+
+
+ITScli.sh --off
