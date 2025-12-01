@@ -1,730 +1,977 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>XTS SOP / 測試作業流程</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0b1120;  /* 比原本更亮一階的深藍 */
-      color: #e5e7eb;
-      margin: 0;
+    <meta charset="UTF-8">
+    <title>XTS SOP / 測試作業流程</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    />
+
+    <style>
+        /* =============================== */
+        /* 基礎/通用 樣式 (淺色模式 - 顏色優化) */
+        /* =============================== */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+            color: #1f2937;
+            margin: 0;
+            padding-bottom: 40px;
+        }
+
+        a { color: #3b82f6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .container {
+            width: 94%;
+            max-width: 1500px;
+            margin: 20px auto 40px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0 0 6px;
+            color: #1e3a8a;
+        }
+
+        .header-sub {
+            font-size: 14px;
+            color: #4b5563;
+            margin-bottom: 10px;
+        }
+
+        /* 移除 header-tag 的浮動，將其內聯在標題下方 */
+        .header-tag-wrapper {
+             margin-bottom: 20px;
+        }
+        .header-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            font-size: 12px;
+            background: #eff6ff;
+            font-weight: 500;
+        }
+
+        /* ===== SOP Sections (內容區塊) ===== */
+        .sop-section {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 18px 20px 16px;
+            margin-top: 18px;
+
+            /* 🌟 修正點：統一區塊寬度並置中 🌟 */
+            max-width: 1500px; /* 設定一個您喜歡的「瘦」寬度 */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sop-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sop-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e3a8a;
+            padding-left: 10px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .sop-tag {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #e0f2f1;
+            color: #0d9488;
+        }
+        .sop-tag a {
+            color: #9333ea !important;
+            font-weight: 700;
+        }
+        .sop-tag a:hover {
+             text-decoration: none;
+        }
+
+        .sop-section p {
+            margin: 4px 0;
+            font-size: 15px; /* 🌟 調整字體大小，配合圖片縮小 🌟 */
+            line-height: 1.7;
+            color: #4b5563;
+        }
+
+        .sop-section ul,
+        .sop-section ol {
+            margin: 6px 0 8px 1.4rem;
+            padding: 0;
+            font-size: 15px; /* 🌟 調整字體大小，配合圖片縮小 🌟 */
+            line-height: 1.7;
+            color: #4b5563;
+        }
+
+        .sop-section li {
+             margin-bottom: 5px;
+        }
+
+        .note {
+            font-size: 14px; /* 稍微放大 note 區域文字 */
+            color: #374151;
+            margin-top: 6px;
+            padding: 8px 10px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 4px solid #fcd34d;
+        }
+        .note strong {
+             color: #1f2937;
+        }
+        .note hr {
+            border-color:#e5e7eb;
+            margin: 15px 0;
+        }
+
+
+        /* ===== Tables/Code/Details (略過，與上次淺色模式一致) ===== */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px 12px; border: 1px solid #e5e7eb; vertical-align: top; color: #374151; }
+        th { background: #f3f4f6; font-weight: 600; color: #1f2937; }
+        tr:nth-child(even) td { background: #f9fafb; }
+        .check { font-weight: 700; color: #10b981; }
+        code { font-family: Consolas, "Courier New", monospace; font-size: 12px; background: #f3f4f6; padding: 2px 4px; border-radius: 4px; color: #c2410c; }
+        .code-block { font-family: Consolas, "Courier New", monospace; font-size: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e0e7ff; padding: 10px 12px; white-space: pre-wrap; margin-top: 8px; color: #0369a1; }
+        details { background: #f0f9ff; border-radius: 8px; border: 1px solid #bfdbfe; padding: 10px 12px; margin-top: 8px; }
+        details summary { cursor: pointer; font-size: 14px; font-weight: 600; list-style: none; color: #1e40af; }
+
+        /* 🌟 圖片視覺優化 (字體/圖片比例調整) 🌟 */
+        img {
+            max-width: 60%; /* 圖片佔用空間調整為60% */
+            height: auto;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            display: block;
+            margin: 15px auto;
+        }
+        .note img {
+            width: auto !important;
+            max-width: 100%;
+        }
+        figcaption {
+            font-size: 13px;
+            color: #4b5563;
+            margin-top: 8px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* 🌟 回到首頁間距修正 🌟 */
+        .back-link {
+            padding: 20px 0 0;
+            margin-top: 20px;
+            font-size: 16px;
+            border-top: 1px solid #e5e7eb; /* 增加一條分隔線 */
+            max-width: 1500px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 94%;
+        }
+        .back-link a {
+            padding: 10px 0;
+            display: inline-block;
+        }
+
+
+        /* =============================== */
+        /* 流程圖 (Flowchart) 樣式 - 最終 4+3 佈局 */
+        /* =============================== */
+
+        .flowchart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 15px 25px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin: 22px 0 26px;
+        }
+
+        .flowchart-steps-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1200px;
+            gap: 25px;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 0 10px;
+        }
+
+
+        .flow-step-wrap {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .flow-step-node {
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a8a;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            box-sizing: border-box;
+            /* 讓節點在 4 步驟中佔用較少寬度，在 3 步驟中佔用較多寬度 */
+        }
+
+        .flow-step-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 統一所有流程節點為 process 樣式 */
+        .flow-step-node.process,
+        .flow-step-node.key-decision {
+            background-color: #f0f9ff;
+            border: 2px solid #60a5fa;
+        }
+
+ /* ===== 改良版箭頭樣式（替換原本 .flow-arrow-right 與 ::after） ===== */
+.flow-arrow-right {
+    /* 固定寬度並保持可縮放（桌面橫向時為水平條） */
+    flex: 0 0 48px;
+    height: 8px;
+    background: linear-gradient(90deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
+    border-radius: 999px;
+    position: relative;
+    margin: 0 12px;
+    box-shadow: 0 2px 6px rgba(59,130,246,0.12), inset 0 -1px 0 rgba(255,255,255,0.08);
+}
+
+/* 箭頭頭（用三角形） */
+.flow-arrow-right::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -10px;               /* 讓箭頭在條的右端外側 */
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 14px solid #3b82f6; /* 箭頭顏色與流程節點配色保持一致 */
+    filter: drop-shadow(0 2px 4px rgba(12,74,150,0.12));
+}
+
+    /* 隱藏最後一個節點旁的箭頭（維持原本行為） */
+    .flow-step-wrap:last-child .flow-arrow-right {
+        display: none;
     }
 
-    a { color: #38bdf8; }
+    /* ===== 響應式：在小螢幕改成垂直箭頭（直條 + 向下箭頭） ===== */
+    @media (max-width: 992px) {
+        .flow-arrow-right {
+            /* 變成直立條（高度變大、寬度變窄） */
+            flex: 0 0 10px;
+            width: 10px;
+            height: 48px;
+            margin: 8px 0;
+            background: linear-gradient(180deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
+            border-radius: 999px;
+        }
 
-    .container {
-      width: 94%;
-      max-width: 1500px;
-      margin: 20px auto 40px;
-    }
+        .flow-arrow-right::after {
+            /* 將三角箭頭旋轉並置於下方 */
+            right: 50%;
+            top: auto;
+            bottom: -10px;
+            transform: translateX(50%) rotate(90deg);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 14px solid #3b82f6;
+        }
 
-    h1 {
-      font-size: 26px;
-      margin: 0 0 6px;
-    }
+        .flow-step-wrap {
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .header-sub {
-      font-size: 13px;
-      color: #9ca3af;
-    }
-
-    .header-tag {
-      float: right;
-      padding: 6px 14px;
-      border-radius: 999px;
-      border: 1px solid #22c1c3;
-      font-size: 13px;
-      margin-top: -24px;
-    }
-
-    /* ===== SOP Flow Bar ===== */
-    .sop-flow {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 22px 0 26px;
+        .flow-step-wrap:last-child .flow-arrow-right {
+            display: none;
+        }
     }
 
-    .sop-flow-step {
-      position: relative;
-      flex: 1;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: #111827;
-      border: 1px solid #1f2937;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: #e5e7eb;
-    }
+        .flow-step-wrap:last-child .flow-arrow-right {
+            display: none;
+        }
 
-    .sop-flow-step::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      right: -6px;
-      width: 12px;
-      height: 2px;
-      background: #22c1c3;
-    }
+        /* 響應式調整：在小螢幕下變回垂直單欄 */
+        @media (max-width: 992px) {
+            .flowchart-steps-wrapper {
+                gap: 0;
+            }
+            .flow-row {
+                flex-direction: column;
+                gap: 0;
+                width: 100%;
+                margin-bottom: 20px;
+            }
 
-    .sop-flow-step:last-child::after {
-      content: none;
-    }
+            .flow-step-wrap {
+                width: 100%;
+                flex-direction: column;
+                margin-bottom: 10px;
+            }
 
-    .sop-step-number {
-      width: 24px;
-      height: 24px;
-      border-radius: 999px;
-      background: #22c1c3;
-      color: #020617;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-    }
+            .flow-arrow-right {
+                width: 3px;
+                height: 30px;
+                background-color: #9ca3af;
+                margin: 5px 0;
+            }
 
-    .sop-step-main {
-      font-weight: 600;
-    }
+            .flow-arrow-right::after {
+                top: auto;
+                bottom: 0;
+                left: -5px;
+                right: auto;
+                border-width: 6px;
+                border-color: #9ca3af transparent transparent transparent;
+            }
 
-    .sop-step-sub {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    .sop-flow-step.main {
-      border-color: #22c1c3;
-      box-shadow: 0 0 0 1px rgba(34,193,195,0.4);
-    }
-
-    /* ===== SOP Sections ===== */
-    .sop-section {
-      background: #111827;
-      border-radius: 12px;
-      border: 1px solid #1e293b;
-      padding: 18px 20px 16px;
-      margin-top: 18px;
-    }
-
-    .sop-section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .sop-title {
-      font-size: 19px;
-      font-weight: 600;
-      color: #93c5fd;
-    }
-
-    .sop-tag {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      background: rgba(34,193,195,0.18);
-      color: #22c1c3;
-    }
-
-    .sop-section p {
-      margin: 4px 0;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .sop-section ul,
-    .sop-section ol {
-      margin: 6px 0 8px 1.4rem;
-      padding: 0;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .note {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-top: 6px;
-    }
-
-    /* ===== Tables ===== */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 8px 10px;
-      border: 1px solid #1f2937;
-      vertical-align: top;
-    }
-
-    th {
-      background: #1f2937;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    tr:nth-child(even) td {
-      background: rgba(15,23,42,0.65);
-    }
-
-    /* ATS matrix headings smaller */
-    .table-small th, .table-small td {
-      font-size: 12px;
-      padding: 6px 8px;
-      text-align: center;
-    }
-    .table-small th:first-child,
-    .table-small td:first-child {
-      text-align: left;
-      white-space: nowrap;
-    }
-
-    .check {
-      font-weight: 700;
-      color: #4ade80;
-    }
-
-    /* Code blocks & inline */
-    code {
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 12px;
-      background: #020617;
-      padding: 2px 4px;
-      border-radius: 4px;
-    }
-
-    .code-block {
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 12px;
-      background: #020617;
-      border-radius: 8px;
-      border: 1px solid #1f2937;
-      padding: 8px 10px;
-      white-space: pre-wrap;
-      margin-top: 4px;
-    }
-
-    /* Retry accordion */
-    details {
-      background: #020617;
-      border-radius: 8px;
-      border: 1px solid #1f2937;
-      padding: 8px 10px;
-      margin-top: 8px;
-    }
-
-    details summary {
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      list-style: none;
-    }
-
-    details summary::before {
-      content: "▶ ";
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    details[open] summary::before {
-      content: "▼ ";
-    }
-
-    .back-link {
-      margin-top: 20px;
-      font-size: 14px;
-    }
-
-    .instruction-list {
-      list-style-type: disc;
-      color: #e5e7eb;
-      padding-left: 20px;
-    }
-
-    .instruction-list-item {
-      margin-bottom: 8px;
-      line-height: 1.6;
-    }
-  </style>
+            .flow-step-wrap:last-child .flow-arrow-right {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
 
-  <h1>XTS SOP / 測試作業流程</h1>
-  <div class="header-sub">
-    整理 Pretest → Flash SW → ATS / Terminal → Run XTS → Retry → Report Check 的標準步驟。
-  </div>
-  <div class="header-tag">XTS Standard Operating Procedure</div>
+    <h1>XTS 測試流程</h1>
 
-  <div class="sop-flow">
-    <div class="sop-flow-step main">
-      <div class="sop-step-number">1</div>
-      <div>
-        <div class="sop-step-main">Pretest</div>
-        <div class="sop-step-sub">User Build / Device Info / BuildVerifier</div>
-      </div>
-    </div>
-    <div class="sop-flow-step">
-      <div class="sop-step-number">2</div>
-      <div>
-        <div class="sop-step-main">Flash SW</div>
-        <div class="sop-step-sub">User / Userdebug / GSI / Vendor-Boot</div>
-      </div>
-    </div>
-    <div class="sop-flow-step">
-      <div class="sop-step-number">3</div>
-      <div>
-        <div class="sop-step-main">ATS / Terminal</div>
-        <div class="sop-step-sub">依 Stage 選 CTS / GTS / STS 等</div>
-      </div>
-    </div>
-    <div class="sop-flow-step">
-      <div class="sop-step-number">4</div>
-      <div>
-        <div class="sop-step-main">Run XTS</div>
-        <div class="sop-step-sub">確認 Fingerprint / MCTS / DUT 狀態</div>
-      </div>
-    </div>
-    <div class="sop-flow-step">
-      <div class="sop-step-number">5</div>
-      <div>
-        <div class="sop-step-main">Retry</div>
-        <div class="sop-step-sub">ToT / Mainline / Waiver 查詢</div>
-      </div>
-    </div>
-    <div class="sop-flow-step">
-      <div class="sop-step-number">6</div>
-      <div>
-        <div class="sop-step-main">Report Check</div>
-        <div class="sop-step-sub">ReportCheck / Jira 附件整理</div>
-      </div>
-    </div>
-  </div>
+    <div class="flowchart-container">
+        <h2 style="color:#3b82f6; font-size: 1.6rem; margin: 10px 0 20px; border: none; padding: 0;">
+            <i class="fas fa-stream"></i> XTS 流程圖
+        </h2>
 
-  <!-- 1. PRETEST -->
-<div class="sop-section" id="pretest">
-    <div class="sop-section-header">
-      <div class="sop-title">1. Pretest（User Build 一台）</div>
-      <div class="sop-tag">Pretest</div>
-    </div>
+        <div class="flowchart-steps-wrapper">
 
-    <p>Pretest 只需一台燒 <strong>User Build</strong> 的 Device ，並根據測試項目在 Jira 上附上必要附件。</p>
 
-    <table>
-      <thead>
-      <tr>
-        <th style="width:15%;">Stage</th>
-        <th style="width:45%;">Jira 附件要求</th>
-        <th>備註</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>IR / LR</td>
-        <td>
-          必須附上：<br>
-          ・AdbDeviceInfo 截圖<br>
-          ・BuildVerifier 截圖<br>
-          ・FIH_Checklist<br>
-        </td>
-        <td>共 3 張截圖 + 1 個 zip + 1 個 xlsx</td>
-      </tr>
-      <tr>
-        <td>MR / SMR</td>
-        <td>
-          必須附上：<br>
-          ・AdbDeviceInfo 截圖<br>
-          ・BuildVerifier 截圖<br>
-        </td>
-        <td>共 3 張截圖 + 1 個 zip</td>
-      </tr>
-      </tbody>
-    </table>
+            <div class="flow-row">
+                <div class="flow-step-wrap">
+                    <a href="#pretest" class="flow-step-node process">
+                        <i class="fas fa-mobile-alt"></i> 1. Pretest & FIH_CheckList
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
 
-    <div class="note" style="margin-top: 15px; color:#9ca3af;">
-      <strong style="font-size:14px; color:white;"> a. AdbDeviceInfo：</strong><br>
-      在 Lab 電腦 Ternimal 中輸入 <code style="font-size:12px; color:white;">AdbDevice</code>，腳本會自動幫你對 DUT 抓取 fingerprint 等資料，請在第 2 個 Terminal 出現且滑鼠游標出現「╬」符號時點擊滑鼠左鍵截圖，待腳本跑完後會在 tmp 資料夾出現 2 張 AdbDeviceInfo 截圖及 zip 檔：<br>
-      <img src="{{ url_for('static', filename='Pretest.jpg') }}" alt="Pretset生成檔案"><br>
-      <hr style="border-color:#1f2937; margin: 15px 0;">
+                <div class="flow-step-wrap">
+                    <a href="#flash" class="flow-step-node process">
+                        <i class="fas fa-bolt"></i> 2. Flash Image 燒錄
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
 
-      <strong style="font-size:14px; color:white;"> b. BuildVerifier Tool 設定：</strong><br>
-      Tool 位置: \\10.57.41.153\user$\QA\XTS\Pretest\GMS_Submission_Manager_V1.0.78 (請把檔案抓到你的本地位置), 名稱叫 GMS_Submission_Manager.exe<br>
-      <img src="{{ url_for('static', filename='BuildVerifier0.jpg') }}" alt="GMS_Submission_Manager"><br>
-      打開之後會先請你登入foxconn.corp-partner.google.com(若無帳號請找PM申請，該帳號需要兩段式驗證)，登入後左上角依序選Tool -> Build Verifier。<br>
-      <img src="{{ url_for('static', filename='BuildVerifier1.jpg') }}" alt="BuildVerifier"><br>
-      依據本次測試在 Tool 上選擇相對應的 type,下圖以SMR為例。<br>
-      <img src="{{ url_for('static', filename='BuildVerifier2.jpg') }}" alt="BuildVerifier"><br>
-      Target Build EDI：放「本次測試」由 AdbDeviceInfo 產生的 zip 檔。<br>
-      Base Build EDI：放「上次同 Android 版本的 MR」zip 檔，如附圖：<br>
-      <strong style="color:red;">** 若今天測試type為IR，則不需提供 Base Build EDI **</strong><br>
-      <img src="{{ url_for('static', filename='BuildVerifier3.jpg') }}" alt="BuildVerifier"><br>
-      把zip檔都放好後，按下Scan等待Tool自行判定<br>
-      <img src="{{ url_for('static', filename='BuildVerifier4.jpg') }}" alt="BuildVerifier"><br>
-      掃描結束後按下右下角截圖,正常來說只有EOL日期會是紅字，若有遇到出現其他Block、Warning等狀況，請Comment在JIRA上<br>
-      <img src="{{ url_for('static', filename='BuildVerifier5.jpg') }}" alt="BuildVerifier"><br>
-      截圖會生成在資料夾的 VerifierSnapshot<br>
-      <img src="{{ url_for('static', filename='BuildVerifier6.jpg') }}" alt="BuildVerifier"><br>
-      <hr style="border-color:#1f2937; margin: 15px 0;">
+                <div class="flow-step-wrap">
+                    <a href="#ats" class="flow-step-node process">
+                        <i class="fas fa-terminal"></i> 3. ATS / Terminal 環境架設
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
 
-      <strong style="font-size:14px; color:white;"> c. FIH_CheckList：</strong><br>
-      最新的 FIH_CheckList 報告都會放在：<code>/home/fih/CHECKLIST_LATEST/FIH_GMS_CheckList_XXXX.xlsx</code><br>
-      <img src="{{ url_for('static', filename='CheckList.jpg') }}" alt="CheckList報告"><br>
-      必填的欄位為：一般送件、BootupLogo；其餘依據 Jira 上 PM 提供之規格做 CheckList 確認。<br>
-      必要1. 一般送件<br>
-      <img src="{{ url_for('static', filename='FIH_CheckList1.jpg') }}" alt="一般送件" style="width: 70%; height: auto; display: block;"><br>
-      必要2. BootupLogo<br>
-      <img src="{{ url_for('static', filename='FIH_CheckList2.jpg') }}" alt="BootUpLogo" style="width: 70%; height: auto; display: block;"><br>
+                <div class="flow-step-wrap">
+                    <a href="#runxts" class="flow-step-node process">
+                        <i class="fas fa-play-circle"></i> 4. Run XTS
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
+            </div>
 
-      除必要的一般送件、BootupLogo，請依照JIRA上提供的資訊，額外付上需要的CheckList，以下圖為例:<br>
 
-      <div style="display: flex; gap: 10px; justify-content: center; align-items: flex-start; margin-top: 10px;">
-          <img src="{{ url_for('static', filename='JIRA.jpg') }}" alt="JIRA 客戶樣機資訊">
-          <img src="{{ url_for('static', filename='FIH_CheckList3.jpg') }}" alt="特殊送件-EDLA">
-      </div>
+            <div class="flow-row">
+                <div class="flow-arrow-right"></div>
+                 <div class="flow-step-wrap">
+                    <a href="#retry" class="flow-step-node process">
+                        <i class="fas fa-redo-alt"></i> 5. Fail 測項 Retry & Waiver ID 提交
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
 
-      <figcaption style="font-size: 12px; color: #9ca3af; margin-top: 8px; text-align: center;">
-           左圖為 JIRA 客戶樣機 SKU 地區版本，以圖例 EDLA - 歐洲 ； 右圖為 特殊送件-EDLA。
-      </figcaption>
+                <div class="flow-step-wrap">
+                    <a href="#reportcheck" class="flow-step-node process">
+                        <i class="fas fa-clipboard-check"></i> 6. Report Check Tool 確認報告
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
 
-      <p style="margin-top: 15px;">
-        確認完畢後請附在 Jira 上，以圖例，假設專案樣機名稱叫 ABC，檔名就改為 <code>FIH_GMS_CheckList_2025111_ABC.xlsx</code>，並附在JIRA上。
-      </p>
-
-    </div>
-  </div>
-
-  <!-- 2. FLASH -->
-  <div class="sop-section" id="flash">
-    <div class="sop-section-header">
-      <div class="sop-title">2. Flash Image</div>
-      <div class="sop-tag">Flash</div>
-    </div>
-
-    <p><strong>版本差異說明：</strong></p>
-    <ul>
-      <li>Android 15 以上：額外需要多測 <strong>GTS-ROOT</strong>。</li>
-    </ul>
-
-    <p><strong>Flash Image 注意事項：</strong></p>
-    <ul>
-      <li>在 <strong>Bootloader Mode</strong> 下，如果裝置管理員或在 Tenimal 下 fastboot devices 偵測不到 device，請先檢查 driver。</li>
-      <li>
-        不同客戶需要的 driver / Tool 不盡相同，若客戶沒有另外提供，可在下方找到通用 Flash SOP 與相關工具：<br>
-         資料夾共同位置 :
-        <span style="font-size: 1.1em; color: white; text-decoration: underline;">
-            <strong> \\10.57.45.213\3pl\Ready_to_GoogleDrive\Flash_sop</strong>
-        </span>
-      </li>
-    </ul>
-
-    <p class="note">
-  <a href="/flash_image" title="前往 Flash Image 頁面">
-    燒錄 Image 的詳細資訊請至 Flash 頁面
-  </a>
-</p>
-
-  <!-- 3. ATS / TERMINAL -->
-  <div class="sop-section" id="ats">
-    <div class="sop-section-header">
-      <div class="sop-title">3. ATS / Terminal 架設環境</div>
-      <div class="sop-tag">ATS &amp; Terminal</div>
-    </div>
-
-    <p><strong>ATS / Terminal 操作原則（2 選 1）：</strong></p>
-    <ol style="color: #0ea5e9;">
-      <li style="margin-top: 15px;">
-        <strong style="color: #0ea5e9;">ATS 服務啟動與關閉（Web UI）</strong>
-        <div style="margin-top: 5px; padding-left: 10px; color: #9ca3af;">
-          <p>可在 Teminal 下指令控制 Android Test Station 服務的生命週期：</p>
-          <code>mtt start</code>（開啟服務並透過網址存取）<br>
-          <code>mtt stop</code>（關閉服務）<br>
-          <p style=" margin-top: 5px;">＊ mtt start 跑完需要點擊 FireFox Web Browser 才會跑出 ATS 網頁介面。</p>
-          <img src="{{ url_for('static', filename='ATS0.jpg') }}" alt="ATS" style="width: 90%; height: auto; display: block;"><br>
+                <div class="flow-step-wrap">
+                    <a href="#submit" class="flow-step-node process">
+                        <i class="fas fa-paper-plane"></i> 7. FIH報告提交
+                    </a>
+                    <div class="flow-arrow-right"></div>
+                </div>
+            </div>
         </div>
-      </li>
-
-      <li>
-        <strong style="color: #0ea5e9;"> Terminal 執行 </strong>
-        <div style="margin-top: 5px; padding-left: 10px; color: #9ca3af;">
-          <p>若想在 Terminal環境執行 Tradefed，必須確保環境無殘留進程：</p>
-          <div>
-            step 1. 必須先關閉 ATS 服務 : <code>mtt stop</code>（關閉ATS）<br>
-            step 2. 確保新開 terminal 及 adb 是一個正確的乾淨環境 : <code>adb kill-server</code><br>
-            step 3. 從Bundle中下載客戶指定之測試版本到QA本機位置並解壓縮，如下圖: (以15_r6為例,測試版本下方會提到)<br>
-              <img src="{{ url_for('static', filename='Terminal.jpg') }}" alt="Terminal" style="width: 80%; height: auto; display: block;"><br>
-          </div>
-        </div>
-      </li>
-    </ol>
-  </div>
-
-  <!-- 4. RUN XTS -->
-  <div class="sop-section" id="runxts">
-    <div class="sop-section-header">
-      <div class="sop-title">4. Run XTS</div>
-      <div class="sop-tag">Run</div>
     </div>
 
-    <p><strong>測試版本：</strong></p>
-    <ul>
-      <li>原則上，XTS 測試應以客戶自測報告的版本為基準。若測試版本與客戶版本不同（例如客戶使用非標準的 Bundle 或未提供版本），則採用當前最新版本進行執行測試。</li>
-      <li>查閱完客戶自測報告後，請於 Jira 註明其測試版本，並依該版本執行自動化測試。</li>
-    </ul>
+    <div class="sop-section" id="pretest">
+        <div class="sop-section-header">
+            <div class="sop-title">1. Pretest & FIH_CheckList（User Build 一台）</div>
+            <div class="sop-tag">Pretest</div>
+        </div>
 
-    <p><strong>執行前檢查：</strong></p>
-    <ul>
-      <li>
-        使用 <strong>DUTShow Tool</strong>，檢查 fingerprint 及版本驗證資訊是否與預期一致，只要在 Terminal 上輸入
-        <code>DUTShow</code>，就會顯示相關資訊。<span style="color:red;">如附圖。</span>
-      </li>
-    </ul>
+        <p>Pretest 只需一台燒 <strong>User Build</strong> 的 Device ，並根據測試項目在 Jira 上附上必要附件。</p>
 
-       <p><strong>不同 Stage 對應可執行的 XTS 組合：</strong></p>
-
-    <table class="table-small">
-      <thead>
-      <tr>
-        <th>Stage / Item</th>
-        <th>CTS</th>
-        <th>GSI</th>
-        <th>CTSV</th>
-        <th>GTS</th>
-        <th>GTSI</th>
-        <th>GTS Root</th>
-        <th>VTS</th>
-        <th>STS</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>IR</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-      </tr>
-      <tr>
-        <td>LR</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-      </tr>
-      <tr>
-        <td>MR</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-      </tr>
-      <tr>
-        <td>VBA</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="check">✓</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>SMR</td>
-        <td class="check">✓</td>
-        <td></td>
-        <td></td>
-        <td class="check">✓</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="check">✓</td>
-      </tr>
-      </tbody>
-    </table>
-
-    <p><strong>SMR、VBA 指令提示：</strong></p>
-    <ul>
-      <li>SMR ⇒ <strong>包含 CTS、GTS、STS</strong>。
-        <div class="code-block" style="font-size: 1rem;">CTS : run -m CtsSecurityTestCases
-GTS : run gts-smr
-STS : run -dynamic-incremental</div>
-      </li>
-      <li>VBA ⇒ 只有GTS
-          <div class="code-block" style="font-size: 1rem;">GTS : run gts-variant</div>
-      </li>
-    </ul>
-
-      <p>CTS 請跑 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試 </p>
-          <img src="{{ url_for('static', filename='ATS1.jpg') }}" alt="ATS" style="width: 80%; height: auto; display: block;"><br>
-          <p>除CTS外測試,請跑當季度[FIH]的Tool，也一樣依據客戶指定版本按下Run Test做測試 </p>
-          <img src="{{ url_for('static', filename='ATS2.jpg') }}" alt="ATS2" style="width: 80%; height: auto; display: block;"><br>
-    <p><strong>CTS 區別：</strong></p>
-    <div style="margin-top: 25px;">
-      <ul style="list-style-type: disc; color: #e5e7eb; padding-left: 20px;">
-        <li>
-          在 <strong>Android 12</strong> 之後，CTS 新增了一個測試套件 MCTS（MainLine CTS），方便獨立驗證和確保可更新的系統組件的相容性。
-        </li>
-
-        <li style="margin-top: 15px; margin-bottom: 20px;">
-          <strong style="color: #0ea5e9;">MainLine CTS 涵蓋範圍</strong>
-          <table class="table table-bordered table-dark table-sm"
-                 style="max-width: 700px; margin-top: 8px; font-size: 0.9rem;">
+        <table>
             <thead>
-            <tr style="background-color: #1f2937;">
-              <th>Android / MCTS 預設</th>
-              <th>ATS</th>
-              <th>Terminal</th>
+            <tr>
+                <th style="width:15%;">Stage</th>
+                <th style="width:45%;">Jira 附件要求</th>
+                <th>備註</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-              <td>A12</td>
-              <td class="text-center" style="color:#22c55e;">X</td>
-              <td class="text-center" style="color:#22c55e;">X</td>
+                <td>IR / LR</td>
+                <td>
+                必須附上：<br>
+                ・AdbDeviceInfo 截圖<br>
+                ・BuildVerifier 截圖<br>
+                ・FIH_Checklist<br>
+                </td>
+                <td>共 3 張截圖 + 1 個 zip + 1 個 xlsx</td>
             </tr>
             <tr>
-              <td>A13</td>
-              <td class="text-center" style="color:#22c55e;">X</td>
-              <td class="text-center" style="color:#22c55e;">X</td>
-            </tr>
-            <tr>
-              <td>A14</td>
-              <td class="text-center" style="color:#22c55e;">X</td>
-              <td class="text-center" style="color:#22c55e;">✓</td>
-            </tr>
-            <tr>
-              <td>A15(以上)</td>
-              <td class="text-center" style="color:#22c55e;">✓</td>
-              <td class="text-center" style="color:#22c55e;">✓</td>
+                <td>MR / SMR</td>
+                <td>
+                必須附上：<br>
+                ・AdbDeviceInfo 截圖<br>
+                ・BuildVerifier 截圖<br>
+                </td>
+                <td>共 3 張截圖 + 1 個 zip</td>
             </tr>
             </tbody>
-          </table>
-        </li>
+        </table>
 
-        <li>
-         CTS測試請依CTS -> MCTS -> TOT 的步驟做測試，若版本為 Android 14，你又是Ternimal愛好者，<strong>請在測試前先關閉MCTS</strong>
-              <p style="color:#9ca3af; margin-top: 5px;">
-                若在 Terminal 環境執行 CTS，為避免與 MCTS 動態下載功能衝突，請設定禁用動態下載將預設的 True 改為 False：
-              </p>
-              <div  style="color:#f97316;max-width: 450px;">
-                「 ENABLE_XTS_DYNAMIC_DOWNLOADER=False 」，如下圖:
-              </div>
-        </li>
+        <div class="note" style="margin-top: 15px; ">
+            <strong style="font-size:14px; color:#333;"> a. AdbDeviceInfo：</strong><br>
+            在 Lab 電腦 Ternimal 中輸入 <code>AdbDevice</code>，腳本會自動幫你對 DUT 抓取 fingerprint 等資料，請在第 2 個 Terminal 出現且滑鼠游標出現「╬」符號時點擊滑鼠左鍵截圖，待腳本跑完後會在 tmp 資料夾出現 2 張 AdbDeviceInfo 截圖及 zip 檔：<br>
+            <img src="{{ url_for('static', filename='Pretest.jpg') }}" alt="Pretset生成檔案"><br>
+        </div>
 
+        <div class="note" style="margin-top: 15px; ">
+            <strong style="font-size:14px; color:#333;"> b. BuildVerifier Tool 設定：</strong><br>
+            Tool 位置: <code>\\10.57.41.153\user$\QA\XTS\Pretest\GMS_Submission_Manager_V1.0.78</code> (請把檔案抓到你的本地位置), 名稱叫 GMS_Submission_Manager.exe<br>
+            <img src="{{ url_for('static', filename='BuildVerifier0.jpg') }}" alt="GMS_Submission_Manager"><br>
+            打開之後會先請你登入foxconn.corp-partner.google.com(若無帳號請找PM申請，該帳號需要兩段式驗證)，登入後左上角依序選Tool -> Build Verifier。<br>
+            <img src="{{ url_for('static', filename='BuildVerifier1.jpg') }}" alt="BuildVerifier"><br>
+            依據本次測試在 Tool 上選擇相對應的 type,下圖以SMR為例。<br>
+            <img src="{{ url_for('static', filename='BuildVerifier2.jpg') }}" alt="BuildVerifier"><br>
+            Target Build EDI：放「本次測試」由 AdbDeviceInfo 產生的 zip 檔。<br>
+            Base Build EDI：放「上次同 Android 版本的 MR」zip 檔，如附圖：<br>
+            <strong style="color:red;">** 若今天測試type為IR，則不需提供 Base Build EDI **</strong><br>
+            <img src="{{ url_for('static', filename='BuildVerifier3.jpg') }}" alt="BuildVerifier"><br>
+            把zip檔都放好後，按下Scan等待Tool自行判定<br>
+            <img src="{{ url_for('static', filename='BuildVerifier4.jpg') }}" alt="BuildVerifier"><br>
+            掃描結束後按下右下角截圖,正常來說只有EOL日期會是紅字，若有遇到出現其他Block、Warning等狀況，請Comment在JIRA上<br>
+            <img src="{{ url_for('static', filename='BuildVerifier5.jpg') }}" alt="BuildVerifier"><br>
+            截圖會生成在資料夾的 VerifierSnapshot<br>
+            <img src="{{ url_for('static', filename='BuildVerifier6.jpg') }}" alt="BuildVerifier"><br>
+        </div>
 
-      </ul>
-      <p class="note" style="color:#f97316; margin-top: 15px;">
-        詳情請閱相關 Google 測試規範PDF 文件 : 。
-      </p>
-    </div>
-  </div>
+        <div class="note" style="margin-top: 15px; ">
+            <strong style="font-size:14px; color:#333;"> c. FIH_CheckList：</strong><br>
+            最新的 FIH_CheckList 報告都會放在：<code>/home/fih/CHECKLIST_LATEST/FIH_GMS_CheckList_XXXX.xlsx</code><br>
+            <img src="{{ url_for('static', filename='CheckList.jpg') }}" alt="CheckList報告"><br>
+            必填的欄位為：一般送件、BootupLogo；其餘依據 Jira 上 PM 提供之規格做 CheckList 確認。<br>
+            必要1. 一般送件<br>
+            <img src="{{ url_for('static', filename='FIH_CheckList1.jpg') }}" alt="一般送件"><br>
+            必要2. BootupLogo<br>
+            <img src="{{ url_for('static', filename='FIH_CheckList2.jpg') }}" alt="BootUpLogo"><br>
 
-  <!-- 5. RETRY -->
-  <div class="sop-section" id="retry">
-    <div class="sop-section-header">
-      <div class="sop-title">5. Retry</div>
-      <div class="sop-tag">詳細Retry資訊((超連結))</div>
-      <div class="sop-tag">Retry</div>
-    </div>
+            除必要的一般送件、BootupLogo，請依照JIRA上提供的資訊，額外付上需要的CheckList，以下圖為例:<br>
 
-    <p>Retry 策略分成「非 CTS 測項」與「CTS 測項」兩大類，外加「ToT + Waiver」特別情境。 </p>
-      <p>何謂TOT?</p>
-      <p>TOT 為 Google 本月更新的程式碼版本，並未經過廣泛測試或正式釋出的最新程式碼，又稱 Daily Build。</p>
-      <p>如下圖</p>
+            <div style="display: flex; gap: 10px; justify-content: center; align-items: flex-start; margin-top: 10px;">
+                <img src="{{ url_for('static', filename='JIRA.jpg') }}" alt="JIRA 客戶樣機資訊" style="max-width: 48%; height: auto;">
+                <img src="{{ url_for('static', filename='FIH_CheckList3.jpg') }}" alt="特殊送件-EDLA" style="max-width: 48%; height: auto;">
+            </div>
 
-    <details open>
-      <summary>非 CTS 測項 Retry 原則</summary>
-      <p style="margin-top:6px;">
-        除 CTS 外，若依照log顯示錯誤內容 Retry 多次都通過不了，<strong>建議使用 ToT（Daily Build）做 Retry</strong>
-        看看測項能否通過，或許是近期 Google 才有更新，正式 release 尚未包含修正。
-      </p>
-    </details>
+            <figcaption style="font-size: 13px; color: #4b5563; margin-top: 8px; text-align: center;">
+                左圖為 JIRA 客戶樣機 SKU 地區版本，以圖例 EDLA - 歐洲 ； 右圖為 特殊送件-EDLA。
+            </figcaption>
+        </div>
 
-    <details>
-      <summary>CTS 測項 Retry 原則</summary>
-      <p style="margin-top:6px;">
-        CTS 測項較為複雜，若 Fail 項目已經收斂到一個階段（只剩少數固定 Fail），請優先依照以下順序處理：
-      </p>
-      <ol>
-        <li>手動更新手機 <strong>Mainline</strong> 至較新的版本。
-            <p >
-        登入Google帳號 -> 點擊system Android版本 -> 點擊Google System Update -> 更新至最新版(通常最新版本為上個月) -> 移除Google帳號
+            <p style="margin-top: 15px;">
+                確認完畢後請附在 Jira 上，以圖例，假設專案樣機名稱叫 ABC，檔名就改為 <code>FIH_GMS_CheckList_2025111_ABC.xlsx</code>，並附在JIRA上。
             </p>
-        </li>
-        <li>打開 MCTS,更改 Tradefed (TF) 設定，將動態下載參數改為 True：<code>「 ENABLE_XTS_DYNAMIC_DOWNLOADER=True 」</code>。</li>
-        <li>上述都做過、怎麼 Retry 都無法 pass，<strong>才改用 ToT</strong>（Daily Build）測試。</li>
-      </ol>
-    </details>
 
-    <details>
-      <summary>ToT  &amp; Waiver 處理</summary>
-      <p style="margin-top:6px;">
-        若用 ToT 單跑測項:<br>
-          1.跑TOT通過時，記得額外附上單項測試報告。若跑TOT也顯示fail的狀況，代表一開始你Retry方法就使用錯誤，請回測試版本重新測試。<br>
-          2.<strong>發現結果都變成 0</strong>，代表 Google 已經將測項移除了，因此不論怎麼測試都不會通過。
-
-        發生上述情況時，請：
-      </p>
-      <ul>
-        <li>
-          使用公司帳號登入
-          <a href="{{ google_waiver_url if google_waiver_url is defined else 'https://foxconn.corp-partner.google.com' }}"
-             target="_blank">foxconn.corp-partner.google.com</a>檢查該測項是否已 waiver。
-        </li>
-        <li>若測項已經 waiver，<strong>提交時記得附上對應的 waiver ID 給 RD</strong>，讓 RD / 客戶後續有依據可查。</li>
-      </ul>
-
-      <p class="note">
-        ※ 內部另有整理一份「已確認可用的 Retry 手法與常見 Waiver ID」列表，可視需要補充到本頁或存放在 Waiver 工具中，以利後續查詢((超連結))。
-      </p>
-    </details>
-  </div>
-
-  <!-- 6. REPORT CHECK -->
-  <div class="sop-section" id="reportcheck">
-    <div class="sop-section-header">
-      <div class="sop-title">6. Report Check</div>
-      <div class="sop-tag">Report</div>
+        </div>
     </div>
 
-    <p>
-      完成所有測試後，請使用 <strong>ReportCheck Tool</strong>，做一次
-      <strong>自動 + 手動</strong> 的報告檢查，確認以下事項：
-    </p>
-    <ul>
-      <li>自動產生的報告內容是否完整、無明顯錯誤。</li>
-      <li>測試結果是否與實際 Run 的套件／版本一致。</li>
-      <li>工具會在本機 <strong>tmp</strong> 位置自動生成截圖與附件，請一併收集，提供給 RD 做 Review。</li>
-    </ul>
+    <div class="sop-section" id="flash">
+        <div class="sop-section-header">
+            <div class="sop-title">2. Flash Image 燒錄</div>
+            <div class="sop-tag">Flash</div>
+        </div>
 
-    <p >
-      最終確認過的報告檔、截圖、附件路徑，整理在 JIRA 上給RD review ，待 PM 提交給 Google 且 auto approved 後測試就完成了 。
-    </p>
-  </div>
+        <p><strong>版本差異說明：</strong></p>
+        <ul>
+            <li>Android 15 以上：額外需要多測 <strong>GTS-ROOT</strong>。</li>
+        </ul>
 
-  <div class="back-link">
-    <a href="/">← 回到首頁</a>
-  </div>
+        <p><strong>Flash Image 注意事項：</strong></p>
+        <ul>
+            <li>在 <strong>Bootloader Mode</strong> 下，如果裝置管理員或在 Tenimal 下 fastboot devices 偵測不到 device，請先檢查 driver。</li>
+            <li>
+                不同客戶需要的 driver / Tool 不盡相同，若客戶沒有另外提供，可在下方找到通用 Flash SOP 與相關工具：<br>
+                資料夾共同位置 :
+                <span style="font-size: 1.1em; color: #1e3a8a; text-decoration: underline;">
+                    <strong> \\10.57.45.213\3pl\Ready_to_GoogleDrive\Flash_sop</strong>
+                </span>
+            </li>
+        </ul>
+
+        <p class="note">
+            <a href="/flash_image" title="前往 Flash Image 頁面">
+                燒錄 Image 的詳細資訊請至 Flash 頁面
+            </a>
+        </p>
+    </div>
+
+    <div class="sop-section" id="ats">
+        <div class="sop-section-header">
+            <div class="sop-title">3. ATS / Terminal 架設環境</div>
+            <div class="sop-tag">ATS &amp; Terminal</div>
+        </div>
+
+        <p><strong>ATS / Terminal 操作原則（2 選 1）：</strong></p>
+        <ol style="color: #3b82f6;">
+            <li style="margin-top: 15px;">
+                <strong style="color: #3b82f6;">ATS 服務啟動與關閉（Web UI）</strong>
+                <div style="margin-top: 5px; padding-left: 10px; color: #4b5563;">
+                    <p>可在 Teminal 下指令控制 Android Test Station 服務的生命週期：</p>
+                    <code style="color: #1e3a8a;">mtt start</code>（開啟服務並透過網址存取）<br>
+                    <code style="color: #1e3a8a;">mtt stop</code>（關閉服務）<br>
+                    <p style=" margin-top: 5px;">＊ mtt start 跑完需要點擊 FireFox Web Browser 才會跑出 ATS 網頁介面。</p>
+                    <img src="{{ url_for('static', filename='ATS0.jpg') }}" alt="ATS" style="width: 50%; height: auto; display: block;"><br>
+                </div>
+            </li>
+
+            <li>
+                <strong style="color: #3b82f6;"> Terminal 執行 </strong>
+                <div style="margin-top: 5px; padding-left: 10px; color: #4b5563;">
+                    <p>若想在 Terminal環境執行 Tradefed，必須確保環境無殘留進程：</p>
+                    <div>
+                        step 1. 必須先關閉 ATS 服務 : <code style="color: #1e3a8a;">mtt stop</code>（關閉ATS）<br>
+                        step 2. 確保新開 terminal 及 adb 是一個正確的乾淨環境 : <code style="color: #1e3a8a;">adb kill-server</code><br>
+                        step 3. 從Bundle中下載客戶指定之測試版本到QA本機位置並解壓縮，如下圖: (以15_r6為例,測試版本下方會提到)<br>
+                        <img src="{{ url_for('static', filename='Terminal.jpg') }}" alt="Terminal" style="width: 50%; height: auto; display: block;"><br>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="sop-section" id="runxts">
+        <div class="sop-section-header">
+            <div class="sop-title">4. Run XTS</div>
+            <div class="sop-tag">Run</div>
+        </div>
+
+        <p><strong>測試版本：</strong></p>
+        <ul>
+            <li>原則上，XTS 測試應以客戶自測報告的版本為基準。若測試版本與客戶版本不同（例如客戶使用非標準的 Bundle 或未提供版本），則採用當前最新版本進行執行測試。</li>
+            <li>查閱完客戶自測報告後，請於 Jira 註明其測試版本，並依該版本執行自動化測試。</li>
+        </ul>
+
+        <p><strong>執行前檢查：</strong></p>
+        <ul>
+            <li>
+                使用 <strong>DUTShow Tool</strong>，檢查 fingerprint 及版本驗證資訊是否與預期一致，只要在 Terminal 上輸入
+                <code style="color: #1e3a8a;">DUTShow</code>，就會顯示相關資訊，如下圖:</span>
+                <img src="{{ url_for('static', filename='DUTShow.jpg') }}" alt="DUTShow">
+                    <figcaption style="font-size: 13px; color: #4b5563; margin-top: 8px; text-align: center;">
+                    能順便驗證每一台燒完的樣機，是否有誤燒錯Image或是燒錄失敗等問題
+                    </figcaption>
+            </li>
+        </ul>
+
+            <p><strong>不同 Stage 對應可執行的 XTS 組合：</strong></p>
+
+        <table class="table-small">
+            <thead>
+            <tr>
+                <th>Stage / Item</th>
+                <th>CTS</th>
+                <th>GSI</th>
+                <th>CTSV</th>
+                <th>GTS</th>
+                <th>GTSI</th>
+                <th>GTS Root</th>
+                <th>VTS</th>
+                <th>STS</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>IR</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+            </tr>
+            <tr>
+                <td>LR</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+            </tr>
+            <tr>
+                <td>MR</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+                <td class="check">✓</td>
+            </tr>
+            <tr>
+                <td>VBA</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="check">✓</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SMR</td>
+                <td class="check">✓</td>
+                <td></td>
+                <td></td>
+                <td class="check">✓</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="check">✓</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p><strong>各項測試指令提示：</strong></p>
+        多台樣機請加上<strong>  --shard-count 樣機數量 </strong>，以 3 台樣機為例 : run cts <strong>--shard-count 3</strong><br>
+        若使用單台電腦跑多種測試，請再額外加上<strong>  -s Serial Number </strong>，，以 2 台樣機為例 : run gts --shard-count 2 <strong>-s abc1 -s abc2</strong>
+        <ul>
+            <li>IR、LR ⇒ <strong>Full Test</strong>。
+                <div class="code-block" style="font-size: 1rem;">
+    CTS : <strong>run cts</strong>
+    GTS : <strong>run gts</strong>
+    STS : <strong>run sts-dynamic-full</strong>
+    GSI : <strong>run cts-on-gsi</strong>
+    VTS : <strong>run vts</strong>
+    若為 A15 以上要多測 GTS-Root : <strong>run gts-root</strong>
+                </div>
+            </li>
+            <li>MR ⇒ <strong>Full Test ( 區別在 STS ) </strong>。
+                <div class="code-block" style="font-size: 1rem;">
+    CTS : <strong>run cts</strong>
+    GTS : <strong>run gts</strong>
+    STS : <strong>run sts-dynamic-incremental</strong>
+    GSI : <strong>run cts-on-gsi</strong>
+    VTS : <strong>run vts</strong>
+    若為 A15 以上要多測 GTS-Root : <strong>run gts-root</strong>
+                </div>
+            </li>
+            <li>SMR ⇒ <strong>包含 CTS、GTS、STS</strong>。
+                <div class="code-block" style="font-size: 1rem;">
+    CTS : <strong>run -m CtsSecurityTestCases</strong>
+    GTS : <strong>run gts-smr</strong>
+    STS : <strong>run sts-dynamic-incremental</strong>
+                </div>
+            </li>
+            <li>VBA ⇒ 只有GTS
+                <div class="code-block" style="font-size: 1rem;">
+    GTS : <strong>run gts-variant</strong>
+                </div>
+            </li>
+        </ul>
+
+            <p>CTS 請跑 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試 </p>
+                <img src="{{ url_for('static', filename='ATS1.jpg') }}" alt="ATS">
+                <p>除CTS外測試,請跑當季度[FIH]的Tool，也一樣依據客戶指定版本按下Run Test做測試 </p>
+                <img src="{{ url_for('static', filename='ATS2.jpg') }}" alt="ATS2">
+
+        <p><strong>* * CTS 區別 * *</strong></p>
+            <div style="margin-top: 25px;">
+            <ul style="list-style-type: disc; color: #4b5563; padding-left: 20px;">
+                <li>
+                    <strong>CTS測試請依CTS -> MCTS -> TOT 的步驟做測試。</strong>
+                </li>
+
+                <li>
+                    在 <strong>Android 12</strong> 之後，CTS 新增了一個測試套件 MCTS（MainLine CTS），方便獨立驗證和確保可更新的系統組件的相容性。<br>
+                </li>
+
+                <li style="margin-top: 15px; margin-bottom: 20px;">
+                    <strong style="color: #3b82f6;">MainLine CTS 涵蓋範圍</strong>
+                    <table class="table table-bordered table-dark table-sm"
+                            style="max-width: 700px; margin-top: 8px; font-size: 0.9rem;">
+                        <thead>
+                        <tr style="background-color: #f3f4f6;">
+                            <th style="color:#1f2937;">Android / MCTS 預設</th>
+                            <th style="color:#1f2937;">ATS</th>
+                            <th style="color:#1f2937;">Terminal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>A12</td>
+                            <td class="text-center" style="color:#ef4444;">X</td>
+                            <td class="text-center" style="color:#ef4444;">X</td>
+                        </tr>
+                        <tr>
+                            <td>A13</td>
+                            <td class="text-center" style="color:#ef4444;">X</td>
+                            <td class="text-center" style="color:#ef4444;">X</td>
+                        </tr>
+                        <tr>
+                            <td>A14</td>
+                            <td class="text-center" style="color:#ef4444;">X</td>
+                            <td class="text-center" style="color:#10b981;">✓</td>
+                        </tr>
+                        <tr>
+                            <td>A15(以上)</td>
+                            <td class="text-center" style="color:#10b981;">✓</td>
+                            <td class="text-center" style="color:#10b981;">✓</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    只有版本為 <strong>Android 14</strong>，ATS 跟 Teminal 預測不相同
+                </li>
+
+                <p><strong>CTS測試也分 ATS 及 Teminal 兩種:</strong></p>
+
+                <div class="note" style="margin-top: 15px; ">
+                    <strong style="font-size:14px; color:#333;"> a. ATS<br>
+                        前面已提過，ATS 只需單純跑預設的 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試。
+                        <div>
+                        step 1. 已CTS 15_r6 為例，選擇完 Android15 點擊 Run Test 後，會看到以下畫面，確認完表格填寫內容即可按下 Next Step。<br>
+                            <img src="{{ url_for('static', filename='ATS_Run1.jpg') }}" alt="ATS_Run1"><br>
+                        step 2. 記得勾選執行測試項目之樣機，若忘記哪些是User Build的機器，可在 Ternimal 輸入DUTShow 做檢查。
+                            <img src="{{ url_for('static', filename='ATS_Run2.jpg') }}" alt="ATS_Run2"><br>
+                        step 3. 按下Next Step
+                            <img src="{{ url_for('static', filename='ATS_Run3.jpg') }}" alt="ATS_Run3"><br>
+                        step 4. 按下browse，並在 local 位置中尋找 CTS15_r6 測試包，除STS外其他項目(GTS、VTS、GSI)步驟都相同
+                            <img src="{{ url_for('static', filename='ATS_Run4.jpg') }}" alt="ATS_Run4"><br>
+                        step 4.1.STS 不同的地方在於版本會跟隨月份顯示R幾-月份，請先確認測試版本，以及STS測試只選擇 arm64.zip 。
+                            <img src="{{ url_for('static', filename='ATS_Run4_1.jpg') }}" alt="ATS_Run4_1"><br>
+                        step 5. 再次確認輸入的內容是否正確，若沒問題就可點擊 Start Test Run 開始測試。
+                            <img src="{{ url_for('static', filename='ATS_Run5.jpg') }}" alt="ATS_Run5"><br>
+                    </div>
+                </div>
+
+                <div class="note" style="margin-top: 15px; ">
+                    <strong style="font-size:14px; color:#333;"> b. Terminal<br>
+                        由於CTS測試須從 CTS -> MCTS -> TOT 的步驟做測試，使用 Termianl 執行時，需先將<strong>禁用動態下載將預設的 True 改為 False</strong>，避免首次測試與 MCTS 動態下載功能衝突。<br>
+                    <div>
+                        step 1. 點進CTS中tools的資料夾，並找到cts-tradefed<br>
+                            <img src="{{ url_for('static', filename='TF.jpg') }}" alt="TF"><br>
+                        step 2. 打開tradefed，並將指令「 ENABLE_XTS_DYNAMIC_DOWNLOADER 」由 True 改為 False 並存檔 (A14以下預設都是False，但還請再次確認):
+                            <img src="{{ url_for('static', filename='Dyn.jpg') }}" alt="Dyn"><br>
+                        step 3.在 ternimal 執行 cts-tradefed ，按下 Enter，建立Google tradefed 的環境
+                            <img src="{{ url_for('static', filename='TF1.jpg') }}" alt="TF1"><br>
+                        step 4.輸入執行指令，以圖為例輸入<strong>run cts --shard-count 3</strong>，若DUT只有一台，則只需輸入<strong>run cts </strong>，按下Enter即開始測試。
+                            <img src="{{ url_for('static', filename='TF2.jpg') }}" alt="TF2"><br>
+                    </div>
+                </div>
+        </div>
+
+        <p >
+            詳細MCTS內容請閱相關 Google 測試規範PDF 文件：
+            <a href="{{ url_for('static', filename='Mainline CTS (MCTS).pdf') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
+                Mainline CTS (MCTS).pdf
+            </a>
+        </p>
+
+    <div class="sop-section" id="retry">
+        <div class="sop-section-header">
+            <div class="sop-title">5. Fail 測項 Retry & Waiver ID 提交</div>
+            <div class="sop-tag" style="background: #e9d5ff; color: #9333ea;">
+                <a href="{{ url_for('retry') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
+                    詳細 Retry方法
+                </a>
+            </div>
+        </div>
+
+          <p>Retry 也分為 ATS 及 Teminal 兩種 </p><br>
+        <p><strong>Ternimal 測試指令提示：</strong></p>
+                <div class="code-block" style="font-size: 1rem;">
+    lr : 可看到歷史報告紀錄、Serial ID。<br>
+    Retry : <strong>run retry --retry </strong>Serial ID<br>
+    單台樣機 :-s Serial Number<br>
+    多台樣機 : --shard-count 樣機數量 -s 樣機1 -s 樣機2<br>
+    單台樣機Retry :  run retry --retry 0 <strong>-s abc1</strong><br>
+    多台樣機Retry : run retry --retry 0 <strong>--shard-count 2</strong> -s abc1 -s abc2<br>
+                </div>
+
+
+
+
+        <div class="note" style="margin-top: 15px; ">
+                    <strong style="font-size:14px; color:#333;"> a. ATS<br>
+                        點選出現 Fail 結果的項目中，並按下 Rerun 按鈕，網頁會記錄先前設定的資料再執行Retry。<br>
+                        <img src="{{ url_for('static', filename='Retry_ATS.jpg') }}" alt="Retry_ATS"><br>
+
+        </div>
+        <div class="note" style="margin-top: 15px; ">
+                    <strong style="font-size:14px; color:#333;"> b. Terminal<br>
+                        Teminal 跑完測試後會自動生成結果，以圖為例就有30項TestCases Fail以及有Modules未完成。可以去資料夾中檢查
+                        <img src="{{ url_for('static', filename='Retry_TF.jpg') }}" alt="Retry_TF"><br>
+                    <div>
+                        step 1. 點進results資料夾，所有錯誤的TestCases都被整理到test_result_failures_suite.Html上<br>
+                            <img src="{{ url_for('static', filename='Retry_TF3.jpg') }}" alt="Retry_TF3"><br>
+                        step 2. Fail TestCases 會有Details給你看錯誤項目，可以根據內容進行Retry<br>
+                            <img src="{{ url_for('static', filename='Retry_TF4.jpg') }}" alt="Retry_TF4"><br>
+                        step 3. 確認完錯誤內容後，在terminal上輸入<strong> lr </strong>可以確認歷史的List Report，並且也會顯示本次測試的 Serial Id。<br>
+                            <img src="{{ url_for('static', filename='Retry_TF2.jpg') }}" alt="Retry_TF2"><br>
+                        step 4. 可再輸入指令<strong>run retry --retry -s Serial ID</strong>，根據那次的測試結果進行Retry。<br>
+                            <img src="{{ url_for('static', filename='Retry_TF5.jpg') }}" alt="Retry_TF5"><br>
+                    </div>
+
+        </div>
+
+        <p>Retry 策略分成「非 CTS 測項」與「CTS 測項」兩大類，外加「ToT + Waiver」特別情境。 </p>
+        <p><strong>何謂TOT?</strong></p>
+            <p>TOT 為 Google 本月更新的程式碼版本，並未經過廣泛測試或正式釋出的最新程式碼，又稱 Daily Build，資料位於本機XTS當中，請一樣將測試包下載到自己的local位置。</p>
+            <img src="{{ url_for('static', filename='TOT.jpg') }}" alt="TOT"><br>
+
+        <details open>
+            <summary>非 CTS 測項 Retry 原則</summary>
+            <p style="margin-top:6px; color: #4b5563;">
+                除 CTS 外，若根據 Log 顯示之錯誤內容 Retry 多次都通過不了，<strong>建議使用 ToT（Daily Build）做 Retry</strong>
+                看看測項能否通過，或許是近期 Google 才有更新，正式 release 尚未包含修正。
+            </p>
+        </details>
+
+        <details>
+            <summary>CTS 測項 Retry 原則</summary>
+            <p style="margin-top:6px; color: #4b5563;">
+                CTS 測項較為複雜，若 Fail 項目已經收斂到一個階段（只剩少數固定 Fail），請優先依照以下順序處理：
+            </p>
+            <ol style="color: #4b5563;">
+                <li>手動更新手機 <strong>Mainline</strong> 至較新的版本。
+                    <p >
+                登入Google帳號 -> 點擊system Android版本 -> 點擊Google System Update -> 更新至最新版(通常最新版本為上個月) -> 移除Google帳號
+                    </p>
+                </li>
+                <li>打開 MCTS,更改 Tradefed (TF) 設定，將動態下載參數改為 True：<code style="color: #c2410c;">「 ENABLE_XTS_DYNAMIC_DOWNLOADER=True 」</code>。</li>
+                <li>上述都做過、怎麼 Retry 都無法 pass，<strong>才改用 ToT</strong>（Daily Build）測試。</li>
+            </ol>
+        </details>
+
+        <details>
+            <summary>ToT  &amp; Waiver 處理</summary>
+            <p style="margin-top:6px; color: #4b5563;">
+                若用 ToT 單跑測項:<br>
+                1.跑TOT通過時，記得額外附上本次單項測試報告。<br>
+                2.若跑TOT也顯示fail的狀況，代表一開始你Retry方法就使用錯誤，請回測試版本根據Module的錯誤內容再次測試。<br>
+                3.<strong>發現結果都變成 0</strong>，代表 Google 已經將測項移除了，因此不論怎麼測試都不會通過。
+
+                發生上述情況時，請：
+            </p>
+            <ul style="color: #4b5563;">
+                <li>
+                    使用公司帳號登入
+                    <a href="{{ google_waiver_url if google_waiver_url is defined else 'https://foxconn.corp-partner.google.com' }}"
+                        target="_blank">foxconn.corp-partner.google.com</a>貼上 TestCases 項目查看該測項是否已申請過 waiver id。
+                </li>
+                <li>若測項Google內部已經 waive，<strong>提交時記得附上對應的 waiver ID 給 RD</strong>，提供給 RD 確認。</li>
+            </ul>
+
+            <p>※ 已整理一份「<a href="{{ url_for('waiver') }}" target="_blank" style="color: #ff5757; font-weight: 600;">Waiver ID</a>」列表，後續有遇到額外Waiver也請幫忙補充<br></p>
+
+        </details>
+    </div>
+
+    <div class="sop-section" id="reportcheck">
+        <div class="sop-section-header">
+            <div class="sop-title">6. Report Check Tool 確認報告</div>
+            <div class="sop-tag">Report</div>
+        </div>
+
+        <p>
+            完成所有測試後，請使用 <strong>ReportCheck Tool</strong>，做一次完整的報告檢查，確認以下事項：
+        </p>
+        <ul>
+            <li>產生的報告結果是否有無不為Waiver的錯誤。</li>
+            <li>報告上顯示 Android 版本是否與實際 Run 的套件／版本一致。</li>
+            <li>工具會在本機 <strong>tmp</strong> 位置自動生成截圖與附件，如下圖，請整理完提供給 RD 做 Review。</li>
+        </ul>
+        <img src="{{ url_for('static', filename='ReportCheck.jpg') }}" alt="ReportCheck"><br>
+    </div>
+
+    <div class="sop-section" id="submit">
+        <div class="sop-section-header">
+            <div class="sop-title">7. FIH報告提交</div>
+            <div class="sop-tag">Approved</div>
+        </div>
+
+        <p>
+           請把截圖、附件路徑，整理在 JIRA；最終確認過的報告檔有固定繳交格式請依照下圖規定附在
+            <span style="font-size: 1.1em; color: #1e3a8a; text-decoration: underline;">
+                    <strong> \\10.57.45.213\3pl\該專案資料夾</strong>
+                </span>
+        </p>
+        <img src="{{ url_for('static', filename='FIH_Report.jpg') }}" alt="FIH_Report"><br>
+        <p></p>
+
+
+        <p >
+            待 RD review 完， PM 提交給 Google 且 auto approved 後測試就完成了 。
+        </p>
+    </div>
+
+    <div class="back-link">
+        <a href="/">← 回到首頁</a>
+    </div>
 
 </div>
 </body>

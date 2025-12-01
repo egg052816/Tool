@@ -347,6 +347,9 @@ TEMPLATE = r"""
                 <button class="beauty-btn" onclick="window.location.href='/waiver'">
                      Waiver 管理頁面
                 </button>
+                <button class="beauty-btn" onclick="window.location.href='/save'">
+                     save
+                </button>
             </div>
         </div>
     </div>
@@ -395,6 +398,11 @@ def waiver():
 @app.route("/ctsv_gtsi")
 def ctsv_gtsi():
     return render_template("ctsv_gtsi.html")
+
+@app.route("/save")
+def save():
+    return render_template("save.html")
+
 
 
 # ----------------------------------------
