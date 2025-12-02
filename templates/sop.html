@@ -493,7 +493,7 @@
             依據本次測試在 Tool 上選擇相對應的 type,下圖以SMR為例。<br>
             <img src="{{ url_for('static', filename='BuildVerifier2.jpg') }}" alt="BuildVerifier"><br>
             Target Build EDI：放「本次測試」由 AdbDeviceInfo 產生的 zip 檔。<br>
-            Base Build EDI：放「上次同 Android 版本的 MR」zip 檔，如附圖：<br>
+            Base Build EDI：放「上次同 Android 版本的 MR」zip 檔(如果沒有 MR 才找 LR 或 IR)，如附圖：<br>
             <strong style="color:red;">** 若今天測試type為IR，則不需提供 Base Build EDI **</strong><br>
             <img src="{{ url_for('static', filename='BuildVerifier3.jpg') }}" alt="BuildVerifier"><br>
             把zip檔都放好後，按下Scan等待Tool自行判定<br>
@@ -788,9 +788,10 @@
                 </li>
 
                 <p><strong>CTS測試也分 ATS 及 Teminal 兩種:</strong></p>
+            </ul>
 
                 <div class="note" style="margin-top: 15px; ">
-                    <strong style="font-size:14px; color:#333;"> a. ATS<br>
+                    <strong style="font-size:14px; color:#333;"> a. ATS<br></strong>
                         前面已提過，ATS 只需單純跑預設的 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試。
                         <div>
                         step 1. 已CTS 15_r6 為例，選擇完 Android15 點擊 Run Test 後，會看到以下畫面，確認完表格填寫內容即可按下 Next Step。<br>
@@ -809,7 +810,7 @@
                 </div>
 
                 <div class="note" style="margin-top: 15px; ">
-                    <strong style="font-size:14px; color:#333;"> b. Terminal<br>
+                    <strong style="font-size:14px; color:#333;"> b. Terminal<br></strong>
                         由於CTS測試須從 CTS -> MCTS -> TOT 的步驟做測試，使用 Termianl 執行時，需先將<strong>禁用動態下載將預設的 True 改為 False</strong>，避免首次測試與 MCTS 動態下載功能衝突。<br>
                     <div>
                         step 1. 點進CTS中tools的資料夾，並找到cts-tradefed<br>
@@ -856,22 +857,22 @@
 
 
         <div class="note" style="margin-top: 15px; ">
-                    <strong style="font-size:14px; color:#333;"> a. ATS<br>
+            <strong style="font-size:14px; color:#333;"> a. ATS<br></strong>
                         點選出現 Fail 結果的項目中，並按下 Rerun 按鈕，網頁會記錄先前設定的資料再執行Retry。<br>
                         <img src="{{ url_for('static', filename='Retry_ATS.jpg') }}" alt="Retry_ATS"><br>
 
         </div>
-        <div class="note" style="margin-top: 15px; ">
-                    <strong style="font-size:14px; color:#333;"> b. Terminal<br>
+            <div class="note" style="margin-top: 15px; ">
+            <strong style="font-size:14px; color:#333;"> b. Terminal<br></strong>
                         Teminal 跑完測試後會自動生成結果，以圖為例就有30項TestCases Fail以及有Modules未完成。可以去資料夾中檢查
-                        <img src="{{ url_for('static', filename='Retry_TF.jpg') }}" alt="Retry_TF"><br>
+                       <img src="{{ url_for('static', filename='Retry_TF.jpg') }}" style="width: 30%; height: auto;" alt="Retry_TF"><br>
                     <div>
                         step 1. 點進results資料夾，所有錯誤的TestCases都被整理到test_result_failures_suite.Html上<br>
                             <img src="{{ url_for('static', filename='Retry_TF3.jpg') }}" alt="Retry_TF3"><br>
                         step 2. Fail TestCases 會有Details給你看錯誤項目，可以根據內容進行Retry<br>
-                            <img src="{{ url_for('static', filename='Retry_TF4.jpg') }}" alt="Retry_TF4"><br>
+                            <img src="{{ url_for('static', filename='Retry_TF4.jpg') }}" style="width: 30%; height: auto;" alt="Retry_TF4"><br>
                         step 3. 確認完錯誤內容後，在terminal上輸入<strong> lr </strong>可以確認歷史的List Report，並且也會顯示本次測試的 Serial Id。<br>
-                            <img src="{{ url_for('static', filename='Retry_TF2.jpg') }}" alt="Retry_TF2"><br>
+                            <img src="{{ url_for('static', filename='Retry_TF2.jpg') }}" style="width: 50%; height: auto;" alt="Retry_TF2"><br>
                         step 4. 可再輸入指令<strong>run retry --retry -s Serial ID</strong>，根據那次的測試結果進行Retry。<br>
                             <img src="{{ url_for('static', filename='Retry_TF5.jpg') }}" alt="Retry_TF5"><br>
                     </div>
@@ -899,7 +900,18 @@
             <ol style="color: #4b5563;">
                 <li>手動更新手機 <strong>Mainline</strong> 至較新的版本。
                     <p >
-                登入Google帳號 -> 點擊system Android版本 -> 點擊Google System Update -> 更新至最新版(通常最新版本為上個月) -> 移除Google帳號
+                         Step1.  在設定中點選Google並登入Google帳號 <br>
+                        <img src="{{ url_for('static', filename='MainLine1.png') }}" style="width: 30%; height: auto;" alt="MainLine1"><br>
+                         Step2.  在設定中點進About tablet 或 About phone <br>
+                        <img src="{{ url_for('static', filename='MainLine2.png') }}" style="width: 30%; height: auto;" alt="MainLine2"><br>
+                         Step3.  點選Android version <br>
+                        <img src="{{ url_for('static', filename='MainLine3.png') }}" style="width: 30%; height: auto;" alt="MainLine3"><br>
+                         Step4.  點選Google Play system update(若點擊無反應，Reset 你的DUT) <br>
+                        <img src="{{ url_for('static', filename='MainLine4.png') }}" style="width: 30%; height: auto;" alt="MainLine4"><br>
+                         Step5.  按下 Download & install 並根據指示重啟你的樣機 <br>
+                        <img src="{{ url_for('static', filename='MainLine5.png') }}" style="width: 30%; height: auto;" alt="MainLine5"><br>
+                         Step6.  重新開機後再次點進 Google Play system update 畫面，確認Download & install 按下去之後無法再次下載 <br>
+                         Step7.  回到Google介面登出你的Google 帳號 <br>
                     </p>
                 </li>
                 <li>打開 MCTS,更改 Tradefed (TF) 設定，將動態下載參數改為 True：<code style="color: #c2410c;">「 ENABLE_XTS_DYNAMIC_DOWNLOADER=True 」</code>。</li>

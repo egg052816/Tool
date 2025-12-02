@@ -2,405 +2,891 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>XTS Retry List</title>
+  <title>XTS Retry List </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+  >
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
   <style>
-    /* Retry Tips 區塊樣式 */
-    .retry-section {
-      margin-top: 24px;
-      padding: 18px 20px;
-      border-radius: 10px;
-      background: #0f172a;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-    }
-
-    .retry-section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .retry-section-title h3 {
+    /* ... (其他通用樣式保持不變) ... */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
+      background: linear-gradient(135deg, #e5f0ff 0%, #f9fafb 40%, #f5f5f5 100%);
+      color: #333;
+    }
+
+    .page-wrap {
+      width: 96%;
+      max-width: 1600px;
+      margin: 20px auto 40px;
+    }
+
+    .tab-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 5px;
+    }
+
+    .tab-subtitle {
       font-size: 1rem;
-      color: #e5e7eb;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .suite-block {
+      background: #fff;
+      padding: 15px 15px 12px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+      overflow-x: auto;
+    }
+
+    /* 🌟 拖曳模式樣式 🌟 */
+    .drag-mode .suite-block {
+        cursor: grab !important; /* 強制使用抓取鼠標 */
+        border: 1px dashed #3b82f6;
+        transition: all 0.15s ease;
+    }
+
+    .drag-mode .suite-block:active {
+        cursor: grabbing !important;
+    }
+
+    /* 拖曳時的陰影效果 */
+    .sortable-ghost {
+        opacity: 0.4;
+        background: #f3f4f6;
+        border: 1px dashed #1e3a8a;
+    }
+
+
+    .suite-block h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #1e3a8a;
     }
 
     .retry-section-tag {
-      font-size: 0.8rem;
-      color: #22c1c3;
-      background: rgba(34,193,195,0.12);
-      padding: 2px 10px;
-      border-radius: 999px;
+        font-size: 0.8rem;
+        color: #22c1c3;
+        background: #e0f2f1;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-weight: 600;
+        display: inline-block;
+        margin-left: 10px;
     }
 
-    .retry-table {
+    /* ==================================================== */
+    /* 表格樣式 - 最終修正版：恢復高度，並確保功能運作 */
+    /* ==================================================== */
+    table {
       width: 100%;
+      min-width: 1000px;
+      table-layout: fixed;
       border-collapse: collapse;
       margin-top: 8px;
-      font-size: 17px;
-    }
-
-    .retry-table th,
-    .retry-table td {
-      border: 1px solid rgba(255,255,255,0.15);
-      padding: 10px 8px;
-      vertical-align: top;
-    }
-
-    .retry-table th {
-      background: #1e293b;
-      color: #e2e8f0;
-      text-align: left;
-    }
-
-    .retry-table td {
-      color: #e5e7eb;
-    }
-
-    /* 新增行用的 input 樣式 */
-    .retry-table input[type="text"] {
-      width: 100%;
-      box-sizing: border-box;
-      background: transparent;
-      border: 1px solid #1f2937;
-      border-radius: 4px;
-      color: #e5e7eb;
       font-size: 13px;
-      padding: 4px 6px;
     }
 
-    .retry-add-row {
-      margin-top: 8px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      vertical-align: top;
+      color: #333;
+      word-wrap: break-word;
     }
 
-    /* 按鈕：低調版，跟整體風格比較不突兀 */
-    .retry-btn {
-      padding: 4px 12px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: rgba(15,23,42,0.9);
-      color: #e5e7eb;
+    th {
+      background: #f3f4f6;
+      text-align: center;
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    /* 🌟 客製化欄寬設定 (維持上一次的比例) 🌟 */
+    .retry-table[data-type$="IC"] th:nth-child(1), .retry-table[data-type$="IC"] td:nth-child(1),
+    .retry-table[data-type="GTS"] th:nth-child(1), .retry-table[data-type="GTS"] td:nth-child(1),
+    .retry-table[data-type="CTS"] th:nth-child(1), .retry-table[data-type="CTS"] td:nth-child(1),
+    .retry-table[data-type$="TOT"] th:nth-child(1), .retry-table[data-type$="TOT"] td:nth-child(1) { width: 38%; }
+
+    .retry-table[data-type="SPECIAL"] th:nth-child(1), .retry-table[data-type="SPECIAL"] td:nth-child(1) { width: 45%; }
+    .retry-table[data-type="SPECIAL"] th:nth-child(2), .retry-table[data-type="SPECIAL"] td:nth-child(2) { width: 47%; }
+
+    .retry-table:not([data-type="SPECIAL"]) th:nth-child(2), .retry-table:not([data-type="SPECIAL"]) td:nth-child(2) { width: 25%; text-align: left; }
+    .retry-table:not([data-type="SPECIAL"]) th:nth-child(3), .retry-table:not([data-type="SPECIAL"]) td:nth-child(3) { width: 29%; text-align: left; }
+
+    th:nth-child(4), td:nth-child(4) { width: 8%; text-align: center; }
+
+    /* 操作按鈕容器 - 保持居中 */
+    .action-buttons-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        height: 100%;
+        padding: 0;
+    }
+
+    /* 操作按鈕樣式 */
+    .action-btn {
+      padding: 5px 8px;
       font-size: 12px;
+      border-radius: 4px;
       cursor: pointer;
-      display: inline-flex;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 4px;
-      transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+      line-height: 1;
+      text-decoration: none;
+      transition: filter 0.1s;
     }
 
-    .retry-btn:hover {
-      background: #111827;
-      border-color: #22c1c3;
-      transform: translateY(-1px);
+    .action-btn.edit-btn {
+      background-color: #3b82f6;
+      color: white;
+      border: 1px solid #2563eb;
+    }
+    .action-btn.delete-btn {
+      background-color: #ef4444;
+      color: white;
+      border: 1px solid #dc2626;
     }
 
-    .retry-btn:active {
-      transform: translateY(0);
+    .action-btn:hover { filter: brightness(0.9); }
+
+    /* 列表區塊標題 */
+    .retry-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
     }
 
-    /* 小提示文字 */
-    .retry-hint {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-top: 6px;
+    /* 回到首頁連結 */
+    .back-link {
+        padding: 20px 0 0;
+        margin-top: 20px;
+        font-size: 16px;
+        border-top: 1px solid #e5e7eb;
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
     }
+    .back-link a {
+        color: #3b82f6;
+        text-decoration: none;
+    }
+
+    /* 🌟 隱藏特殊 Modal 欄位 🌟 */
+    .modal-hidden-field {
+        display: none !important;
+    }
+
   </style>
 </head>
 
 <body>
-  <div class="tab-pane fade" id="retry" role="tabpanel" aria-labelledby="retry-tab">
-    <div class="tab-title"> Retry 方法 </div>
-    <div class="tab-subtitle">
-      有遇到相同 fail 可以先對一下，有遇到新的手法也希望能新增。
-    </div>
+<div class="page-wrap">
 
-    <!-- Basic 區 -->
-    <div class="retry-section">
-      <div class="retry-section-title">
-        <h3>Basic 測項</h3>
-        <span class="retry-section-tag">SIM / Host / Permission 類</span>
-      </div>
-
-      <table class="retry-table" id="basic-table">
-        <thead>
-          <tr>
-            <th style="width: 34%;">模組 / 測項</th>
-            <th style="width: 33%;">關鍵條件 / 環境</th>
-            <th>備註</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Radio</td>
-            <td>實體 SIM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Adoptable Host</td>
-            <td>SD 卡</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>CarrierApiTestCases</td>
-            <td>Test SIM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Libcore</td>
-            <td>IPv4 測項</td>
-            <td>建議連 FIH-Free / 內網等穩定 IPv4 網路</td>
-          </tr>
-          <tr>
-            <td>CtsPermission</td>
-            <td>實體 SIM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>VCN</td>
-            <td>實體 SIM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>MbaPrivilegedPermission</td>
-            <td>Factory Reset</td>
-            <td>重置後再跑一次測項</td>
-          </tr>
-          <tr>
-            <td>Dialeraudio</td>
-            <td>實體 SIM</td>
-            <td>記得開 LTE / 4G</td>
-          </tr>
-          <tr>
-            <td>SimAppDialog</td>
-            <td>Test SIM</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="retry-add-row">
-        <button class="retry-btn" type="button" onclick="addRow('basic-table')">＋ 新增 Basic 條目</button>
-        <span class="retry-hint">之後可以改成跳出表單，填模組 / 條件 / 備註後加入上表。</span>
-      </div>
-
-    </div>
-
-    <!-- GTS 區 -->
-    <div class="retry-section">
-      <div class="retry-section-title">
-        <h3>GTS 測項</h3>
-        <span class="retry-section-tag">GTS</span>
-      </div>
-
-      <table class="retry-table" id="gts-table">
-        <thead>
-          <tr>
-            <th style="width: 34%;">模組 / 測項</th>
-            <th style="width: 33%;">關鍵條件 / 環境</th>
-            <th>備註 / Retry 技巧</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>GtsGmscoreHostTestCases</td>
-            <td>audioservice / Camera 相關</td>
-            <td>
-              測 audioservice 時外接麥克風。若為 Camera 相關測項，記得外接 Camera。
-            </td>
-          </tr>
-          <tr>
-            <td>GtsPermissionTestCases</td>
-            <td>SecurityPath ＋ CtsScopedStorageHostTest</td>
-            <td>
-              兩者會互相干擾，遇到兩邊都 fail 時，建議使用：<br>
-              <code>--exclude-filter CtsScopedStorageHostTest</code> 重跑一次 GtsPermission。
-            </td>
-          </tr>
-          <tr>
-            <td>GtsBackupTestCases</td>
-            <td>Factory Reset 後，在 SetupWizard 不連網</td>
-            <td>
-              Factory Reset 後在開機設定精靈中不要連網，直接進系統，<br>
-              再 Retry 一次，不讓 Device 自動下載套件，通常就會 PASS。
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="retry-add-row">
-        <button class="retry-btn" type="button" onclick="addRow('gts-table')">＋ 新增 GTS 條目</button>
-      </div>
-
-    </div>
-
-    <!-- CTS 區 -->
-    <div class="retry-section">
-      <div class="retry-section-title">
-        <h3>CTS 測項</h3>
-        <span class="retry-section-tag">CTS</span>
-      </div>
-
-      <table class="retry-table" id="cts-table">
-        <thead>
-          <tr>
-            <th style="width: 40%;">模組 / 測項</th>
-            <th style="width: 30%;">關鍵條件 / 環境</th>
-            <th>備註 / Retry 方法</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Test SIM / Secure Element -->
-          <tr>
-            <td>signed-CtsSecureElementAccessControlTestCases1~3<br>signed-CtsOmapiTestCases</td>
-            <td>Test SIM（RD 有貼 Google 標籤的那兩張）</td>
-            <td>所有 Secure Element / OMAPI 系列建議統一用 Test SIM 來測。</td>
-          </tr>
-
-          <!-- Net -->
-          <tr>
-            <td>CtsNetTestCases</td>
-            <td>DNS 相關測項</td>
-            <td>只要跟 DNS 相關，讓 Device 連自己手機的 Hotspot 通常就會 PASS。</td>
-          </tr>
-          <tr>
-            <td>CtsNetworkStackHostTestCases</td>
-            <td>連上 FIH-Free，Network usage 設為 metered</td>
-            <td>測前確認目前連線為 FIH-Free，並將該網路標記為「計量（metered）」。</td>
-          </tr>
-
-          <!-- Autofill -->
-          <tr>
-            <td>CtsAutoFillServiceTestCases<br>testDatasetAuthResponseWhileAutofilledAppIsLifecycled</td>
-            <td>Device owner 設定</td>
-            <td>需要把裝置中的 owner 刪乾淨，只保留一個主要 owner 再跑測項。</td>
-          </tr>
-
-          <!-- TOT 特殊 Case -->
-          <tr>
-            <td>1. arm64-v8a CtsWindowManagerDeviceTestCases android.server.wm.PinnedStackTests - testTranslucentActivityOnTopOfPinnedTask<br>
-                2. arm64-v8a CtsWindowManagerDeviceTestCases android.server.wm.PinnedStackTests - testAutoEnterPictureInPictureOverPip<br>
-            </td>
-            <td>使用 TOT build</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="retry-add-row">
-        <button class="retry-btn" type="button" onclick="addRow('cts-table')">＋ 新增 CTS 條目</button>
-      </div>
-
-    </div>
-
-    <!-- Android 10 CTS 區 -->
-    <div class="retry-section">
-      <div class="retry-section-title">
-        <h3>Android 10 CTS（憑證 / Security 系列）</h3>
-        <span class="retry-section-tag">CTS / Android 10</span>
-      </div>
-
-      <table class="retry-table" id="android10-table">
-        <thead>
-          <tr>
-            <th style="width: 50%;">模組 / 測項</th>
-            <th style="width: 25%;">關鍵條件 / 環境</th>
-            <th>備註</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              1. CtsLibcoreOjTestCases / test.java.security.cert.AKISerialNumberTest#main<br>
-              2. CtsLibcoreTestCases / com.android.org.conscrypt.CertBlacklistTest#testBlacklistedIntermediateFallback<br>
-              3. CtsLibcoreTestCases / libcore.java.security.cert.X509CertificateTest#test_Provider<br>
-              4. arm64-v8a CtsSecurityTestCases / android.security.cts.CertBlacklistTest#testBlacklistedIntermediateFallback
-            </td>
-            <td>憑證系列（用 TOT）</td>
-            <td>憑證相關 Security 測項建議統一使用 TOT build，避免客製憑證 / Mainline 版本影響。</td>
-          </tr>
-          <tr>
-            <td>CtsOsHostTestCases</td>
-            <td>Factory Reset 後不要連 Wi-Fi</td>
-            <td>重置後直接進系統，不連 Wi-Fi，再 Retry 測項。</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="retry-add-row">
-        <button class="retry-btn" type="button" onclick="addRow('android10-table')">＋ 新增 Android 10 條目</button>
-      </div>
-
-    </div>
-
-    <!-- 特殊情況區（Getac 等） -->
-    <div class="retry-section">
-      <div class="retry-section-title">
-        <h3>特殊情況 / 特定機種（Getac 等）</h3>
-        <span class="retry-section-tag">Special Cases</span>
-      </div>
-
-      <div style="color:#e5e7eb; font-size:16px; line-height:1.7;">
-            1. <strong>Getac 系列需開啟 Perform Setting</strong>：否則部分 Camera 測項會無法通過。<br>
-            2. <strong>Getac 第一次測試需插 Docker</strong>：首次測試需要透過 Docker，否則可能發生 Port 掉線問題。<br>
-            3. <strong>PhotoPicker 測項需登入 Google 帳號並升級 Mainline</strong>：更新完成後再進行測試。<br>
-            4. <strong>Battery 測項需拔電池並插 Docker</strong>：符合 Getac 需求的測試流程。<br>
-            5. <strong>Getac GSI GPS 測項可能需使用貼有 VTS 貼紙的 Device</strong>：部分板子可能 GPS 不穩，可更換另一台測試以提高 PASS 率。
-          </div>
-
-          <div class="retry-add-row" style="margin-top:10px;">
-            <button class="retry-btn" type="button">＋ 新增 Getac 條目</button>
-          </div>
-
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="header-text">
+        <div class="tab-title"> XTS Retry List  </div>
+        <div class="tab-subtitle">
+          有遇到相同 fail 可以先對一下，有遇到新的手法也希望能新增。
+            <p class="note-text" style="font-size: 14px; color: #666; margin-top: 4px;">
+                點擊列表中的 <span class="badge bg-primary"><i class="fas fa-pencil-alt"></i></span> 或 <span class="badge bg-danger"><i class="fas fa-times"></i></span> 按鈕來修改/刪除既有的紀錄。
+            </p>
         </div>
+      </div>
 
-
-      <div class="retry-add-row">
-        <button class="retry-btn" type="button" onclick="addRow('special-table')">＋ 新增特殊情況</button>
+      <div class="btn-group">
+          <button class="btn btn-secondary me-2" id="toggleDragBtn" onclick="toggleDragMode(event)">
+              <i class="fas fa-hand-rock me-1"></i>
+          </button>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newSuiteModal">
+              <i class="fas fa-plus me-1"></i> 新增區塊
+          </button>
       </div>
 
     </div>
 
-    <!-- 其他提醒 -->
-    <div class="retry-section">
-      <div class="retry-section-title">
-        <h3>其他通用提醒</h3>
-        <span class="retry-section-tag">ATS / General</span>
-      </div>
-
-      <div style="color:#e5e7eb; font-size:16px;">
-        ※ ATS 測試完後若遇到 DeviceInfo 的 json 檔有缺少欄位：<br>
-        1. 把 full test 的 zip 解壓縮。<br>
-        2. 用 terminal 建立 subplan，再 retry。<br>
-        3. 記得把 MCTS 關掉（Dynamic）再重跑。<br>
-      </div>
-
-      <div class="retry-add-row">
-        <button class="retry-btn" type="button">＋ 新增 ATS 提醒</button>
-      </div>
-
+    <div id="suites-container">
+        <p class="text-center text-muted" id="loading-suites">正在載入區塊...</p>
     </div>
-  </div>
 
-  <script>
-    function addRow(tableId) {
-      const table = document.getElementById(tableId);
-      if (!table) return;
-      const tbody = table.getElementsByTagName("tbody")[0];
-      const colCount = table.querySelectorAll("thead tr th").length;
-      const row = document.createElement("tr");
-      for (let i = 0; i < colCount; i++) {
-        const td = document.createElement("td");
-        const input = document.createElement("input");
-        input.type = "text";
-        td.appendChild(input);
-        row.appendChild(td);
-      }
-      tbody.appendChild(row);
+
+</div>
+
+<div class="modal fade" id="retryModal" tabindex="-1" aria-labelledby="retryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="retryModalLabel">Retry 技巧方法</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="retryForm">
+                    <input type="hidden" id="retry_id_pk" value="">
+
+                    <div class="mb-3 modal-hidden-field" id="retry-type-group">
+                        <label for="retry_type" class="form-label">Retry 類型 (必填)</label>
+                        <input type="text" class="form-control" id="retry_type" readonly required>
+                        <div class="form-text text-muted">類型由區塊決定，無法修改。</div>
+                    </div>
+
+                    <div class="mb-3" id="module-case-group">
+                        <label for="module_case" class="form-label">模組 / 測項 (必填)</label>
+                        <textarea class="form-control" id="module_case" rows="2" required></textarea>
+                        <div class="form-text text-muted">例如：CtsNetTestCases / DNS 相關測項</div>
+                    </div>
+
+                    <div class="mb-3" id="condition-group">
+                        <label for="condition" class="form-label">條件 / 環境 (必填)</label>
+                        <textarea class="form-control" id="condition" rows="2" required></textarea>
+                        <div class="form-text text-muted">例如：連自己手機 Hotspot、Factory Reset</div>
+                    </div>
+
+                    <div class="mb-3" id="trick-group">
+                        <label for="trick" class="form-label">備註 / Retry 方法</label>
+                        <textarea class="form-control" id="trick" rows="3"></textarea>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveRetryBtn">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newSuiteModal" tabindex="-1" aria-labelledby="newSuiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newSuiteModalLabel">新增測試套件區塊</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newSuiteForm">
+                    <div class="mb-3">
+                        <label for="new_suite_title" class="form-label">區塊標題 (必填)</label>
+                        <input type="text" class="form-control" id="new_suite_title" required>
+                        <div class="form-text text-muted">例如：STS 測項</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new_suite_tag" class="form-label">標籤 / 簡短說明</label>
+                        <input type="text" class="form-control" id="new_suite_tag">
+                        <div class="form-text text-muted">此欄位若有填寫，將作為該區塊的識別 Key，不可重複。</div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveNewSuiteBtn">新增區塊</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="back-link">
+    <a href="/">← 回到首頁</a>
+</div>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
+
+<script>
+    // 最終修正版本：新增拖曳排序功能 (Sortable.js)
+
+    const API_URL_RETRY = '/api/retry';
+    const API_URL_SUITES = '/api/suites';
+
+    let localSuitesList = [];
+    let localRetryTips = [];
+
+    const retryModalElement = document.getElementById('retryModal');
+    const newSuiteModalElement = document.getElementById('newSuiteModal');
+
+    const retryModal = new bootstrap.Modal(retryModalElement);
+    const newSuiteModal = new bootstrap.Modal(newSuiteModalElement);
+
+    const saveRetryButton = document.getElementById('saveRetryBtn');
+    const saveNewSuiteButton = document.getElementById('saveNewSuiteBtn');
+    const toggleDragButton = document.getElementById('toggleDragBtn');
+
+    // 拖曳實例變數
+    let sortableInstance = null;
+
+    // 測項表單欄位
+    const retryFormFields = {
+        id: document.getElementById('retry_id_pk'),
+        type: document.getElementById('retry_type'),
+        module_case: document.getElementById('module_case'),
+        condition: document.getElementById('condition'),
+        trick: document.getElementById('trick')
+    };
+
+    const inputGroups = {
+        type: document.getElementById('retry-type-group'),
+        module_case: document.getElementById('module-case-group'),
+        condition: document.getElementById('condition-group'),
+        trick: document.getElementById('trick-group')
+    };
+
+
+    // 新增區塊表單欄位
+    const newSuiteFormFields = {
+        title: document.getElementById('new_suite_title'),
+        tag: document.getElementById('new_suite_tag')
+    };
+
+    // ==========================================================
+    // 輔助函數：將換行符(\n)轉換為HTML換行標籤(<br>)
+    // ==========================================================
+    function nl2br(str) {
+        if (!str) return '';
+        // 由於 CSS 移除了 white-space: pre-wrap; 這裡必須使用 <br> 標籤實現分行
+        return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
     }
-  </script>
+
+    // ==========================================================
+    // 1. 載入函式總入口
+    // ==========================================================
+    async function loadAllData() {
+        const loadingMessage = document.getElementById('loading-suites');
+        if (loadingMessage) loadingMessage.textContent = '正在載入區塊和測項...';
+
+        try {
+            // 1. 取得區塊列表
+            const suiteResponse = await fetch(`${API_URL_SUITES}/list`);
+            if (!suiteResponse.ok) throw new Error('Failed to load suites list');
+            localSuitesList = await suiteResponse.json();
+
+            // 2. 取得測項列表
+            const tipsResponse = await fetch(`${API_URL_RETRY}/list`);
+            if (!tipsResponse.ok) throw new Error('Failed to load retry tips');
+            localRetryTips = await tipsResponse.json();
+
+            // 3. 渲染頁面
+            renderPageLayout();
+
+            // 確保每次渲染完成後，Sortable.js 實例被創建但處於禁用狀態
+            if (sortableInstance) {
+                sortableInstance.destroy();
+                sortableInstance = null;
+            }
+            initializeSorting();
+
+        } catch (error) {
+            console.error('Failed to load data:', error);
+            const container = document.getElementById('suites-container');
+            container.innerHTML = `<p class="text-center text-danger">數據載入失敗，請檢查後端 API：${error.message}</p>`;
+        }
+    }
+
+    // ==========================================================
+    // 2. 渲染頁面結構 (動態區塊)
+    // ==========================================================
+    function renderPageLayout() {
+        const container = document.getElementById('suites-container');
+        container.innerHTML = ''; // 清空容器
+
+        const dataByGroup = localRetryTips.reduce((acc, item) => {
+            const key = item.type ? item.type.toUpperCase() : 'UNKNOWN';
+            acc[key] = acc[key] || [];
+            acc[key].push(item);
+            return acc;
+        }, {});
+
+        const loadingMessage = document.getElementById('loading-suites');
+        if (loadingMessage) loadingMessage.remove();
+
+        if (localSuitesList.length === 0) {
+            container.innerHTML = '<p class="text-center text-muted">目前沒有任何測試區塊，請點擊「新增區塊」建立。</p>';
+            return;
+        }
+
+        localSuitesList.forEach(suite => {
+            const suiteKey = suite.suite_key.toUpperCase();
+            const typeData = dataByGroup[suiteKey] || [];
+
+            const isSpecial = (suiteKey === 'SPECIAL');
+
+            let headerCols;
+            if (isSpecial) {
+                // 客製化 SPECIAL 表頭 (三欄)
+                headerCols = `
+                    <th>條件 / 環境</th>
+                    <th>備註</th>
+                    <th>Edit / Delete</th>
+                `;
+            } else {
+                // 標準四欄表頭
+                headerCols = `
+                    <th>模組 / 測項</th>
+                    <th>關鍵條件 / 環境</th>
+                    <th>備註 / Retry 技巧</th>
+                    <th>Edit / Delete</th>
+                `;
+            }
+
+            // 渲染區塊 HTML
+            const suiteBlockHtml = `
+                <div class="suite-block" id="${suiteKey.toLowerCase()}-section" data-suite-key="${suiteKey}">
+                    <div class="retry-list-header">
+                        <div class="d-flex align-items-center">
+                            <h2>${suite.suite_title}</h2>
+                            <span class="retry-section-tag">${suite.suite_tag}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-primary me-2 add-tip-btn" data-bs-toggle="modal" data-bs-target="#retryModal" data-id="new" data-type-preset="${suiteKey}">
+                                <i class="fas fa-plus"></i> 新增測項
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-suite-btn" data-type="${suiteKey}" onclick="deleteSuite('${suiteKey}', event)" title="刪除整個 ${suite.suite_title} 區塊">
+                                <i class="fas fa-trash-alt"></i> 刪除區塊
+                            </button>
+                        </div>
+                    </div>
+
+                    <table class="retry-table" data-type="${suiteKey}">
+                        <thead>
+                            <tr>
+                                ${headerCols}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${renderTableBody(suiteKey, typeData)}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', suiteBlockHtml);
+        });
+    }
+
+    // 3. 渲染表格內容
+    function renderTableBody(suiteKey, typeData) {
+        if (typeData.length === 0) {
+            return `<tr><td colspan="4" class="text-center">目前沒有 ${suiteKey} 的 Retry 項目。</td></tr>`;
+        }
+
+        const isSpecial = (suiteKey === 'SPECIAL');
+
+        if (isSpecial) {
+             // 三欄渲染 (合併模組/測項和條件/環境)
+             return typeData.map(item => `
+                <tr data-id="${item.id}" data-type="${item.type}">
+                    <td>${nl2br(item.module_case) + '<br>' + nl2br(item.condition)}</td>
+                    <td>${nl2br(item.trick) || '-'}</td>
+                    <td class="text-center">
+                        <div class="action-buttons-wrapper">
+                            <a href="#" class="action-btn edit-btn" onclick="openModalForEdit(${item.id}, event)" title="編輯">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a href="#" class="action-btn delete-btn" onclick="deleteRetryTip(${item.id}, event)" title="刪除">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+        } else {
+            // 標準四欄渲染
+            return typeData.map(item => `
+                <tr data-id="${item.id}" data-type="${item.type}">
+                    <td>${nl2br(item.module_case)}</td>
+                    <td>${nl2br(item.condition)}</td>
+                    <td>${nl2br(item.trick) || '-'}</td>
+                    <td class="text-center">
+                        <div class="action-buttons-wrapper">
+                            <a href="#" class="action-btn edit-btn" onclick="openModalForEdit(${item.id}, event)" title="編輯">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a href="#" class="action-btn delete-btn" onclick="deleteRetryTip(${item.id}, event)" title="刪除">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+
+    // ==========================================================
+    // 6. 拖曳排序邏輯 (Sortable.js)
+    // ==========================================================
+    function initializeSorting() {
+        const container = document.getElementById('suites-container');
+
+        if (typeof Sortable === 'undefined') {
+            console.error("Sortable.js not loaded.");
+            return;
+        }
+
+        sortableInstance = Sortable.create(container, {
+            animation: 150,
+            handle: '.suite-block',
+            ghostClass: 'sortable-ghost',
+            disabled: true, // 🌟 預設為禁用 🌟
+            onEnd: async function (evt) {
+                // 拖曳結束時觸發
+                const items = evt.from.children;
+                const newOrderKeys = [];
+
+                for (let i = 0; i < items.length; i++) {
+                    const key = items[i].getAttribute('data-suite-key');
+                    if (key) {
+                        newOrderKeys.push(key);
+                    }
+                }
+
+                if (newOrderKeys.length === 0) return;
+
+                // 呼叫後端 API 更新排序
+                try {
+                    const response = await fetch(`${API_URL_SUITES}/reorder`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(newOrderKeys)
+                    });
+
+                    if (response.ok) {
+                        loadAllData();
+                    } else {
+                        const errorData = await response.json();
+                        alert(`排序失敗: ${errorData.message || '伺服器錯誤'}`);
+                        loadAllData();
+                    }
+                } catch (error) {
+                    alert('連線失敗，無法保存新順序。');
+                    console.error('Reorder failed:', error);
+                    loadAllData();
+                }
+            }
+        });
+    }
+
+    // 🌟 拖曳模式開關函數 🌟
+    function toggleDragMode(event) {
+        event.preventDefault();
+
+        const container = document.getElementById('suites-container');
+
+        if (!sortableInstance) {
+            initializeSorting();
+        }
+
+        if (sortableInstance.options.disabled) {
+            // 啟用拖曳模式
+            sortableInstance.option("disabled", false);
+            container.classList.add('drag-mode');
+            toggleDragButton.innerHTML = '<i class="fas fa-mouse-pointer me-1"></i>';
+            toggleDragButton.classList.remove('btn-secondary');
+            toggleDragButton.classList.add('btn-warning');
+
+        } else {
+            // 禁用拖曳模式
+            sortableInstance.option("disabled", true);
+            container.classList.remove('drag-mode');
+            toggleDragButton.innerHTML = '<i class="fas fa-hand-rock me-1"></i>';
+            toggleDragButton.classList.remove('btn-warning');
+            toggleDragButton.classList.add('btn-secondary');
+        }
+    }
+
+
+    // ==========================================================
+    // 4. 測項 CRUD 邏輯 (新增、修改、刪除表格內單行)
+    // ==========================================================
+
+    // 儲存測項 (新增/修改)
+    saveRetryButton.addEventListener('click', async () => {
+        // 🌟 修正: 檢查欄位是否必填，需要根據當前模式判斷 🌟
+        const currentType = retryFormFields.type.value.toUpperCase();
+        const isSpecial = (currentType === 'SPECIAL');
+
+        if (!retryFormFields.condition.value.trim() || !retryFormFields.trick.value.trim()) {
+            alert('「條件 / 環境」和「備註 / Retry 方法」為必填欄位。');
+            return;
+        }
+
+        if (!isSpecial && !retryFormFields.module_case.value.trim()) {
+            alert('「模組 / 測項」為必填欄位。');
+            return;
+        }
+
+        const id = retryFormFields.id.value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL_RETRY}/update/${id}` : `${API_URL_RETRY}/add`;
+
+        const data = {
+            type: currentType,
+            // 🌟 修正: SPECIAL 模式下 module_case 可以為空 (因為已合併到 condition) 🌟
+            module_case: isSpecial ? "" : retryFormFields.module_case.value,
+            condition: retryFormFields.condition.value,
+            trick: retryFormFields.trick.value
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 'ok') {
+                alert(`Retry 紀錄已${id ? '更新' : '新增'}成功！`);
+                retryModal.hide();
+                loadAllData(); // 重新載入所有數據 (即時反饋)
+            } else {
+                alert(`操作失敗: ${result.message || '伺服器錯誤'}`);
+            }
+        } catch (error) {
+            alert('連線失敗，請確認後端服務是否運行。');
+            console.error('Save failed:', error);
+        }
+    });
+
+    // 刪除測項 (保持不變)
+    async function deleteRetryTip(id, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!confirm(`確定要刪除這筆 ID 為 ${id} 的 Retry 項目嗎？`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL_RETRY}/delete/${id}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 'ok') {
+                alert('Retry 紀錄已成功刪除！');
+                loadAllData(); // 重新載入所有數據 (即時反饋)
+            } else {
+                alert(`刪除失敗: ${result.message || '伺服器錯誤'}`);
+            }
+        } catch (error) {
+            alert('連線失敗，請確認後端服務是否運行。');
+            console.error('Delete failed:', error);
+        }
+    }
+
+    // 🌟 編輯時填充表單 (根據 SPECIAL 類型調整 Modal 顯示) 🌟
+    function openModalForEdit(id, event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const item = localRetryTips.find(d => d.id === id);
+        if (!item) {
+            alert('找不到該紀錄！');
+            return;
+        }
+
+        const isSpecial = (item.type.toUpperCase() === 'SPECIAL');
+
+        document.getElementById('retryModalLabel').textContent = `編輯 Retry 技巧 (ID: ${id})`;
+
+        // 🌟 根據類型調整 Modal 顯示 🌟
+        if (isSpecial) {
+            inputGroups.type.classList.add('modal-hidden-field');
+            inputGroups.module_case.classList.add('modal-hidden-field');
+
+            // 由於 SPECIAL 區塊在表格中是合併的，但在 Modal 中，我們只編輯 condition 和 trick
+            document.querySelector('#condition-group label').textContent = '條件 / 環境 (必填)';
+            document.querySelector('#trick-group label').textContent = '備註 (必填)';
+
+            // 填充表單
+            retryFormFields.id.value = item.id;
+            retryFormFields.type.value = item.type;
+            // module_case 在 SPECIAL 中保留數據庫值，但欄位隱藏
+            retryFormFields.module_case.value = item.module_case || '';
+            retryFormFields.condition.value = item.condition;
+            retryFormFields.trick.value = item.trick;
+
+        } else {
+            // 標準模式 (四欄)
+            inputGroups.type.classList.add('modal-hidden-field');
+            inputGroups.module_case.classList.remove('modal-hidden-field');
+
+            document.querySelector('#condition-group label').textContent = '條件 / 環境 (必填)';
+            document.querySelector('#trick-group label').textContent = '備註 / Retry 方法';
+
+            // 填充表單
+            retryFormFields.id.value = item.id;
+            retryFormFields.type.value = item.type;
+            retryFormFields.module_case.value = item.module_case;
+            retryFormFields.condition.value = item.condition;
+            retryFormFields.trick.value = item.trick;
+        }
+
+
+        retryModal.show();
+    }
+
+
+    // ==========================================================
+    // 5. 區塊 CRUD 邏輯 (新增、刪除大區塊)
+    // ==========================================================
+
+    // 儲存新區塊 (保持不變)
+    saveNewSuiteButton.addEventListener('click', async () => {
+        // 只需要檢查 title 是否必填
+        if (!newSuiteFormFields.title.value.trim()) {
+             alert('請填寫「區塊標題」欄位。');
+             return;
+        }
+
+        const data = {
+            suite_title: newSuiteFormFields.title.value.trim(),
+            suite_tag: newSuiteFormFields.tag.value.trim()
+        };
+
+        try {
+            const response = await fetch(`${API_URL_SUITES}/add`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 'ok') {
+                alert(`新的區塊 "${data.suite_title}" 已成功新增！Key: ${result.suite_key}`);
+                newSuiteModal.hide();
+                loadAllData(); // 重新載入所有數據 (即時反饋)
+            } else {
+                // 處理 Key 重複等錯誤 (409 Conflict)
+                alert(`新增區塊失敗: ${result.message || '伺服器錯誤'}`);
+            }
+        } catch (error) {
+            alert('連線失敗，請確認後端服務是否運行。');
+            console.error('Add Suite failed:', error);
+        }
+    });
+
+    // 刪除區塊 (保持不變)
+    async function deleteSuite(suiteKey, event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // 檢查該區塊下是否有測項數據
+        const itemsCount = localRetryTips.filter(item => item.type === suiteKey).length;
+
+        let confirmMessage;
+        if (itemsCount > 0) {
+             confirmMessage = `警告："${suiteKey}" 區塊下還有 ${itemsCount} 條測項紀錄。確定要刪除整個區塊及其所有紀錄嗎？`;
+        } else {
+            confirmMessage = `確定要刪除 "${suiteKey}" 區塊嗎？`;
+        }
+
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL_SUITES}/delete/${suiteKey}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 'ok') {
+                alert(`區塊 "${suiteKey}" 已成功刪除！`);
+                loadAllData(); // 重新載入所有數據 (即時反饋)
+            } else {
+                alert(`刪除失敗: ${result.message || '伺服器錯誤'}`);
+            }
+        } catch (error) {
+            alert('連線失敗，請確認後端服務是否運行。');
+            console.error('Delete Suite failed:', error);
+        }
+    }
+
+    // Modal 顯示/隱藏等邏輯
+    retryModalElement.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+
+        // 如果是新增 (點擊「新增測項」按鈕)
+        if (button && button.dataset.id === 'new') {
+            document.getElementById('retryModalLabel').textContent = '新增 Retry 項目'
+            // 清空表單
+            retryFormFields.id.value = '';
+            retryFormFields.module_case.value = '';
+            retryFormFields.condition.value = '';
+            retryFormFields.trick.value = '';
+
+            const presetType = button.dataset.typePreset;
+            retryFormFields.type.value = presetType || 'UNKNOWN';
+
+            // 🌟 新增時，根據類型預設 Modal 狀態 🌟
+            const isSpecial = (presetType === 'SPECIAL');
+            if (isSpecial) {
+                inputGroups.type.classList.add('modal-hidden-field');
+                inputGroups.module_case.classList.add('modal-hidden-field');
+
+                document.querySelector('#condition-group label').textContent = '條件 / 環境 (必填)';
+                document.querySelector('#trick-group label').textContent = '備註 (必填)';
+            } else {
+                inputGroups.type.classList.add('modal-hidden-field'); // 類型永遠隱藏
+                inputGroups.module_case.classList.remove('modal-hidden-field');
+
+                document.querySelector('#condition-group label').textContent = '關鍵條件 / 環境 (必填)';
+                document.querySelector('#trick-group label').textContent = '備註 / Retry 方法';
+            }
+        }
+        // 編輯邏輯已在 openModalForEdit 函數中處理
+    });
+
+    // 清除新增區塊 Modal 狀態
+    newSuiteModalElement.addEventListener('hidden.bs.modal', () => {
+        document.getElementById('newSuiteForm').reset();
+    });
+
+    // ==========================================================
+    // 6. 初始載入
+    // ==========================================================
+    document.addEventListener('DOMContentLoaded', loadAllData);
+
+    // 暴露全域函數給 HTML 內聯事件使用
+    window.openModalForEdit = openModalForEdit;
+    window.deleteRetryTip = deleteRetryTip;
+    window.deleteSuite = deleteSuite;
+    window.toggleDragMode = toggleDragMode;
+
+</script>
 </body>
 </html>
