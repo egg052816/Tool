@@ -208,82 +208,92 @@
 <header>
   <div>
     <h1>手動測試說明</h1>
-    <div class="subtitle">GTS-I / CTS Verifier 相關項目備註整理（依 Android 版本區分）</div>
+    <div class="subtitle">GTS-I / CTS Verifier / MADA Check List</div>
   </div>
 </header>
 
 <main>
   <!-- GTS-I 區塊 -->
   <h2 class="section-title">
-    GTS-I 手動測試 : Android 13 以上才需測 <strong>GTS-I（GTS Interactive）</strong>。
+    GTS-I 手動測試 : Android 13 以上才需測 <strong>GTS-I（GTS Interactive）</strong>
     <span class="tag">GTS-I</span>
   </h2>
 
-  <div class="android-subtitle">
-    適用版本：
-    <span class="badge">Android 13 / 14</span>
-    <span class="badge">Android 15 / 16+</span>
+    <div class="android-subtitle">
+        <span class="badge" style="font-size: 15px;"><b>Gts Interactive 測試環境架設</b></span>
+      </div>
+
+    <div class="card-title"></div>
+    <ul>
+      Step 1 . 在 /home/fih/XTS 位置下載指定版本的 GTS 包並複製到本機位置進行測試 <br>
+      Step 2 . 在 ternimal 執行 gts-tradefed ，按下 Enter，建立Google tradefed 的環境<br>
+      Step 3 . 輸入 run gts-interactive。<br>
+
+    </ul>
   </div>
 
-  <!-- Android 13 / 14：共用這些測項 -->
-  <div class="card">
-    <div class="card-title">1. Android Auto 測試方式</div>
-    <small>Test item：AndroidAuto / AutoOverUsb（Android 13 / 14 / 15 / 16+）</small>
+    <div class="card">
+    <div class="card-title">GtsInteractiveOverUsbTestCases</div>
     <ul>
-      <li>測試 Android Auto 時，需要建立 <b>Wi-Fi 連線</b>。</li>
-      <li>請使用 <b>AutoOverUsb</b> 模式進行測試。</li>
+      Step 1 . 測試Usb Over Wifi 時，需使用iPhone Hotspot與DUT建立 Wi-Fi 連線。<br>
+      Step 2 . DUT 按下Setting -> Debugging  -> Wireless -> 顯示ip。<br>
+      Step 3 . 在Terminal 輸入 adb connect xxx.xxx.xxx.xxx:xxxx (ip位置)。<br>
+      Step 4 . 關閉電腦乙太網路。<br>
+      Step 5 . 拔掉 DUT 連接電腦的 cable ，並在 tradefed 輸入 ld 確認 iphone 提供的 ip 位置是online的<br>
+      Step 6 . 利用WiFi連線的adb進行後續步驟依照提示詞依序進行<br>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">AndroidAutoOverUsbInteractiveHostTest</div>
+    <small>Test item：只要測項名稱有顯示 OverUsb 就都要連上iphone hotspot，利用WiFi連線的adb進行測試</small>
+    <ul>
+      <li>測試 Android Auto 時，待DUT前置WiFi步驟連線完成後，需接上<b>車機</b>進行測試。</li>
+      <li>車機有額外提供獨立電源，請確認接線是否正確，另外背板有一Type-C孔，可跟DUT做連接。</li>
     </ul>
     <div class="note">
-      建議紀錄：測試時是否有同時啟用 Wi-Fi 與 USB 連線、畫面是否可正常投影至車機。
+      建議紀錄：請注意DUT與車機是否有正常連線，畫面是否可正常投影至車機。
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">2. Madachecklist SetupWizard - QRCode / NFC Tag</div>
-    <small>Test item：Madachecklist SetupWizard（第 2 / 第 3 張截圖）（Android 13 / 14 / 15 / 16+）</small>
+    <div class="card-title">Madachecklist SetupWizard - QRCode / NFC Tag</div>
     <ul>
-      <li>第 2 與第 3 張截圖需要使用：
-        <ul>
-          <li><code>&lt;qrcode&gt;</code>：已附在測試資料夾 (Folder) 中。</li>
-          <li><code>&lt;nfc tag&gt;</code>：RD 另外提供一張 NFC Tag。</li>
-        </ul>
-      </li>
+      <li>Madachecklist SetupWizard 第 2 與第 3 張截圖需要使用下列工具：<br>
+
+          <br>
+          2. <b>SetupWizard Qrcode</b>：額外附在 \\10.57.41.153\user$\QA\XTS\GTSI\QR Code<br>
+          <img src="{{ url_for('static', filename='GTSI/QR Code/QRCode_SetupWizard.png') }}" style="width: 40%; height: auto;" alt="QR Code 設置精靈"><br>
+          3.<b>Nfc Tag</b> : 請確認為此張 Tag，避免測試錯誤。</li><br>
+            <img src="{{ url_for('static', filename='NFC_Tag.jpg') }}" style="width: 40%; height: auto;" alt="NFC_Tag"><br>
       <li>以上兩種方式皆用於 <b>work provisioning</b> 測試。</li>
     </ul>
-    <div class="note">
-      測試前確認：手機支援 NFC、已開啟 NFC 功能，並確認使用的是專案提供之 QRCode / NFC Tag。
-    </div>
   </div>
 
   <div class="card">
-    <div class="card-title">3. SetupWizard 無網路版本截圖</div>
-    <small>Test item：SetupWizard（倒數第 2 張截圖）（Android 13 / 14 / 15 / 16+）</small>
+    <div class="card-title">GtsInteractiveMadachecklistTest 除Case9_2以外截圖請參照pdf </div>
+    <a href="{{ url_for('static', filename='GTSI/GTS_Interactive_Setupwizard_PART1_oldversion.pdf') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
+                GTS_Interactive_Setupwizard_PART1_oldversion.pdf
+            </a><br>
     <ul>
-      <li>該截圖需提供「<b>完全不連網路</b>」的 SetupWizard 版本。</li>
-      <li>測試時請關閉：
-        <ul>
-          <li>Wi-Fi</li>
-          <li>行動數據 / SIM 網路</li>
-          <li>任何 Hotspot / Tethering</li>
-        </ul>
+      <li>Case9_2 測試條件要求SetupWizard介面「<b>完全不連網路</b>」直接進入主頁。</li>
+      <li>該截圖請改成：<br>
+        <img src="{{ url_for('static', filename='GtsInteractiveMadachecklistTest.jpg') }}" style="width: 40%; height: auto;" alt="GtsInteractiveMadachecklistTest">
       </li>
     </ul>
     <div class="note">
-      測試時需確認：裝置從開機到 SetupWizard 全程未連上任何網路，畫面內容需與截圖一致。
+      測試時需確認：裝置從開機到 SetupWizard 全程未連上任何網路，且畫面內容需與截圖一致。
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">4. 自測報告版本一致性要求</div>
-    <small>Test item：Version Alignment / Customer Self-Test Report（Android 13 / 14 / 15 / 16+）</small>
+    <div class="card-title">✯ TOT版本(Preview)</div>
     <ul>
-      <li>測試請依客戶提供之自測報告版本執行。</li>
-      <li>若客戶未提供，則使用 <b>最新版本</b> 自測報告作為依據。</li>
-      <li>請將使用之自測報告版本資訊填寫於 <b>JIRA</b>，以利 RD 進行 review 與比對。</li>
+      <li>GTSI 也有提供TOT的版本，只是名稱不相同叫做「 Preview 」</li>
+      <li>Preview 版的GTS測試包，也會附在/home/fih/XTS/GTS的資料夾內，資料夾名稱會特別標示。</li>
+      <li>若已完全根據提示詞測試確認無法通過，則可使用Preview版本，進行驗證確認該項測試在DUT上為Fail。</li>
+      <li>若依舊為Fail，則須將其測試過程及結果截圖，並回報給RD分析。</li>
     </ul>
-    <div class="note">
-      目的：確保測試依據一致，避免因報告版本差異導致結果判讀錯誤，並提升 RD 分析效率。
-    </div>
   </div>
 
   <!-- CTS Verifier 區塊 -->
@@ -292,87 +302,167 @@
     <span class="tag">CTS Verifier</span>
   </h2>
 
-  <div class="android-subtitle">
-    適用版本：
-    <span class="badge">Android 13 / 14</span>
-  </div>
 
   <div class="card">
-    <div class="card-title">1. Audio Loopback Latency Test</div>
-    <small>Test item：Audio Loopback Latency Test（Android 13 / 14）</small>
+    <div class="card-title">Audio Loopback Latency Test</div>
     <ul>
       <li>第 2 個子項的 <b>Analog 測試</b> 需要使用 <b>3.5mm loopback dongle</b>。</li>
       <li>需將已封起來的回收用 loopback dongle <b>接在耳機孔</b> 做 loopback 測試。</li>
+      <li>loopback dongle 圖示 : </li><br>
+      <img src="{{ url_for('static', filename='LoopBack.jpg') }}" style="width: 40%; height: auto;" alt="LoopBack">
     </ul>
     <div class="note">
-      測試時確認：線材接觸良好、音量設定符合文件要求，以免影響 Latency 結果。
+      測試時確認：請依圖片上的loopback dongle做測試，以免影響 Latency 結果。
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">2. Voicemail Broadcast Test</div>
-    <small>Test item：Voicemail Broadcast Test（Android 13 / 14）</small>
+    <div class="card-title">Voicemail Broadcast Test</div>
     <ul>
       <li>台灣地區 <b>未支援 Voicemail 服務</b>。</li>
       <li>需搭配 <b>NowSMS Server</b> 進行模擬測試。</li>
-      <li>目前 NowSMS Server 相關設定與連線問題尚未完全解決，測試狀態請視專案最新結論更新。</li>
+      <li>附上壓縮檔:
+      <a href="{{ url_for('static', filename='CTSV/NowSMS.zip') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
+            NowSMS.zip
+      </a>進行測試，密碼為:Foxconn123<br>
+
     </ul>
     <div class="note">
-      建議於報告中註明：使用 NowSMS 模擬，實網路側不支援 Voicemail；若因環境問題無法完成，需標註原因。
+      由於先前同仁架設之伺服器已消失，需重新架設(須研究)。
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">3. Java MIDI Test / Native MIDI Test</div>
-    <small>Test item：Java MIDI Test / Native MIDI Test（Android 13 / 14 / 15 / 16+）</small>
+    <div class="card-title">Java MIDI Test / Native MIDI Test</div>
     <ul>
-      <li><code>MIDI_BLE.apk</code> 已附在測試 Folder 中。</li>
-      <li>只需安裝並使用 <b>1.11 版本</b> 即可。</li>
-      <li>不需要另外到 Google Play 商店下載最新版。</li>
+      <li><code>MIDI_BLE.apk</code> 會在每一台實驗室電腦的/home/fih/XTS/CTS/MIDI_BLE中</li>
+      <li>只需安裝並使用 <b>1.11 版本</b> 即可，不需照pdf步驟另外到 Google Play 商店下載最新版。</li>
     </ul>
     <div class="note">
-      測試前確認：裝置已允許安裝不明來源 APK，並使用 Folder 中提供的指定版本。
+      測試前確認：裝置已安裝MIDI_BLE.APK。
     </div>
   </div>
 
-  <div class="android-subtitle">
-    適用版本：
-    <span class="badge">Android 15 / 16+</span>
+    <div class="card">
+    <div class="card-title">✯ Camera ITS 測項</div>
+    <ul>
+      <li>Camera ITS 測項比較特別需要架設測試環境，必須要在實驗室的regular field-of-view (RFoV) box中測試(黑色測試箱)，並需額外準備一台做Reference的平板</li><br>
+        <ul>
+      Step 1 . 開啟Ternimal 根據你的 Android 版本並initialize測試環境，輸入source ITS.sh 版本。以A15為例，輸入 source ITS.sh 15。 <br>
+            <img src="{{ url_for('static', filename='ITS_setup1.jpg') }}" style="width: 50%; height: auto;" alt="ITS_setup1"><br>
+      Step 2 . 將測試環境拉到自己資料夾的位置，用來SetUp及修改內部Comfig:<code> cd '/home/fih/USER/QA/XXX/CTSV/android-cts-verifier-15_r5-linux_x86-arm/android-cts-verifier/CameraITS'</code><br>
+            <img src="{{ url_for('static', filename='ITS.jpg') }}" style="width: 50%; height: auto;" alt="ITS"><br>
+      Step 3 . 輸入<code>source build/envsetup.sh</code><br>
+      Step 4 . 根據提示詞輸入 <code>adb -s <"Serial ID"> shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier</code>。<br>
+            Step 5 . 更改內部Comfig<br>
+            <img src="{{ url_for('static', filename='ITS2.jpg') }}" style="width: 50%; height: auto;" alt="ITS2"><br>
+            <b>根據目前的測試環境、DUT Serial Number、Arduino、Light</b>等等進行修改<br>
+            <img src="{{ url_for('static', filename='ITS3.jpg') }}" style="width: 50%; height: auto;" alt="ITS3"><br>
+      Step 6 . 執行Python檔案 <code>python tools/run_all_tests.py camera=0 scenes=1</code> 開始測試<br>(Camera argument值0是後鏡頭;1是前鏡頭，另外scenes可以選擇測試範圍 ，若未輸入則全部測試)<br>
+            <img src="{{ url_for('static', filename='ITS_setup2.jpg') }}" style="width: 100%; height: auto;" alt="ITS_setup2"><br>
+
+        </ul>
+
+      <li>自動化測試，待全部測試完才會出結果</li>
+        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
+    </ul>
   </div>
 
   <div class="card">
-    <div class="card-title">4. ITS Test - Sensor Fusion（Test Pattern）</div>
-    <small>Test item：ITS Test &gt; Sensor Fusion（Android 15 / 16+）</small>
+    <div class="card-title">ITS Test - Sensor Fusion（Test Pattern）</div>
     <ul>
-      <li>自 <b>A15 版本後</b>，Sensor Fusion 會多出額外的 <b>Test Pattern 測項</b>。</li>
-      <li>若 Test Pattern 測試無法通過：
+      <li>Sensor Fusion 會需要使用 <b>上方有滾輪的箱子</b>做測試，並需要測試額外的 <b>Test Pattern</b>紙張。</li>
+      <li>圖示可能會隨版本更新，因此若 Test Pattern 測試無法通過：
         <ul>
           <li>請至 Google CTS Verifier 對應項目查詢官方範例圖片與說明。</li>
           <li>依照官方提供的指引，確認測試步驟與畫面是否正確。</li>
+          <li>Android 15 Pattern 圖例:</li><br>
+            <img src="{{ url_for('static', filename='ITS_Fusion.jpg') }}" style="width: 40%; height: auto;" alt="ITS_Fusion">
         </ul>
       </li>
+        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
     </ul>
     <div class="note">
-      測試失敗時，請記錄：Pattern 類型、實際畫面截圖與測試環境（光線 / 姿態），提供 RD 與 Google 進一步分析。
+        詳細Google參考資料:
+      <a href="https://source.android.com/docs/compatibility/cts/sensor-fusion-box-assembly" target="_blank" style="color: #ff5757; font-weight: 600;">
+        ITS Test - Sensor Fusion
+        </a>
     </div>
   </div>
-
-  <!-- 測試設備照片區塊 -->
-  <h3 class="photo-section-title">測試設備照片（參考）</h3>
-  <div class="photo-grid">
-    <figure>
-      <img src="{{ url_for('static', filename='S__7258204_0.jpg') }}" alt="測試設備照片 1">
-      <figcaption>設備照片 1</figcaption>
-    </figure>
-    <figure>
-      <img src="{{ url_for('static', filename='S__7258205_0.jpg') }}" alt="測試設備照片 2">
-      <figcaption>設備照片 2</figcaption>
-    </figure>
-    <figure>
-      <img src="{{ url_for('static', filename='S__7258206_0.jpg') }}" alt="測試設備照片 3">
-      <figcaption>設備照片 3</figcaption>
-    </figure>
+    <div class="card">
+    <div class="card-title">ITS Test - CameraWebcamTest</div>
+    <ul>
+      <li>在 regular field-of-view (RFoV) box中測試</li><br>
+      Step 1 . 開啟Ternimal 根據你的 Android 版本並initialize測試環境，輸入source ITS.sh 版本 W。以A15為例，輸入 source ITS.sh 15 W。 <br>
+            <img src="{{ url_for('static', filename='ITS_W2.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W2"><br>
+      Step 2 . 將測試環境拉到自己資料夾的位置，用來SetUp及修改內部Comfig:<code> cd '/home/fih/USER/QA/XXX/CTSV/android-cts-verifier-15_r5-linux_x86-arm/android-cts-verifier/CameraWebcamTest'</code><br>
+            <img src="{{ url_for('static', filename='ITS_W.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W"><br>
+      Step 3 . 更改內部Comfig，修改DUT Serial Number<br>
+            <img src="{{ url_for('static', filename='ITS_W4.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W4"><br>
+      Step 4 .執行測試Python檔 <code> python run_webcam_test.py -c config.yml</code>。<br>
+            <img src="{{ url_for('static', filename='ITS_W3.jpg') }}" style="width: 80%; height: auto;" alt="ITS_W3"><br>
+        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
+    </ul>
   </div>
+
+    <div class="card">
+    <div class="card-title">ITS Test - CameraWebcamTest</div>
+    <ul>
+      <li>在 regular field-of-view (RFoV) box中測試</li><br>
+      Step 1 . 需要準備一個PN532 NFC reader。 <br>
+            <img src="{{ url_for('static', filename='PN532.jpg') }}" style="width: 50%; height: auto;" alt="PN532"><br>
+      Step 2 . DUT需額外安裝apk<code> adb install -r -g NfcEmulatorTestApp.apk</code>(如果應版本問題下載不了，請再額外輸入<code>adb shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier</code>)<br>
+      Step 3 . DUT的Settings->開啟NFC->並將PN532 NFC chip那一面靠着DUT的NFC位置,并且DUT和PN532 Chip都要接到PC<br>
+      Step 4 .在Terminal中輸入source ITS.sh 15<br>
+      Step 5 .cd 到MultiDevice位置中<br>
+            <img src="{{ url_for('static', filename='MultiDevice.jpg') }}" style="width: 80%; height: auto;" alt="MultiDevice"><br>
+
+      Step 6 .並更改config 中 DUT ID 及 pn532_serial_path的值(先將PN532 Chip接上電腦並輸入<code> ls /dev/ttyUSB*</code>看path位置)<br>
+         <img src="{{ url_for('static', filename='MultiDevice2.jpg') }}" style="width: 80%; height: auto;" alt="MultiDevice2"><br>
+      Step 7 .輸入 source build/envsetup.sh<br>
+      Step 8 .執行Python檔 MultiDevice$ <code>python3 tools/run_all_tests.py </code>並等待測試結果<br>
+        <li>若本項有單條測項錯誤，請使用TOT版本再跑一次</li>
+        <li>log會存在tmp下 (如有fail, 需要提供這個給RD)</li>
+    </ul>
+
+  </div>
+
+
+  <!-- MADA Check List -->
+  <h2 class="section-title">
+    MADA Check List
+    <span class="tag">MADA </span>
+  </h2>
+
+
+   <div class="card">
+    <div class="card-title"></div>
+    <ul>
+      <li>最新版本的MADA都會放在: <b>/home/fih/CHECKLIST_LATEST/GMS_Mada Compliance Form - (External sharing).docx</b>。</li>
+      <li>內部會需要用到的測試apk也都放在相同位置：<br>
+          <img src="{{ url_for('static', filename='MADA.jpg') }}" style="width: 70%; height: auto;" alt="MADA"><br>
+          <li>封面黃色部分，請依照要求輸入指令提供<b>DUT Name 以及 Fingerprint。</b><br>
+            <img src="{{ url_for('static', filename='MADA2.jpg') }}" style="width: 70%; height: auto;" alt="MADA3"><br>
+          <li>測試MADA時，請依照Google規定步驟，提供所要求之圖片。</li><br>
+          <li>完成每個測項，並附上照片後，<b>請在最右側輸入pass</b>；若該DUT無該功能或高/低於測試版本，則在<b>右側註明原因並填上N/A</b>。<br>
+            <img src="{{ url_for('static', filename='MADA3.jpg') }}" style="width: 70%; height: auto;" alt="MADA3"><br>
+            </li>
+    </ul>
+  </div>
+
+    <div class="card">
+    <div class="card-title">M63 - Android Auto discoverability</div>
+    <ul>
+      <li>車機這條測項，只有手機的樣機需要測試，測試時需錄影提供影片給Google查驗</li>
+      <li>Google有提供範例影片，影片需要錄製到打開Google Map 並確認定位已在車機上顯示。<br>
+         <a href="https://www.youtube.com/watch?v=FzBJqehq3As" target="_blank" style="color: #ff5757; font-weight: 600;">
+        Android Auto discoverability
+         </a>
+       <li>須在MADA上註明影片的名稱及附上影片位置並提供給PM</li>
+    </ul>
+  </div>
+
+
 
   <!-- 🔹 新增 / 編輯 / 刪除 工具列：放在頁面最下面 -->
   <div class="toolbar">

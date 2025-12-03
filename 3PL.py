@@ -1,4 +1,4 @@
-# 3pl.py (最終版 - 簡化 Suite Key 邏輯)
+# 3pl.py (最終完整版：包含所有 DB 初始化和 API 路由)
 
 from flask import Flask, render_template_string, render_template, request, jsonify
 import sqlite3
@@ -16,15 +16,17 @@ gms_3pl_planning = "https://docs.google.com/sheets/d/1T-m_5qRCIr2nBdPUiF-u8_Ph0b
 
 
 # ----------------------------------------
-# DB Helper (保持不變)
+# DB Helper (更新: 支援 ctsv_gtsi.db)
 # ----------------------------------------
 def get_db_conn(db_name="waiver"):
     """
     取得 SQLite 連線，根據名稱返回不同的 DB 檔案連線。
-    db_name 參數可以是 'waiver' 或 'retry'。
+    db_name 參數可以是 'waiver', 'retry', 或 'ctsv_gtsi'。
     """
     if db_name == "retry":
         db_path = os.path.join(BASE_DIR, "retry.db")
+    elif db_name == "ctsv_gtsi":
+        db_path = os.path.join(BASE_DIR, "ctsv_gtsi.db")
     else:
         # 默認為 waiver.db
         db_path = os.path.join(BASE_DIR, "waiver.db")
@@ -36,9 +38,9 @@ def get_db_conn(db_name="waiver"):
 
 
 def init_db():
-    """初始化資料庫：建立 waivers.db 和 retry.db 中的所有表格。"""
+    """初始化所有資料庫： waivers.db, retry.db, 和 ctsv_gtsi.db。"""
 
-    # 1. 初始化 waivers.db
+    # 1. 初始化 waivers.db (保持不變)
     conn_waiver = get_db_conn("waiver")
     cursor_waiver = conn_waiver.cursor()
     cursor_waiver.execute(
@@ -54,11 +56,10 @@ def init_db():
     conn_waiver.close()
     print("✅ waiver.db 初始化完成。")
 
-    # 2. 初始化 retry.db (包含 retry_tips 和新的 suites 表格)
+    # 2. 初始化 retry.db (保持不變)
     conn_retry = get_db_conn("retry")
     cursor_retry = conn_retry.cursor()
 
-    # 建立 retry_tips 表格 (儲存單行測項資料)
     cursor_retry.execute(
         """
         CREATE TABLE IF NOT EXISTS retry_tips (
@@ -71,7 +72,6 @@ def init_db():
         """
     )
 
-    # 建立 suites 表格 (儲存區塊標題資料，對應前端的大區塊)
     cursor_retry.execute(
         """
         CREATE TABLE IF NOT EXISTS suites (
@@ -87,7 +87,6 @@ def init_db():
     # 檢查並插入預設的區塊（如果表格為空）
     cursor_retry.execute("SELECT COUNT(*) FROM suites")
     if cursor_retry.fetchone()[0] == 0:
-        # 注意: suite_key 必須是英文/數字，所以這裡使用大寫英文
         default_suites = [
             ('BASIC', 'Basic 測項', 'SIM / Host / Permission 類', 10),
             ('GTS', 'GTS 測項', 'GTS', 20),
@@ -108,9 +107,63 @@ def init_db():
     conn_retry.close()
     print("✅ retry.db (包含 retry_tips & suites) 初始化完成。")
 
+    # 3. 初始化 ctsv_gtsi.db (新增)
+    conn_ctsv = get_db_conn("ctsv_gtsi")
+    cursor_ctsv = conn_ctsv.cursor()
+
+    # 建立 ctsv_sections 表格 (頂層導航錨點)
+    cursor_ctsv.execute(
+        """
+        CREATE TABLE IF NOT EXISTS ctsv_sections (
+            section_key TEXT PRIMARY KEY,    /* 'GTSI', 'CTSV', 'MADA' */
+            title TEXT NOT NULL,             /* e.g., 'GTS Interactive 區塊' */
+            tag TEXT,                        /* e.g., 'Android 13+ / MADA' */
+            display_order INTEGER NOT NULL DEFAULT 0
+        );
+        """
+    )
+
+    # 建立 test_cards 表格 (每個測試步驟卡片)
+    cursor_ctsv.execute(
+        """
+        CREATE TABLE IF NOT EXISTS test_cards (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            section_key TEXT NOT NULL,       /* FK: GTSI, CTSV, MADA */
+            card_title TEXT NOT NULL,        /* e.g., 'Audio Loopback Latency Test' */
+            card_subtitle TEXT,              /* Small text under title */
+            content TEXT,                    /* Main content / Step list */
+            image_url TEXT,                  /* Primary image URL */
+            note TEXT,                       /* Content for the dedicated note box */
+            display_order INTEGER NOT NULL DEFAULT 0,
+            FOREIGN KEY(section_key) REFERENCES ctsv_sections(section_key)
+        );
+        """
+    )
+
+    # 檢查並插入預設區塊 (如果表格為空)
+    cursor_ctsv.execute("SELECT COUNT(*) FROM ctsv_sections")
+    if cursor_ctsv.fetchone()[0] == 0:
+        default_sections = [
+            ('GTSI', 'GTS Interactive 區塊', 'Android 13+ / MADA', 10),
+            ('CTSV', 'CTS Verifier 區塊', 'CameraITS / Audio / Sensor', 20),
+            ('MADA', 'MADA Check List 區塊', 'Auto discoverability / Doc', 30),
+        ]
+        cursor_ctsv.executemany(
+            """
+            INSERT INTO ctsv_sections (section_key, title, tag, display_order)
+            VALUES (?, ?, ?, ?)
+            """,
+            default_sections
+        )
+        print("    [CTSV_GTSI Sections] 插入預設區塊。")
+
+    conn_ctsv.commit()
+    conn_ctsv.close()
+    print("✅ ctsv_gtsi.db 初始化完成。")
+
 
 def create_db_if_not_exists():
-    """確保兩個 DB 都存在且結構正確。"""
+    """確保所有 DB 都存在且結構正確。"""
     init_db()
 
 
@@ -334,9 +387,9 @@ TEMPLATE = r"""
                 <ul>
                     <li>Step 1：確認機種、Android 版本、build type（user / userdebug）。</li>
                     <li>Step 2：確認測試項目（CTS / GTS / STS / AACT / MADA...）。</li>
-                    <li>Step 3：準備測試環境（網路、SIM、log 工具、CAN / DLT 等）。</li>
-                    <li>Step 4：執行測試並紀錄 log 位置。</li>
-                    <li>Step 5：整理結果、retry、判斷是否要提 waiver。</li>
+                    <li>Step 3：準備測試環境（網路、SIM、log 工具、CAN / DLT 等）。
+                    <li>Step 4：執行測試並紀錄 log 位置。
+                    <li>Step 5：整理結果、retry、判斷是否要提 waiver。
                 </ul>
                 <div style="font-size:0.85rem; color:#9ca3af;">
                     之後你可以把這些條列換成你實際的 SOP，一條一條貼上去就好。
@@ -363,7 +416,7 @@ TEMPLATE = r"""
                       --retry 3 \
                       --subplan My_SubPlan
 
-                    # TODO：你之後可以把你真正在用的 command 貼上來
+                    # TODO：你之後可以把你真正在用的 command 貼進來
                 </div>
 
                 <button class="beauty-btn" onclick="window.location.href='/ctsv_gtsi'">
@@ -377,9 +430,9 @@ TEMPLATE = r"""
                     這一頁可以整理：什麼情境用 retry，怎麼決定 retry 次數、怎麼記錄每次 retry 的差異。
                 </div>
                 <ul>
-                    <li>Retry 條件：暫時性環境問題（network、server、lab 狀態不穩）。</li>
-                    <li>不建議 retry 的情況：穩定重現的功能 bug、明顯的 device 行為異常。</li>
-                    <li>建議紀錄：第幾次 run、環境差異、是否更換 device / port / cable。</li>
+                    <li>Retry 條件：暫時性環境問題（network、server、lab 狀態不穩）。
+                    <li>不建議 retry 的情況：穩定重現的功能 bug、明顯的 device 行為異常。
+                    <li>建議紀錄：第幾次 run、環境差異、是否更換 device / port / cable。
                 </ul>
                 <div class="code-block">
                     # 範例：只 retry previously failed tests
@@ -401,8 +454,8 @@ TEMPLATE = r"""
                     要如何確定會有 Waiver：
                 </div>
                 <ol style="color:#9ca3af;">
-                    <li>TOT 跑完測項顯示 0 次執行，結果也為 0。</li>
-                    <li>在 Google IssueTracker 上查詢該 TestCase ID。</li>
+                    <li>TOT 跑完測項顯示 0 次執行，結果也為 0。
+                    <li>在 Google IssueTracker 上查詢該 TestCase ID。
                 </ol>
                 <div style="font-size:0.85rem; color:#9ca3af;">
                     如果後續有遇到其他的 Waiver 可以繼續新增，另外有些 TestCase 只有 Warning，無 bug id。
@@ -434,35 +487,27 @@ TEMPLATE = r"""
 # ----------------------------------------
 @app.route("/")
 def index():
-    # 這裡使用 render_template_string 返回單頁 Tab 結構
     return render_template_string(TEMPLATE, planning_url=gms_3pl_planning)
 
-
-# 這裡的路由負責返回獨立的 HTML 檔案
 @app.route("/flash_image")
 def flash_image():
     return render_template("flash_image.html")
-
 
 @app.route("/sop")
 def sop():
     return render_template("sop.html")
 
-
 @app.route("/retry")
 def retry():
     return render_template("retry.html")
-
 
 @app.route("/waiver")
 def waiver():
     return render_template("waiver.html")
 
-
 @app.route("/ctsv_gtsi")
 def ctsv_gtsi():
     return render_template("ctsv_gtsi.html")
-
 
 @app.route("/save")
 def save():
@@ -683,7 +728,7 @@ def delete_retry_tip(tip_id):
 
 
 # ----------------------------------------
-# Suite API (新增 - 取得和新增/刪除區塊功能)
+# Suite API (連接 retry.db)
 # ----------------------------------------
 
 @app.route("/api/suites/list")
@@ -713,9 +758,6 @@ def add_suite():
     suite_tag = data.get('suite_tag', '').strip()
 
     # 🌟 修正點 2: 自動生成 suite_key 的邏輯 🌟
-    # 規則: 若 suite_tag 有值，用 suite_tag，否則用 suite_title。
-    # 為了確保 suite_key 是唯一且適合資料庫使用，我們移除特殊符號並轉大寫。
-
     source_key = suite_tag if suite_tag else suite_title
 
     # 簡單的清理函數: 移除空格和特殊符號
@@ -794,19 +836,13 @@ def delete_suite(suite_key):
     conn.close()
 
     if suites_affected == 0:
-        return jsonify({"status": "error", "message": f"Suite key '{suite_key}' not found."}), 404
+        return jsonify({"status": "error", "message": "Suite key '{suite_key}' not found."}), 404
 
     return jsonify({
         "status": "ok",
         "message": f"Suite '{suite_key}' and {tips_affected} related tips deleted successfully."
     })
 
-
-# ----------------------------------------
-# Suite API (新增排序功能)
-# ----------------------------------------
-
-# ... (list_suites, add_suite, delete_suite 等函數保持不變) ...
 
 @app.route("/api/suites/reorder", methods=["PUT"])
 def reorder_suites():
@@ -843,6 +879,228 @@ def reorder_suites():
     return jsonify({"status": "ok", "message": "Suites reordered successfully"}), 200
 
 
+# ----------------------------------------
+# CTSV_GTSI API (新增)
+# ----------------------------------------
+
+@app.route("/api/ctsv_gtsi/sections/list")
+def list_ctsv_sections():
+    """列出所有頂層區塊 (GTSI, CTSV, MADA)"""
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+    cur.execute("SELECT section_key, title, tag FROM ctsv_sections ORDER BY display_order")
+    rows = cur.fetchall()
+    conn.close()
+    data = [{k: r[k] for k in r.keys()} for r in rows]
+    return jsonify(data)
+
+
+@app.route("/api/ctsv_gtsi/cards/list")
+def list_ctsv_cards():
+    """列出所有測試卡片內容"""
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, section_key, card_title, card_subtitle, content, image_url, note, display_order FROM test_cards ORDER BY section_key, display_order")
+    rows = cur.fetchall()
+    conn.close()
+    data = [{k: r[k] for k in r.keys()} for r in rows]
+    return jsonify(data)
+
+
+@app.route("/api/ctsv_gtsi/cards/add", methods=["POST"])
+def add_ctsv_card():
+    """新增一個測試卡片"""
+    data = request.json or {}
+    required_fields = ["section_key", "card_title", "content"]
+    if not all(data.get(k) is not None for k in required_fields):
+        return jsonify({"status": "error", "message": "Missing required fields"}), 400
+
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+
+    # 計算新的 display_order
+    cur.execute("SELECT MAX(display_order) FROM test_cards WHERE section_key = ?", (data['section_key'].upper(),))
+    max_order = cur.fetchone()[0] or 0
+    new_order = max_order + 10
+
+    cur.execute(
+        """
+        INSERT INTO test_cards (section_key, card_title, card_subtitle, content, image_url, note, display_order)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            data['section_key'].upper(),
+            data['card_title'],
+            data.get('card_subtitle'),
+            data['content'],
+            data.get('image_url'),
+            data.get('note'),
+            new_order
+        ),
+    )
+    conn.commit()
+    new_id = cur.lastrowid
+    conn.close()
+    return jsonify({"status": "ok", "id": new_id})
+
+
+@app.route("/api/ctsv_gtsi/cards/update/<int:card_id>", methods=["PUT"])
+def update_ctsv_card(card_id):
+    """更新一個測試卡片"""
+    data = request.json or {}
+    required_fields = ["section_key", "card_title", "content"]
+    if not all(data.get(k) is not None for k in required_fields):
+        return jsonify({"status": "error", "message": "Missing required fields for update"}), 400
+
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+    cur.execute(
+        """
+        UPDATE test_cards
+        SET section_key=?, card_title=?, card_subtitle=?, content=?, image_url=?, note=?
+        WHERE id = ?
+        """,
+        (
+            data['section_key'].upper(),
+            data['card_title'],
+            data.get('card_subtitle'),
+            data['content'],
+            data.get('image_url'),
+            data.get('note'),
+            card_id
+        ),
+    )
+    conn.commit()
+    affected = cur.rowcount
+    conn.close()
+
+    if affected == 0:
+        return jsonify({"status": "error", "message": "Card not found"}), 404
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/ctsv_gtsi/cards/delete/<int:card_id>", methods=["DELETE"])
+def delete_ctsv_card(card_id):
+    """刪除一個測試卡片"""
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+    cur.execute("DELETE FROM test_cards WHERE id = ?", (card_id,))
+    conn.commit()
+    affected = cur.rowcount
+    conn.close()
+
+    if affected == 0:
+        return jsonify({"status": "error", "message": "Card not found"}), 404
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/ctsv_gtsi/sections/delete/<section_key>", methods=["DELETE"])
+def delete_ctsv_section(section_key):
+    """刪除整個區塊 (頂層) 及其所有卡片"""
+    section_key = section_key.upper()
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+
+    try:
+        # 1. 刪除所有相關卡片
+        cur.execute("DELETE FROM test_cards WHERE section_key = ?", (section_key,))
+        tips_affected = cur.rowcount
+
+        # 2. 刪除頂層區塊
+        cur.execute("DELETE FROM ctsv_sections WHERE section_key = ?", (section_key,))
+        sections_affected = cur.rowcount
+
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        return jsonify({"status": "error", "message": f"Database error during deletion: {str(e)}"}), 500
+
+    conn.close()
+
+    if sections_affected == 0:
+        return jsonify({"status": "error", "message": "Section key '{section_key}' not found."}), 404
+
+    return jsonify({
+        "status": "ok",
+        "message": f"Section '{section_key}' and {tips_affected} related cards deleted."
+    })
+
+
+@app.route("/api/ctsv_gtsi/sections/reorder", methods=["PUT"])
+def reorder_ctsv_sections():
+    """接收前端傳來的排序列表，更新 ctsv_sections 表格的 display_order"""
+    data = request.json or []
+    if not isinstance(data, list) or not data:
+        return jsonify({"status": "error", "message": "Invalid or empty reorder list"}), 400
+
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+
+    try:
+        # 遍歷接收到的列表，列表中的順序就是新的 display_order
+        for index, section_key in enumerate(data):
+            # 新的 order 值可以基於 index，確保間距以防未來需要插入
+            new_order = (index + 1) * 10
+
+            cur.execute(
+                """
+                UPDATE ctsv_sections
+                SET display_order = ?
+                WHERE section_key = ?
+                """,
+                (new_order, section_key.upper()),
+            )
+
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        return jsonify({"status": "error", "message": f"Database error during reorder: {str(e)}"}), 500
+
+    conn.close()
+    return jsonify({"status": "ok", "message": "Sections reordered successfully"}), 200
+
+
+@app.route("/api/ctsv_gtsi/cards/reorder/<section_key>", methods=["PUT"])
+def reorder_ctsv_cards(section_key):
+    """
+    接收前端傳來的卡片ID列表，更新 test_cards 表格的 display_order。
+    """
+    section_key = section_key.upper()
+    data = request.json or []  # 預計接收 [card_id_1, card_id_2, ...]
+
+    if not isinstance(data, list):
+        return jsonify({"status": "error", "message": "Invalid reorder list format"}), 400
+
+    conn = get_db_conn("ctsv_gtsi")
+    cur = conn.cursor()
+
+    try:
+        for index, card_id in enumerate(data):
+            # 新的 order 值可以基於 index
+            new_order = (index + 1) * 10
+
+            cur.execute(
+                """
+                UPDATE test_cards
+                SET display_order = ?
+                WHERE id = ? AND section_key = ?
+                """,
+                (new_order, card_id, section_key),
+            )
+
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        return jsonify({"status": "error", "message": f"Database error during card reorder: {str(e)}"}), 500
+
+    conn.close()
+    return jsonify({"status": "ok", "message": "Cards reordered successfully"}), 200
+
+
 # ---------- quick debug routes (保持不變) ----------
 @app.route("/ping")
 def ping():
@@ -853,8 +1111,5 @@ def ping():
 # main
 # ----------------------------------------
 if __name__ == "__main__":
-    # 確保 DB 存在
     create_db_if_not_exists()
-
-    # 啟動 Flask
     app.run(debug=True)
