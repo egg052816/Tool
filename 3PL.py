@@ -1,8 +1,10 @@
-# 3pl.py (最終完整版：包含所有 DB 初始化和 API 路由)
+# 3pl.py (最終完整版：包含所有內容和 API 路由)
 
 from flask import Flask, render_template_string, render_template, request, jsonify
+from werkzeug.utils import secure_filename # 確保文件名的安全性
 import sqlite3
 import os
+from datetime import datetime
 
 # ----------------------------------------
 # 基本設定
@@ -11,9 +13,21 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 
-# 3PL Planning Google Sheet
-gms_3pl_planning = "https://docs.google.com/sheets/d/1T-m_5qRCIr2nBdPUiF-u8_Ph0bX2KACsU5_UAC1oVKk/edit?gid=0#gid=0"
+# 3PL Planning Google Sheet (保持不變)
+gms_3pl_planning = "https://docs.google.com/sheets/d/1T-m_5qRCIr2nBdPUiF-u8_Ph0b2KACsU5_UAC1oVKk/edit?gid=0#gid=0"
 
+# 檔案上傳設定
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'zip', 'docx', 'xlsx'}
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ----------------------------------------
 # DB Helper (更新: 支援 ctsv_gtsi.db)
@@ -107,7 +121,7 @@ def init_db():
     conn_retry.close()
     print("✅ retry.db (包含 retry_tips & suites) 初始化完成。")
 
-    # 3. 初始化 ctsv_gtsi.db (新增)
+    # 3. 初始化 ctsv_gtsi.db
     conn_ctsv = get_db_conn("ctsv_gtsi")
     cursor_ctsv = conn_ctsv.cursor()
 
@@ -115,9 +129,9 @@ def init_db():
     cursor_ctsv.execute(
         """
         CREATE TABLE IF NOT EXISTS ctsv_sections (
-            section_key TEXT PRIMARY KEY,    /* 'GTSI', 'CTSV', 'MADA' */
-            title TEXT NOT NULL,             /* e.g., 'GTS Interactive 區塊' */
-            tag TEXT,                        /* e.g., 'Android 13+ / MADA' */
+            section_key TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            tag TEXT,
             display_order INTEGER NOT NULL DEFAULT 0
         );
         """
@@ -128,14 +142,14 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS test_cards (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            section_key TEXT NOT NULL,       /* FK: GTSI, CTSV, MADA */
-            card_title TEXT NOT NULL,        /* e.g., 'Audio Loopback Latency Test' */
-            card_subtitle TEXT,              /* Small text under title */
-            content TEXT,                    /* Main content / Step list */
-            image_url TEXT,                  /* Primary image URL */
-            note TEXT,                       /* Content for the dedicated note box */
+            section_key TEXT NOT NULL,
+            card_title TEXT NOT NULL,
+            card_subtitle TEXT,
+            content TEXT,
+            image_url TEXT,
+            note TEXT,
             display_order INTEGER NOT NULL DEFAULT 0,
-            FOREIGN KEY(section_key) REFERENCES ctsv_sections(section_key)
+            FOREIGN KEY(section_key) REFERENCES ctsv_sections(section_key) ON DELETE CASCADE
         );
         """
     )
@@ -168,7 +182,7 @@ def create_db_if_not_exists():
 
 
 # ----------------------------------------
-# 首頁 Template (保持不變)
+# 首頁 Template (完整補上)
 # ----------------------------------------
 TEMPLATE = r"""
 <!DOCTYPE html>
@@ -382,7 +396,7 @@ TEMPLATE = r"""
             <div class="tab-pane fade" id="sop" role="tabpanel" aria-labelledby="sop-tab">
                 <div class="tab-title">SOP（標準作業流程）</div>
                 <div class="tab-subtitle">
-                    這一頁可以當作「人看得懂」的版本：步驟拆開、注意事項寫清楚，真正用來丟給新同事或 RD/PM 的。
+                    SOP標準流程。
                 </div>
                 <ul>
                     <li>Step 1：確認機種、Android 版本、build type（user / userdebug）。</li>
@@ -420,8 +434,9 @@ TEMPLATE = r"""
                 </div>
 
                 <button class="beauty-btn" onclick="window.location.href='/ctsv_gtsi'">
-                    手動測試
+                     手動測試 管理頁面
                 </button>
+
             </div>
 
             <div class="tab-pane fade" id="retry" role="tabpanel" aria-labelledby="retry-tab">
@@ -463,9 +478,6 @@ TEMPLATE = r"""
 
                 <button class="beauty-btn" onclick="window.location.href='/waiver'">
                      Waiver 管理頁面
-                </button>
-                <button class="beauty-btn" onclick="window.location.href='/save'">
-                     save
                 </button>
             </div>
         </div>
@@ -900,12 +912,27 @@ def list_ctsv_cards():
     """列出所有測試卡片內容"""
     conn = get_db_conn("ctsv_gtsi")
     cur = conn.cursor()
+    # 🌟 修正點：只選擇存在的欄位，避免舊版 'image_url' 欄位衝突 🌟
     cur.execute(
-        "SELECT id, section_key, card_title, card_subtitle, content, image_url, note, display_order FROM test_cards ORDER BY section_key, display_order")
-    rows = cur.fetchall()
+        "SELECT id, section_key, card_title, card_subtitle, content, note, display_order FROM test_cards ORDER BY section_key, display_order")
+    cards = [dict(r) for r in cur.fetchall()]
+
+    # 獲取所有圖片 (從 card_images 表格)
+    card_ids = [c['id'] for c in cards]
+    imgs_by_card = {}
+    if card_ids:
+        placeholders = ','.join('?' for _ in card_ids)
+        cur.execute(f"SELECT card_id, filename FROM card_images WHERE card_id IN ({placeholders}) ORDER BY card_id, display_order", card_ids)
+
+        for r in cur.fetchall():
+            imgs_by_card.setdefault(r["card_id"], []).append(r["filename"])
+
+    # 合併圖片到卡片
+    for c in cards:
+        c["image_urls"] = imgs_by_card.get(c["id"], [])
+
     conn.close()
-    data = [{k: r[k] for k in r.keys()} for r in rows]
-    return jsonify(data)
+    return jsonify(cards)
 
 
 @app.route("/api/ctsv_gtsi/cards/add", methods=["POST"])
@@ -916,6 +943,8 @@ def add_ctsv_card():
     if not all(data.get(k) is not None for k in required_fields):
         return jsonify({"status": "error", "message": "Missing required fields"}), 400
 
+    image_urls = data.get("image_urls") or []
+
     conn = get_db_conn("ctsv_gtsi")
     cur = conn.cursor()
 
@@ -924,23 +953,31 @@ def add_ctsv_card():
     max_order = cur.fetchone()[0] or 0
     new_order = max_order + 10
 
+    # 插入卡片
     cur.execute(
         """
-        INSERT INTO test_cards (section_key, card_title, card_subtitle, content, image_url, note, display_order)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO test_cards (section_key, card_title, card_subtitle, content, note, display_order)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             data['section_key'].upper(),
             data['card_title'],
             data.get('card_subtitle'),
             data['content'],
-            data.get('image_url'),
             data.get('note'),
             new_order
         ),
     )
-    conn.commit()
     new_id = cur.lastrowid
+
+    # 插入圖片
+    for idx, url in enumerate(image_urls):
+        cur.execute(
+            "INSERT INTO card_images (card_id, filename, display_order) VALUES (?, ?, ?)",
+            (new_id, url, (idx + 1) * 10)
+        )
+
+    conn.commit()
     conn.close()
     return jsonify({"status": "ok", "id": new_id})
 
@@ -953,12 +990,16 @@ def update_ctsv_card(card_id):
     if not all(data.get(k) is not None for k in required_fields):
         return jsonify({"status": "error", "message": "Missing required fields for update"}), 400
 
+    image_urls = data.get("image_urls") or []
+
     conn = get_db_conn("ctsv_gtsi")
     cur = conn.cursor()
+
+    # 1. 更新卡片主要數據
     cur.execute(
         """
         UPDATE test_cards
-        SET section_key=?, card_title=?, card_subtitle=?, content=?, image_url=?, note=?
+        SET section_key=?, card_title=?, card_subtitle=?, content=?, note=?
         WHERE id = ?
         """,
         (
@@ -966,13 +1007,21 @@ def update_ctsv_card(card_id):
             data['card_title'],
             data.get('card_subtitle'),
             data['content'],
-            data.get('image_url'),
             data.get('note'),
             card_id
         ),
     )
-    conn.commit()
     affected = cur.rowcount
+
+    # 2. 清除舊圖片並插入新圖片
+    cur.execute("DELETE FROM card_images WHERE card_id = ?", (card_id,))
+    for idx, url in enumerate(image_urls):
+        cur.execute(
+            "INSERT INTO card_images (card_id, filename, display_order) VALUES (?, ?, ?)",
+            (card_id, url, (idx + 1) * 10)
+        )
+
+    conn.commit()
     conn.close()
 
     if affected == 0:
@@ -1101,6 +1150,39 @@ def reorder_ctsv_cards(section_key):
     return jsonify({"status": "ok", "message": "Cards reordered successfully"}), 200
 
 
+# 檔案上傳 API
+@app.route("/api/ctsv_gtsi/upload_file", methods=["POST"])
+def upload_file():
+    """處理單個文件上傳，並返回伺服器路徑"""
+    if 'file' not in request.files:
+        return jsonify({"status": "error", "message": "No file part in the request"}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({"status": "error", "message": "No selected file"}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        # 增加時間戳以避免文件衝突
+        ts = datetime.now().strftime("%Y%m%d%H%M%S")
+        save_name = f"{ts}_{filename}"
+
+        file_path = os.path.join(UPLOAD_FOLDER, save_name)
+        file.save(file_path)
+
+        # 返回靜態文件相對路徑 (e.g., static/uploads/20231204_file.jpg)
+        relative_path = 'uploads/' + save_name
+
+        return jsonify({
+            "status": "ok",
+            "message": "File uploaded successfully",
+            "file_path": 'static/' + relative_path  # 返回給數據庫的寫入路徑
+        }), 200
+
+    return jsonify({"status": "error", "message": "File type not allowed"}), 400
+
+
 # ---------- quick debug routes (保持不變) ----------
 @app.route("/ping")
 def ping():
@@ -1112,4 +1194,4 @@ def ping():
 # ----------------------------------------
 if __name__ == "__main__":
     create_db_if_not_exists()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)

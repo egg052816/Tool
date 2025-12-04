@@ -11,7 +11,7 @@ DB_PATH = os.path.join(BASE_DIR, "retry.db")  # 🎯 正確使用 retry.db
 # 靜態 Retry 技巧數據 (補回數據內容)
 # ----------------------------------------
 RETRY_DATA = [
-    # --- 1. Basic 測項 (SIM / Host / Permission 類) ---
+    # --- 1. Basic ---
     {"type": "Basic", "module_case": "Radio", "condition": "實體 SIM", "trick": "使用真實SIM卡重測"},
     {"type": "Basic", "module_case": "Adoptable Host", "condition": "SD 卡", "trick": "確保SD卡格式正確"},
     {"type": "Basic", "module_case": "CarrierApiTestCases", "condition": "Test SIM", "trick": "確認 SIM 卡狀態"},

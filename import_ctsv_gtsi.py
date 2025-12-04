@@ -2,13 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 將固定內容（對應你提供的 ctsv_gtsi HTML）匯入 ctsv_gtsi.db。
-- 會確保表存在（ctsv_sections, test_cards, card_images）
-- 會 upsert 三個頂層區塊 (GTSI, CTSV, MADA)
-- 會清空 test_cards 與 card_images，然後依照 HTML 內容匯入卡片與多張圖片
-使用:
-    python import_ctsv_gtsi.py
+- 建立或確認表格: ctsv_sections, test_cards, card_images
+- 清空 test_cards & card_images，然後匯入 HTML 裡的卡片與多張圖片
 """
-
 import sqlite3
 import os
 import sys
@@ -32,6 +28,7 @@ def ensure_tables(conn):
         display_order INTEGER NOT NULL DEFAULT 0
     );
     """)
+    # test_cards (no image_url column; images in card_images)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS test_cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +36,6 @@ def ensure_tables(conn):
         card_title TEXT NOT NULL,
         card_subtitle TEXT,
         content TEXT,
-        image_url TEXT,
         note TEXT,
         display_order INTEGER NOT NULL DEFAULT 0,
         FOREIGN KEY(section_key) REFERENCES ctsv_sections(section_key) ON DELETE CASCADE
@@ -59,7 +55,7 @@ def ensure_tables(conn):
 def upsert_sections(conn):
     cur = conn.cursor()
     default_sections = [
-        ('GTSI', 'GTS-I 手動測試 : Android 13 以上才需測 GTS-I（GTS Interactive）', 'GTS-I', 10),
+        ('GTSI', 'GTS-I 手動測試 ', 'GTS-I', 10),
         ('CTSV', 'CTS Verifier 手動測試', 'CTS Verifier', 20),
         ('MADA', 'MADA Check List', 'MADA', 30),
     ]
@@ -80,20 +76,13 @@ def clear_cards(conn):
     conn.commit()
 
 def insert_card(conn, card):
-    """
-    card: dict {
-        section_key, card_title, card_subtitle, content, note, image_urls(list), display_order
-    }
-    """
     cur = conn.cursor()
     cur.execute("""
-        INSERT INTO test_cards (section_key, card_title, card_subtitle, content, image_url, note, display_order)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (card['section_key'], card['card_title'], card.get('card_subtitle'), card.get('content'),
-          None, card.get('note'), card.get('display_order')))
+        INSERT INTO test_cards (section_key, card_title, card_subtitle, content, note, display_order)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (card['section_key'], card['card_title'], card.get('card_subtitle'),
+          card.get('content'), card.get('note'), card.get('display_order')))
     card_id = cur.lastrowid
-
-    # insert card_images if any
     for idx, fname in enumerate(card.get('image_urls', [])):
         if not fname:
             continue
@@ -103,23 +92,20 @@ def insert_card(conn, card):
     return card_id
 
 def main():
-    if not os.path.exists(DB_PATH):
-        print("資料庫不存在，將建立新資料庫：", DB_PATH)
-
+    print("使用資料庫：", DB_PATH)
     conn = get_conn()
     try:
         ensure_tables(conn)
         upsert_sections(conn)
-        print("ctsv_sections 確認完成 / 已 upsert。")
+        print("ctsv_sections 建立/更新完成。")
 
         print("清空現有 test_cards 與 card_images（避免重複匯入）...")
         clear_cards(conn)
 
-        # build cards list (與你 HTML 一模一樣的內容與圖片路徑)
         cards = []
         order = 10
 
-        # GTSI
+        # （以下完全照你給的 HTML 內容填入）
         cards.append({
             "section_key": "GTSI",
             "card_title": "GtsInteractiveOverUsbTestCases",
@@ -166,7 +152,7 @@ def main():
             "card_subtitle": None,
             "content": "Case9_2 測試條件要求 SetupWizard 介面「完全不連網路」直接進入主頁。\n該截圖請改成對應的圖片（請參照專案 static 檔案）。",
             "note": "測試時需確認：裝置從開機到 SetupWizard 全程未連上任何網路，且畫面內容需與截圖一致。",
-            "image_urls": ["GtsInteractiveMadachecklistTest.jpg", "GTSI/GTS_Interactive_Setupwizard_PART1_oldversion.pdf"],
+            "image_urls": ["Case9_2.jpg", "GTSI/GTS_Interactive_Setupwizard_PART1_oldversion.pdf"],
             "display_order": order
         }); order += 10
 
@@ -207,7 +193,7 @@ def main():
             "card_subtitle": None,
             "content": "MIDI_BLE.apk 會在每一台實驗室電腦的 /home/fih/XTS/CTS/MIDI_BLE 中\n只需安裝並使用 1.11 版本即可，不需另外到 Google Play 下載最新版。",
             "note": "測試前確認：裝置已安裝 MIDI_BLE.apk。",
-            "image_urls": [],  # APK 非圖片，可不放
+            "image_urls": [],
             "display_order": order
         }); order += 10
 
@@ -217,7 +203,7 @@ def main():
             "card_subtitle": None,
             "content": "Step 1 . 開啟 Terminal 根據你的 Android 版本並 initialize 測試環境，輸入 source ITS.sh 版本 (例如: source ITS.sh 15)。\nStep 2 . 將測試環境拉到自己資料夾位置，用來 SetUp 及修改內部 Config。\nStep 3 . 輸入 source build/envsetup.sh。\nStep 4 . 輸入 adb -s <Serial ID> shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier。\nStep 5 . 更改內部 Config (依實驗室設備、DUT Serial、Arduino、Light 等進行修改)。\nStep 6 . 執行 Python 檔案: python tools/run_all_tests.py camera=0 scenes=1 。",
             "note": "自動化測試，待全部測試完才會出結果；log 會存在 tmp 下（如有 fail，需提供 log 給 RD）。",
-            "image_urls": ["ITS_setup1.jpg","ITS.jpg","ITS2.jpg","ITS3.jpg","ITS_setup2.jpg"],
+            "image_urls": ["Step1.jpg","CameraITS.jpg","CameraITS_Config.jpg","Step5.jpg","Step6.jpg"],
             "display_order": order
         }); order += 10
 
@@ -227,7 +213,7 @@ def main():
             "card_subtitle": None,
             "content": "Sensor Fusion 需要使用上方有滾輪的箱子做測試，並需要額外準備 Test Pattern 紙張。\n若 Test Pattern 測試無法通過，請至 Google CTS Verifier 查詢官方範例圖片與說明。",
             "note": "如有 fail，需提供 log 給 RD。參考: https://source.android.com/docs/compatibility/cts/sensor-fusion-box-assembly",
-            "image_urls": ["ITS_Fusion.jpg"],
+            "image_urls": ["ITS_Fusionjpg"],
             "display_order": order
         }); order += 10
 
@@ -235,19 +221,19 @@ def main():
             "section_key": "CTSV",
             "card_title": "ITS Test - CameraWebcamTest",
             "card_subtitle": None,
-            "content": "Step 1 . initialize 測試環境，例如 source ITS.sh 15 W。\nStep 2 . cd 到 CameraWebcamTest 目錄並修改 config。\nStep 3 . 執行測試: python run_webcam_test.py -c config.yml。",
+            "content": "Step 1 . initialize 測試環境，輸入 source ITS.sh 15 W。\nStep 2 . cd 到 CameraWebcamTest 目錄並修改 config。\nStep 3 . 執行測試: python run_webcam_test.py -c config.yml。",
             "note": None,
-            "image_urls": ["ITS_W2.jpg","ITS_W.jpg","ITS_W4.jpg","ITS_W3.jpg"],
+            "image_urls": ["Step 1.jpg","CameraWebcam.jpg","CameraWebcam_Config.jpg","Step 4.jpg"],
             "display_order": order
         }); order += 10
 
         cards.append({
             "section_key": "CTSV",
-            "card_title": "PN532 / MultiDevice NFC 測試",
+            "card_title": "MultiDeviceTest",
             "card_subtitle": None,
             "content": "Step 1 . 準備 PN532 NFC reader，並將 PN532 接上電腦 (檢查 /dev/ttyUSB* path)。\nStep 2 . DUT 需安裝 NfcEmulatorTestApp.apk (adb install -r -g NfcEmulatorTestApp.apk)。\nStep 3 . 打開 source ITS.sh 15，cd 到 MultiDevice 目錄，修改 config 中 DUT ID 及 pn532_serial_path。\nStep 4 . 執行測試: python3 tools/run_all_tests.py。",
             "note": "若本項單條測項錯誤，請使用 TOT 版本再跑一次；log 會存在 tmp 下。",
-            "image_urls": ["PN532.jpg","MultiDevice.jpg","MultiDevice2.jpg"],
+            "image_urls": ["PN532.jng","MultiDevice.jpg","MultiDeviceTest_Config.jpg"],
             "display_order": order
         }); order += 10
 
@@ -258,7 +244,7 @@ def main():
             "card_subtitle": None,
             "content": "最新版本的 MADA 都會放在: /home/fih/CHECKLIST_LATEST/GMS_Mada Compliance Form - (External sharing).docx。\n內部會需要用到的測試 apk 也都放在相同位置。",
             "note": "完成每個測項並附上照片後，請在最右側輸入 pass；若該 DUT 無該功能或不符版本，則註明原因並填上 N/A。",
-            "image_urls": ["MADA.jpg","MADA2.jpg","MADA3.jpg"],
+            "image_urls": ["MADA附件.jpg","DUT_Detail.jpg","Step3.jpg"],
             "display_order": order
         }); order += 10
 
@@ -272,22 +258,24 @@ def main():
             "display_order": order
         }); order += 10
 
-        # insert them
         print("開始匯入卡片...")
         for c in cards:
             cid = insert_card(conn, c)
             print(f"Inserted card id={cid} title='{c['card_title']}' section={c['section_key']} images={len(c.get('image_urls',[]))}")
 
-        print("匯入完成。請確認 static/ 目錄下含有下列檔案（若要顯示圖片或連結）:")
-        # 列出所有使用到的檔案（合併）
+        print("匯入完成。請把靜態檔放到 static/ 對應路徑，以便前端顯示。")
+        # 列印使用到的檔案
         used_files = []
         for c in cards:
             for f in c.get('image_urls', []):
                 if f and f not in used_files:
                     used_files.append(f)
-        for f in used_files:
-            print("  -", f)
-
+        if used_files:
+            print("使用到的檔案（請確認 static/ 下有這些檔案）:")
+            for f in used_files:
+                print("  -", f)
+        else:
+            print("沒有外部檔案清單。")
     except Exception as e:
         print("匯入發生錯誤:", e)
         raise

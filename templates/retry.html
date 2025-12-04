@@ -20,7 +20,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
   <style>
-    /* ... (其他通用樣式保持不變) ... */
+    /* ... (CSS 樣式保持不變，略) ... */
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
@@ -59,7 +59,7 @@
 
     /* 🌟 拖曳模式樣式 🌟 */
     .drag-mode .suite-block {
-        cursor: grab !important; /* 強制使用抓取鼠標 */
+        cursor: grab !important;
         border: 1px dashed #3b82f6;
         transition: all 0.15s ease;
     }
@@ -197,7 +197,7 @@
         text-decoration: none;
     }
 
-    /* 🌟 隱藏特殊 Modal 欄位 🌟 */
+    /* 🌟 隱藏 Modal 欄位 🌟 */
     .modal-hidden-field {
         display: none !important;
     }
@@ -221,7 +221,7 @@
 
       <div class="btn-group">
           <button class="btn btn-secondary me-2" id="toggleDragBtn" onclick="toggleDragMode(event)">
-              <i class="fas fa-hand-rock me-1"></i>
+                  <i class="fas fa-hand-rock me-1"></i>
           </button>
           <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newSuiteModal">
               <i class="fas fa-plus me-1"></i> 新增區塊
@@ -246,33 +246,30 @@
             </div>
             <div class="modal-body">
                 <form id="retryForm">
-                    <input type="hidden" id="retry_id_pk" value="">
+            <input type="hidden" id="retry_id_pk" value="">
 
-                    <div class="mb-3 modal-hidden-field" id="retry-type-group">
-                        <label for="retry_type" class="form-label">Retry 類型 (必填)</label>
-                        <input type="text" class="form-control" id="retry_type" readonly required>
-                        <div class="form-text text-muted">類型由區塊決定，無法修改。</div>
-                    </div>
-
-                    <div class="mb-3" id="module-case-group">
-                        <label for="module_case" class="form-label">模組 / 測項 (必填)</label>
-                        <textarea class="form-control" id="module_case" rows="2" required></textarea>
-                        <div class="form-text text-muted">例如：CtsNetTestCases / DNS 相關測項</div>
-                    </div>
-
-                    <div class="mb-3" id="condition-group">
-                        <label for="condition" class="form-label">條件 / 環境 (必填)</label>
-                        <textarea class="form-control" id="condition" rows="2" required></textarea>
-                        <div class="form-text text-muted">例如：連自己手機 Hotspot、Factory Reset</div>
-                    </div>
-
-                    <div class="mb-3" id="trick-group">
-                        <label for="trick" class="form-label">備註 / Retry 方法</label>
-                        <textarea class="form-control" id="trick" rows="3"></textarea>
-                    </div>
-
-                </form>
+            <div class="mb-3 modal-hidden-field" id="retry-type-group">
+                <label for="retry_type" class="form-label">Retry 類型</label>
+                <input type="text" class="form-control" id="retry_type" readonly required>
             </div>
+
+            <div class="mb-3" id="module-case-group">
+                <label for="module_case" class="form-label">模組 / 測項 (必填)</label>
+                <textarea class="form-control" id="module_case" rows="2" required></textarea>
+            </div>
+
+            <div class="mb-3" id="condition-group">
+                <label for="condition" class="form-label">關鍵條件 / 環境 (必填)</label>
+                <textarea class="form-control" id="condition" rows="2" required></textarea>
+            </div>
+
+            <div class="mb-3" id="trick-group">
+                <label for="trick" class="form-label">備註 / Retry 方法 (必填)</label>
+                <textarea class="form-control" id="trick" rows="3" required></textarea>
+            </div>
+
+        </form>
+    </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary" id="saveRetryBtn">儲存</button>
@@ -324,8 +321,7 @@
 ></script>
 
 <script>
-    // 最終修正版本：新增拖曳排序功能 (Sortable.js)
-
+    // 最終修正版本：修復 SPECIAL 編輯錯誤，並確保所有欄位必填
     const API_URL_RETRY = '/api/retry';
     const API_URL_SUITES = '/api/suites';
 
@@ -373,7 +369,6 @@
     // ==========================================================
     function nl2br(str) {
         if (!str) return '';
-        // 由於 CSS 移除了 white-space: pre-wrap; 這裡必須使用 <br> 標籤實現分行
         return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
     }
 
@@ -444,8 +439,8 @@
             if (isSpecial) {
                 // 客製化 SPECIAL 表頭 (三欄)
                 headerCols = `
-                    <th>條件 / 環境</th>
-                    <th>備註</th>
+                    <th>模組/測項 / 條件 / 環境</th>
+                    <th>備註 / Retry 方法</th>
                     <th>Edit / Delete</th>
                 `;
             } else {
@@ -464,7 +459,6 @@
                     <div class="retry-list-header">
                         <div class="d-flex align-items-center">
                             <h2>${suite.suite_title}</h2>
-                            <span class="retry-section-tag">${suite.suite_tag}</span>
                         </div>
                         <div class="btn-group">
                             <button class="btn btn-sm btn-primary me-2 add-tip-btn" data-bs-toggle="modal" data-bs-target="#retryModal" data-id="new" data-type-preset="${suiteKey}">
@@ -494,17 +488,20 @@
 
     // 3. 渲染表格內容
     function renderTableBody(suiteKey, typeData) {
-        if (typeData.length === 0) {
-            return `<tr><td colspan="4" class="text-center">目前沒有 ${suiteKey} 的 Retry 項目。</td></tr>`;
+        const isSpecial = (suiteKey === 'SPECIAL');
+        const colspan = isSpecial ? 3 : 4;
+
+        // 如果沒有資料，根據 header 欄數回傳正確的 colspan
+        if (!typeData || typeData.length === 0) {
+            return `<tr><td colspan="${colspan}" class="text-center">目前沒有 ${suiteKey} 的 Retry 項目。</td></tr>`;
         }
 
-        const isSpecial = (suiteKey === 'SPECIAL');
-
+        // 為避免欄位錯誤，每一列會依 isSpecial 產生正確數量的 <td>
         if (isSpecial) {
-             // 三欄渲染 (合併模組/測項和條件/環境)
-             return typeData.map(item => `
+            // 三欄模式：模組/測項+條件、備註、操作
+            return typeData.map(item => `
                 <tr data-id="${item.id}" data-type="${item.type}">
-                    <td>${nl2br(item.module_case) + '<br>' + nl2br(item.condition)}</td>
+                    <td>${nl2br(item.module_case) + (item.module_case && item.condition ? '<hr style="border:none;border-top:1px dashed #eee;margin:6px 0;">' : '') + nl2br(item.condition)}</td>
                     <td>${nl2br(item.trick) || '-'}</td>
                     <td class="text-center">
                         <div class="action-buttons-wrapper">
@@ -518,9 +515,8 @@
                     </td>
                 </tr>
             `).join('');
-
         } else {
-            // 標準四欄渲染
+            // 四欄模式：模組、條件、備註、操作
             return typeData.map(item => `
                 <tr data-id="${item.id}" data-type="${item.type}">
                     <td>${nl2br(item.module_case)}</td>
@@ -609,7 +605,7 @@
             // 啟用拖曳模式
             sortableInstance.option("disabled", false);
             container.classList.add('drag-mode');
-            toggleDragButton.innerHTML = '<i class="fas fa-mouse-pointer me-1"></i>';
+            toggleDragButton.innerHTML = '<i class="fas fa-mouse-pointer me-1"></i> 禁用排序';
             toggleDragButton.classList.remove('btn-secondary');
             toggleDragButton.classList.add('btn-warning');
 
@@ -617,7 +613,7 @@
             // 禁用拖曳模式
             sortableInstance.option("disabled", true);
             container.classList.remove('drag-mode');
-            toggleDragButton.innerHTML = '<i class="fas fa-hand-rock me-1"></i>';
+            toggleDragButton.innerHTML = '<i class="fas fa-hand-rock me-1"></i> 啟用排序';
             toggleDragButton.classList.remove('btn-warning');
             toggleDragButton.classList.add('btn-secondary');
         }
@@ -630,12 +626,12 @@
 
     // 儲存測項 (新增/修改)
     saveRetryButton.addEventListener('click', async () => {
-        // 🌟 修正: 檢查欄位是否必填，需要根據當前模式判斷 🌟
         const currentType = retryFormFields.type.value.toUpperCase();
         const isSpecial = (currentType === 'SPECIAL');
 
+        // 驗證必填欄位
         if (!retryFormFields.condition.value.trim() || !retryFormFields.trick.value.trim()) {
-            alert('「條件 / 環境」和「備註 / Retry 方法」為必填欄位。');
+            alert('「條件 / 環境」和「備註」為必填欄位。');
             return;
         }
 
@@ -650,7 +646,7 @@
 
         const data = {
             type: currentType,
-            // 🌟 修正: SPECIAL 模式下 module_case 可以為空 (因為已合併到 condition) 🌟
+            // 🌟 關鍵修正: SPECIAL 模式下，module_case 必須傳送空字串，防止數據庫驗證失敗 🌟
             module_case: isSpecial ? "" : retryFormFields.module_case.value,
             condition: retryFormFields.condition.value,
             trick: retryFormFields.trick.value
@@ -673,7 +669,7 @@
                 alert(`操作失敗: ${result.message || '伺服器錯誤'}`);
             }
         } catch (error) {
-            alert('連線失敗，請確認後端服務是否運行。');
+            alert('連線失敗，請檢查後端服務是否運行。');
             console.error('Save failed:', error);
         }
     });
@@ -700,7 +696,7 @@
                 alert(`刪除失敗: ${result.message || '伺服器錯誤'}`);
             }
         } catch (error) {
-            alert('連線失敗，請確認後端服務是否運行。');
+            alert('連線失敗，請檢查後端服務是否運行。');
             console.error('Delete failed:', error);
         }
     }
@@ -720,39 +716,28 @@
 
         document.getElementById('retryModalLabel').textContent = `編輯 Retry 技巧 (ID: ${id})`;
 
-        // 🌟 根據類型調整 Modal 顯示 🌟
+        // 🌟 1. 重置並設定顯示/隱藏 🌟
         if (isSpecial) {
-            inputGroups.type.classList.add('modal-hidden-field');
-            inputGroups.module_case.classList.add('modal-hidden-field');
-
-            // 由於 SPECIAL 區塊在表格中是合併的，但在 Modal 中，我們只編輯 condition 和 trick
+            inputGroups.module_case.classList.add('modal-hidden-field'); // 隱藏 Module/測項
             document.querySelector('#condition-group label').textContent = '條件 / 環境 (必填)';
             document.querySelector('#trick-group label').textContent = '備註 (必填)';
-
-            // 填充表單
-            retryFormFields.id.value = item.id;
-            retryFormFields.type.value = item.type;
-            // module_case 在 SPECIAL 中保留數據庫值，但欄位隱藏
-            retryFormFields.module_case.value = item.module_case || '';
-            retryFormFields.condition.value = item.condition;
-            retryFormFields.trick.value = item.trick;
-
+            retryFormFields.condition.required = true;
+            retryFormFields.trick.required = true;
         } else {
-            // 標準模式 (四欄)
-            inputGroups.type.classList.add('modal-hidden-field');
-            inputGroups.module_case.classList.remove('modal-hidden-field');
-
-            document.querySelector('#condition-group label').textContent = '條件 / 環境 (必填)';
+            inputGroups.module_case.classList.remove('modal-hidden-field'); // 顯示 Module/測項
+            document.querySelector('#condition-group label').textContent = '關鍵條件 / 環境 (必填)';
             document.querySelector('#trick-group label').textContent = '備註 / Retry 方法';
-
-            // 填充表單
-            retryFormFields.id.value = item.id;
-            retryFormFields.type.value = item.type;
-            retryFormFields.module_case.value = item.module_case;
-            retryFormFields.condition.value = item.condition;
-            retryFormFields.trick.value = item.trick;
+            retryFormFields.condition.required = true;
+            retryFormFields.trick.required = false; // 標準模式的 trick 非必填
         }
+        inputGroups.type.classList.add('modal-hidden-field'); // 類型永遠隱藏
 
+        // 🌟 2. 填充數據 🌟
+        retryFormFields.id.value = item.id;
+        retryFormFields.type.value = item.type;
+        retryFormFields.module_case.value = item.module_case || ''; // 即使隱藏也要填充數據庫值
+        retryFormFields.condition.value = item.condition;
+        retryFormFields.trick.value = item.trick;
 
         retryModal.show();
     }
@@ -855,18 +840,15 @@
             // 🌟 新增時，根據類型預設 Modal 狀態 🌟
             const isSpecial = (presetType === 'SPECIAL');
             if (isSpecial) {
-                inputGroups.type.classList.add('modal-hidden-field');
-                inputGroups.module_case.classList.add('modal-hidden-field');
-
+                inputGroups.module_case.classList.add('modal-hidden-field'); // 隱藏 Module/測項
                 document.querySelector('#condition-group label').textContent = '條件 / 環境 (必填)';
                 document.querySelector('#trick-group label').textContent = '備註 (必填)';
             } else {
-                inputGroups.type.classList.add('modal-hidden-field'); // 類型永遠隱藏
-                inputGroups.module_case.classList.remove('modal-hidden-field');
-
+                inputGroups.module_case.classList.remove('modal-hidden-field'); // 顯示 Module/測項
                 document.querySelector('#condition-group label').textContent = '關鍵條件 / 環境 (必填)';
                 document.querySelector('#trick-group label').textContent = '備註 / Retry 方法';
             }
+            inputGroups.type.classList.add('modal-hidden-field'); // 類型永遠隱藏
         }
         // 編輯邏輯已在 openModalForEdit 函數中處理
     });

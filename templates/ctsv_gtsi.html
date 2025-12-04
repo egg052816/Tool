@@ -2,206 +2,57 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>手動測試說明 - GTS-I & CTS Verifier</title>
+  <title>手動測試說明 - GTS-I & CTS Verifier & MADA </title>
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+  >
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f4f7fb;
-      color: #111827;
-    }
-
-    header {
-      background: #2563eb;
-      color: #ffffff;
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-      letter-spacing: 0.05em;
-    }
-
-    header .subtitle {
-      font-size: 13px;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1080px;
-      margin: 24px auto 32px;
-      padding: 0 16px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      margin: 24px 0 12px;
-      color: #1f2933;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .section-title span.tag {
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .android-subtitle {
-      font-size: 14px;
-      margin: 12px 0 8px;
-      color: #4b5563;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .android-subtitle span.badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
-      border: 1px solid #e5e7eb;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #111827;
-    }
-
-    .card small {
-      font-size: 11px;
-      color: #6b7280;
-    }
-
-    .card ul {
-      margin: 6px 0 0;
-      padding-left: 18px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .note {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #374151;
-      background: #eff6ff;
-      border-radius: 6px;
-      padding: 6px 8px;
-      border-left: 3px solid #2563eb;
-    }
-
-    code {
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 12px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .photo-section-title {
-      font-size: 16px;
-      margin: 24px 0 8px;
-      color: #111827;
-    }
-
-    .photo-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .photo-grid figure {
-      margin: 0;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 8px;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
-      border: 1px solid #e5e7eb;
-      max-width: 180px;
-      text-align: center;
-    }
-
-    .photo-grid img {
-      max-width: 100%;
-      border-radius: 8px;
-      display: block;
-    }
-
-    .photo-grid figcaption {
-      margin-top: 4px;
-      font-size: 11px;
-      color: #6b7280;
-    }
-
-    .back-link {
-      margin-top: 24px;
-      font-size: 13px;
-    }
-
-    .back-link a {
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
-    }
-
-    /* 🔹 新增 / 編輯 / 刪除 工具列：移到最下面 */
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      margin-top: 24px;
-    }
-
-    .toolbar button {
-      border: 1px solid #d1d5db;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      background: #ffffff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
-    }
-
-    .toolbar button:hover {
-      background: #eff6ff;
-      border-color: #2563eb;
-    }
-
-    .toolbar button.active {
-      background: #2563eb;
-      color: #ffffff;
-      border-color: #2563eb;
-    }
+    /* 保留你原本樣式，必要的輕微調整（略過不影響功能的長 CSS） */
+    * { box-sizing: border-box; font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { margin:0; padding:0; background:#f4f7fb; color:#111827; }
+    header { background:#2563eb; color:#fff; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:1000; box-shadow:0 2px 5px rgba(0,0,0,.2); }
+    header h1 { margin:0; font-size:20px; letter-spacing:.05em; } header .subtitle { font-size:13px; opacity:.9; }
+    .nav-anchors a { color:#fff; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:14px; margin-left:10px; transition:background .2s; }
+    .nav-anchors a:hover { background: rgba(255,255,255,.2); }
+    main { max-width:1080px; margin:24px auto 32px; padding:0 16px; }
+    .section-anchor { scroll-margin-top:80px; display:block; }
+    .section-title { font-size:18px; margin:24px 0 12px; color:#1f2933; display:flex; align-items:center; gap:8px; }
+    .section-title .tag { font-size:12px; padding:2px 8px; border-radius:999px; background:#dbeafe; color:#1d4ed8; }
+    .android-subtitle { font-size:14px; margin:12px 0 8px; color:#4b5563; display:inline-flex; align-items:center; gap:6px; }
+    .card-container { min-height:50px; }
+    .card { background:#fff; border-radius:10px; padding:16px 18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(15,23,42,0.07); border:1px solid #e5e7eb; position:relative; }
+    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid #eee; }
+    .card-title { font-size:15px; font-weight:600; color:#111827; margin:0; }
+    .card small { font-size:11px; color:#6b7280; }
+    .card ul li, .card ol li, .card p {font-size: 13px !important; line-height: 1.5; /* 確保行高正常，避免擠壓 */}
+    .card ul li code, .card ol li code, .card p code,
+    .card ul li b, .card ol li b, .card p b {font-size: 13px !important; font-weight: 700;}
+    figure { margin:8px 0; padding:0; max-width:240px; text-align:center; display:inline-block; vertical-align:top; margin-right:8px; }
+    figure img { max-width:100%; border-radius:6px; border:1px solid #ddd; display:block; cursor:pointer; }
+    figure figcaption { font-size:11px; color:#6b7280; margin-top:4px; word-break:break-all; }
+    .note { margin-top:10px; font-size:12px; color:#374151; background:#eff6ff; border-radius:6px; padding:6px 8px; border-left:3px solid #2563eb; }
+    .btn-action { padding:5px 10px; font-size:12px; border-radius:5px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; line-height:1; }
+    .btn-edit { background-color:#3b82f6; color:white; border:1px solid #2563eb; }
+    .btn-delete { background-color:#ef4444; color:white; border:1px solid #dc2626; }
+    .image-thumb { width:80px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #ddd; margin-right:6px; }
+    .modal-image-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .modal-image-item { display:inline-flex; flex-direction:column; align-items:center; gap:6px; }
+    .remove-image-btn { font-size:11px; padding:3px 6px; border-radius:4px; background:#ef4444; color:#fff; border:none; cursor:pointer; }
+    .small-muted { font-size:12px; color:#6b7280; }
+    /* image preview modal tweaks */
+    .modal-xl { max-width:1200px; }
   </style>
 </head>
 <body>
@@ -210,265 +61,18 @@
     <h1>手動測試說明</h1>
     <div class="subtitle">GTS-I / CTS Verifier / MADA Check List</div>
   </div>
+  <div class="nav-anchors" id="header-nav">
+       <button class="btn btn-sm btn-secondary" id="toggleDragBtn" onclick="toggleDragMode(event)" style="margin-left: 10px;">
+          <i class="fas fa-hand-rock me-1"></i>
+      </button>
+  </div>
 </header>
 
 <main>
-  <!-- GTS-I 區塊 -->
-  <h2 class="section-title">
-    GTS-I 手動測試 : Android 13 以上才需測 <strong>GTS-I（GTS Interactive）</strong>
-    <span class="tag">GTS-I</span>
-  </h2>
-
-    <div class="android-subtitle">
-        <span class="badge" style="font-size: 15px;"><b>Gts Interactive 測試環境架設</b></span>
-      </div>
-
-    <div class="card-title"></div>
-    <ul>
-      Step 1 . 在 /home/fih/XTS 位置下載指定版本的 GTS 包並複製到本機位置進行測試 <br>
-      Step 2 . 在 ternimal 執行 gts-tradefed ，按下 Enter，建立Google tradefed 的環境<br>
-      Step 3 . 輸入 run gts-interactive。<br>
-
-    </ul>
-  </div>
-
-    <div class="card">
-    <div class="card-title">GtsInteractiveOverUsbTestCases</div>
-    <ul>
-      Step 1 . 測試Usb Over Wifi 時，需使用iPhone Hotspot與DUT建立 Wi-Fi 連線。<br>
-      Step 2 . DUT 按下Setting -> Debugging  -> Wireless -> 顯示ip。<br>
-      Step 3 . 在Terminal 輸入 adb connect xxx.xxx.xxx.xxx:xxxx (ip位置)。<br>
-      Step 4 . 關閉電腦乙太網路。<br>
-      Step 5 . 拔掉 DUT 連接電腦的 cable ，並在 tradefed 輸入 ld 確認 iphone 提供的 ip 位置是online的<br>
-      Step 6 . 利用WiFi連線的adb進行後續步驟依照提示詞依序進行<br>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">AndroidAutoOverUsbInteractiveHostTest</div>
-    <small>Test item：只要測項名稱有顯示 OverUsb 就都要連上iphone hotspot，利用WiFi連線的adb進行測試</small>
-    <ul>
-      <li>測試 Android Auto 時，待DUT前置WiFi步驟連線完成後，需接上<b>車機</b>進行測試。</li>
-      <li>車機有額外提供獨立電源，請確認接線是否正確，另外背板有一Type-C孔，可跟DUT做連接。</li>
-    </ul>
-    <div class="note">
-      建議紀錄：請注意DUT與車機是否有正常連線，畫面是否可正常投影至車機。
+  <div id="content-container">
+    <div class="text-center p-5" id="initial-loading">
+        <p>正在載入數據，請稍候...</p>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Madachecklist SetupWizard - QRCode / NFC Tag</div>
-    <ul>
-      <li>Madachecklist SetupWizard 第 2 與第 3 張截圖需要使用下列工具：<br>
-
-          <br>
-          2. <b>SetupWizard Qrcode</b>：額外附在 \\10.57.41.153\user$\QA\XTS\GTSI\QR Code<br>
-          <img src="{{ url_for('static', filename='GTSI/QR Code/QRCode_SetupWizard.png') }}" style="width: 40%; height: auto;" alt="QR Code 設置精靈"><br>
-          3.<b>Nfc Tag</b> : 請確認為此張 Tag，避免測試錯誤。</li><br>
-            <img src="{{ url_for('static', filename='NFC_Tag.jpg') }}" style="width: 40%; height: auto;" alt="NFC_Tag"><br>
-      <li>以上兩種方式皆用於 <b>work provisioning</b> 測試。</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">GtsInteractiveMadachecklistTest 除Case9_2以外截圖請參照pdf </div>
-    <a href="{{ url_for('static', filename='GTSI/GTS_Interactive_Setupwizard_PART1_oldversion.pdf') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
-                GTS_Interactive_Setupwizard_PART1_oldversion.pdf
-            </a><br>
-    <ul>
-      <li>Case9_2 測試條件要求SetupWizard介面「<b>完全不連網路</b>」直接進入主頁。</li>
-      <li>該截圖請改成：<br>
-        <img src="{{ url_for('static', filename='GtsInteractiveMadachecklistTest.jpg') }}" style="width: 40%; height: auto;" alt="GtsInteractiveMadachecklistTest">
-      </li>
-    </ul>
-    <div class="note">
-      測試時需確認：裝置從開機到 SetupWizard 全程未連上任何網路，且畫面內容需與截圖一致。
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">✯ TOT版本(Preview)</div>
-    <ul>
-      <li>GTSI 也有提供TOT的版本，只是名稱不相同叫做「 Preview 」</li>
-      <li>Preview 版的GTS測試包，也會附在/home/fih/XTS/GTS的資料夾內，資料夾名稱會特別標示。</li>
-      <li>若已完全根據提示詞測試確認無法通過，則可使用Preview版本，進行驗證確認該項測試在DUT上為Fail。</li>
-      <li>若依舊為Fail，則須將其測試過程及結果截圖，並回報給RD分析。</li>
-    </ul>
-  </div>
-
-  <!-- CTS Verifier 區塊 -->
-  <h2 class="section-title">
-    CTS Verifier 手動測試
-    <span class="tag">CTS Verifier</span>
-  </h2>
-
-
-  <div class="card">
-    <div class="card-title">Audio Loopback Latency Test</div>
-    <ul>
-      <li>第 2 個子項的 <b>Analog 測試</b> 需要使用 <b>3.5mm loopback dongle</b>。</li>
-      <li>需將已封起來的回收用 loopback dongle <b>接在耳機孔</b> 做 loopback 測試。</li>
-      <li>loopback dongle 圖示 : </li><br>
-      <img src="{{ url_for('static', filename='LoopBack.jpg') }}" style="width: 40%; height: auto;" alt="LoopBack">
-    </ul>
-    <div class="note">
-      測試時確認：請依圖片上的loopback dongle做測試，以免影響 Latency 結果。
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Voicemail Broadcast Test</div>
-    <ul>
-      <li>台灣地區 <b>未支援 Voicemail 服務</b>。</li>
-      <li>需搭配 <b>NowSMS Server</b> 進行模擬測試。</li>
-      <li>附上壓縮檔:
-      <a href="{{ url_for('static', filename='CTSV/NowSMS.zip') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
-            NowSMS.zip
-      </a>進行測試，密碼為:Foxconn123<br>
-
-    </ul>
-    <div class="note">
-      由於先前同仁架設之伺服器已消失，需重新架設(須研究)。
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Java MIDI Test / Native MIDI Test</div>
-    <ul>
-      <li><code>MIDI_BLE.apk</code> 會在每一台實驗室電腦的/home/fih/XTS/CTS/MIDI_BLE中</li>
-      <li>只需安裝並使用 <b>1.11 版本</b> 即可，不需照pdf步驟另外到 Google Play 商店下載最新版。</li>
-    </ul>
-    <div class="note">
-      測試前確認：裝置已安裝MIDI_BLE.APK。
-    </div>
-  </div>
-
-    <div class="card">
-    <div class="card-title">✯ Camera ITS 測項</div>
-    <ul>
-      <li>Camera ITS 測項比較特別需要架設測試環境，必須要在實驗室的regular field-of-view (RFoV) box中測試(黑色測試箱)，並需額外準備一台做Reference的平板</li><br>
-        <ul>
-      Step 1 . 開啟Ternimal 根據你的 Android 版本並initialize測試環境，輸入source ITS.sh 版本。以A15為例，輸入 source ITS.sh 15。 <br>
-            <img src="{{ url_for('static', filename='ITS_setup1.jpg') }}" style="width: 50%; height: auto;" alt="ITS_setup1"><br>
-      Step 2 . 將測試環境拉到自己資料夾的位置，用來SetUp及修改內部Comfig:<code> cd '/home/fih/USER/QA/XXX/CTSV/android-cts-verifier-15_r5-linux_x86-arm/android-cts-verifier/CameraITS'</code><br>
-            <img src="{{ url_for('static', filename='ITS.jpg') }}" style="width: 50%; height: auto;" alt="ITS"><br>
-      Step 3 . 輸入<code>source build/envsetup.sh</code><br>
-      Step 4 . 根據提示詞輸入 <code>adb -s <"Serial ID"> shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier</code>。<br>
-            Step 5 . 更改內部Comfig<br>
-            <img src="{{ url_for('static', filename='ITS2.jpg') }}" style="width: 50%; height: auto;" alt="ITS2"><br>
-            <b>根據目前的測試環境、DUT Serial Number、Arduino、Light</b>等等進行修改<br>
-            <img src="{{ url_for('static', filename='ITS3.jpg') }}" style="width: 50%; height: auto;" alt="ITS3"><br>
-      Step 6 . 執行Python檔案 <code>python tools/run_all_tests.py camera=0 scenes=1</code> 開始測試<br>(Camera argument值0是後鏡頭;1是前鏡頭，另外scenes可以選擇測試範圍 ，若未輸入則全部測試)<br>
-            <img src="{{ url_for('static', filename='ITS_setup2.jpg') }}" style="width: 100%; height: auto;" alt="ITS_setup2"><br>
-
-        </ul>
-
-      <li>自動化測試，待全部測試完才會出結果</li>
-        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">ITS Test - Sensor Fusion（Test Pattern）</div>
-    <ul>
-      <li>Sensor Fusion 會需要使用 <b>上方有滾輪的箱子</b>做測試，並需要測試額外的 <b>Test Pattern</b>紙張。</li>
-      <li>圖示可能會隨版本更新，因此若 Test Pattern 測試無法通過：
-        <ul>
-          <li>請至 Google CTS Verifier 對應項目查詢官方範例圖片與說明。</li>
-          <li>依照官方提供的指引，確認測試步驟與畫面是否正確。</li>
-          <li>Android 15 Pattern 圖例:</li><br>
-            <img src="{{ url_for('static', filename='ITS_Fusion.jpg') }}" style="width: 40%; height: auto;" alt="ITS_Fusion">
-        </ul>
-      </li>
-        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
-    </ul>
-    <div class="note">
-        詳細Google參考資料:
-      <a href="https://source.android.com/docs/compatibility/cts/sensor-fusion-box-assembly" target="_blank" style="color: #ff5757; font-weight: 600;">
-        ITS Test - Sensor Fusion
-        </a>
-    </div>
-  </div>
-    <div class="card">
-    <div class="card-title">ITS Test - CameraWebcamTest</div>
-    <ul>
-      <li>在 regular field-of-view (RFoV) box中測試</li><br>
-      Step 1 . 開啟Ternimal 根據你的 Android 版本並initialize測試環境，輸入source ITS.sh 版本 W。以A15為例，輸入 source ITS.sh 15 W。 <br>
-            <img src="{{ url_for('static', filename='ITS_W2.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W2"><br>
-      Step 2 . 將測試環境拉到自己資料夾的位置，用來SetUp及修改內部Comfig:<code> cd '/home/fih/USER/QA/XXX/CTSV/android-cts-verifier-15_r5-linux_x86-arm/android-cts-verifier/CameraWebcamTest'</code><br>
-            <img src="{{ url_for('static', filename='ITS_W.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W"><br>
-      Step 3 . 更改內部Comfig，修改DUT Serial Number<br>
-            <img src="{{ url_for('static', filename='ITS_W4.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W4"><br>
-      Step 4 .執行測試Python檔 <code> python run_webcam_test.py -c config.yml</code>。<br>
-            <img src="{{ url_for('static', filename='ITS_W3.jpg') }}" style="width: 80%; height: auto;" alt="ITS_W3"><br>
-        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
-    </ul>
-  </div>
-
-    <div class="card">
-    <div class="card-title">ITS Test - CameraWebcamTest</div>
-    <ul>
-      <li>在 regular field-of-view (RFoV) box中測試</li><br>
-      Step 1 . 需要準備一個PN532 NFC reader。 <br>
-            <img src="{{ url_for('static', filename='PN532.jpg') }}" style="width: 50%; height: auto;" alt="PN532"><br>
-      Step 2 . DUT需額外安裝apk<code> adb install -r -g NfcEmulatorTestApp.apk</code>(如果應版本問題下載不了，請再額外輸入<code>adb shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier</code>)<br>
-      Step 3 . DUT的Settings->開啟NFC->並將PN532 NFC chip那一面靠着DUT的NFC位置,并且DUT和PN532 Chip都要接到PC<br>
-      Step 4 .在Terminal中輸入source ITS.sh 15<br>
-      Step 5 .cd 到MultiDevice位置中<br>
-            <img src="{{ url_for('static', filename='MultiDevice.jpg') }}" style="width: 80%; height: auto;" alt="MultiDevice"><br>
-
-      Step 6 .並更改config 中 DUT ID 及 pn532_serial_path的值(先將PN532 Chip接上電腦並輸入<code> ls /dev/ttyUSB*</code>看path位置)<br>
-         <img src="{{ url_for('static', filename='MultiDevice2.jpg') }}" style="width: 80%; height: auto;" alt="MultiDevice2"><br>
-      Step 7 .輸入 source build/envsetup.sh<br>
-      Step 8 .執行Python檔 MultiDevice$ <code>python3 tools/run_all_tests.py </code>並等待測試結果<br>
-        <li>若本項有單條測項錯誤，請使用TOT版本再跑一次</li>
-        <li>log會存在tmp下 (如有fail, 需要提供這個給RD)</li>
-    </ul>
-
-  </div>
-
-
-  <!-- MADA Check List -->
-  <h2 class="section-title">
-    MADA Check List
-    <span class="tag">MADA </span>
-  </h2>
-
-
-   <div class="card">
-    <div class="card-title"></div>
-    <ul>
-      <li>最新版本的MADA都會放在: <b>/home/fih/CHECKLIST_LATEST/GMS_Mada Compliance Form - (External sharing).docx</b>。</li>
-      <li>內部會需要用到的測試apk也都放在相同位置：<br>
-          <img src="{{ url_for('static', filename='MADA.jpg') }}" style="width: 70%; height: auto;" alt="MADA"><br>
-          <li>封面黃色部分，請依照要求輸入指令提供<b>DUT Name 以及 Fingerprint。</b><br>
-            <img src="{{ url_for('static', filename='MADA2.jpg') }}" style="width: 70%; height: auto;" alt="MADA3"><br>
-          <li>測試MADA時，請依照Google規定步驟，提供所要求之圖片。</li><br>
-          <li>完成每個測項，並附上照片後，<b>請在最右側輸入pass</b>；若該DUT無該功能或高/低於測試版本，則在<b>右側註明原因並填上N/A</b>。<br>
-            <img src="{{ url_for('static', filename='MADA3.jpg') }}" style="width: 70%; height: auto;" alt="MADA3"><br>
-            </li>
-    </ul>
-  </div>
-
-    <div class="card">
-    <div class="card-title">M63 - Android Auto discoverability</div>
-    <ul>
-      <li>車機這條測項，只有手機的樣機需要測試，測試時需錄影提供影片給Google查驗</li>
-      <li>Google有提供範例影片，影片需要錄製到打開Google Map 並確認定位已在車機上顯示。<br>
-         <a href="https://www.youtube.com/watch?v=FzBJqehq3As" target="_blank" style="color: #ff5757; font-weight: 600;">
-        Android Auto discoverability
-         </a>
-       <li>須在MADA上註明影片的名稱及附上影片位置並提供給PM</li>
-    </ul>
-  </div>
-
-
-
-  <!-- 🔹 新增 / 編輯 / 刪除 工具列：放在頁面最下面 -->
-  <div class="toolbar">
-    <button type="button" class="active" data-mode="create">＋ 新增</button>
-    <button type="button" data-mode="edit">✎ 編輯</button>
-    <button type="button" data-mode="delete">🗑 刪除</button>
   </div>
 
   <div class="back-link">
@@ -476,16 +80,633 @@
   </div>
 </main>
 
+<!-- Modal (支援多圖上傳、編輯現有圖、刪除現有圖) -->
+<div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cardModalLabel">新增/編輯測試卡片</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cardForm" enctype="multipart/form-data" novalidate>
+                    <input type="hidden" id="card_id_pk" value="">
+
+                    <div class="mb-3">
+                        <label for="section_key" class="form-label">所屬區塊 (必填)</label>
+                        <select class="form-select" id="section_key" required></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="card_title" class="form-label">卡片標題 (必填)</label>
+                        <input type="text" class="form-control" id="card_title" required>
+                        <small class="form-text text-muted">例如: Audio Loopback Latency Test</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="card_subtitle" class="form-label">次要標題 / 備註</label>
+                        <input type="text" class="form-control" id="card_subtitle">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label">內容 / SOP 步驟 (必填)</label>
+                        <textarea class="form-control" id="content" rows="8" required></textarea>
+                        <small class="form-text text-muted">每行一個步驟，若以 "Step" 或 "-" 開頭將自動格式化為列表。</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="file_upload" class="form-label">從本機上傳圖片/附件（可多選）</label>
+                        <input type="file" class="form-control" id="file_upload" name="file" multiple accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.bmp,.webp">
+                        <small class="form-text small-muted">支援多選，上傳後會把檔案儲存到 static/uploads/，並自動加入圖片清單。</small>
+                    </div>
+
+                    <div>
+                        <label class="form-label">現有圖片（可移除）</label>
+                        <div class="modal-image-list" id="existingImages"></div>
+                    </div>
+
+                    <div class="mb-3 mt-3">
+                        <label for="note" class="form-label">Note Box 內容 (可選)</label>
+                        <textarea class="form-control" id="note" rows="3"></textarea>
+                        <small class="form-text text-muted">顯示在卡片底部的藍色 Note 區塊。</small>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveCardBtn">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal（點圖片放大） -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-2">
+        <button type="button" class="btn-close float-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="d-flex justify-content-center align-items-center" style="min-height:60vh;">
+            <img id="imagePreviewImg" src="" alt="" style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:6px; box-shadow:0 6px 20px rgba(0,0,0,0.2);">
+        </div>
+        <div class="p-2 text-center" id="imagePreviewCaption" style="font-size:13px; color:#6b7280;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
+
 <script>
-  // 切換按鈕外觀，之後你要接後端或切換不同區塊再往這裡加就好
-  document.querySelectorAll(".toolbar button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".toolbar button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      // const mode = btn.dataset.mode; // create / edit / delete
-      // TODO: 之後可以依 mode 顯示不同表單 / dialog
+    // API 路徑
+    const API_URL_CARDS = '/api/ctsv_gtsi/cards';
+    const API_URL_SECTIONS = '/api/ctsv_gtsi/sections';
+    const API_URL_UPLOAD = '/api/ctsv_gtsi/upload_file';
+
+    // STATIC_BASE_URL 使用 Jinja 渲染（Flask 會把它替換成 /static/）
+    const STATIC_BASE_URL = "{{ url_for('static', filename='') }}";
+
+    const cardModalElement = document.getElementById('cardModal');
+    const cardModal = new bootstrap.Modal(cardModalElement);
+    const saveCardButton = document.getElementById('saveCardBtn');
+    const toggleDragButton = document.getElementById('toggleDragBtn');
+
+    let allSections = [];
+    let allCards = [];
+
+    // 表單欄位
+    const formFields = {
+        id: document.getElementById('card_id_pk'),
+        section_key: document.getElementById('section_key'),
+        card_title: document.getElementById('card_title'),
+        card_subtitle: document.getElementById('card_subtitle'),
+        content: document.getElementById('content'),
+        note: document.getElementById('note'),
+        file_upload: document.getElementById('file_upload'),
+        existingImagesContainer: document.getElementById('existingImages')
+    };
+
+    // ==========================================================
+    // 輔助：內容轉 HTML（支援 Step / - 轉換）
+    // ==========================================================
+    function renderContent(rawContent) {
+        if (!rawContent) return '';
+        const lines = rawContent.trim().split('\n');
+        let html = '';
+        let inList = false;
+        let listType = null; // 'ol' or 'ul'
+        lines.forEach(line => {
+            const t = line.trim();
+            if (!t) {
+                if (inList) { html += `</${listType}>`; inList = false; listType = null; }
+                return;
+            }
+            const isStep = /^Step\s+\d+\s*\./i.test(t);
+            const isBullet = t.startsWith('-');
+            if (isStep) {
+                if (!inList || listType !== 'ol') { if (inList) html += `</${listType}>`; html += '<ol>'; inList = true; listType = 'ol'; }
+                const txt = t.replace(/^Step\s+\d+\s*\.\s*/i, '');
+                html += `<li>${txt.replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`;
+            } else if (isBullet) {
+                if (!inList || listType !== 'ul') { if (inList) html += `</${listType}>`; html += '<ul>'; inList = true; listType = 'ul'; }
+                const txt = t.replace(/^-+\s*/, '');
+                html += `<li>${txt.replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`;
+            } else {
+                if (inList) { html += `</${listType}>`; inList = false; listType = null; }
+                html += `<p>${t.replace(/`([^`]+)`/g, '<code>$1</code>')}</p>`;
+            }
+        });
+        if (inList) html += `</${listType}>`;
+        return html;
+    }
+
+    // ==========================================================
+    // 圖片渲染器（陣列或字串），含點擊放大
+    // ==========================================================
+    function renderImageOrLink(url) {
+        if (!url) return '';
+        url = String(url).trim();
+
+        // 判斷是否為外部連結
+        const isExternal = /^https?:\/\//i.test(url);
+        const path = url.replace(/^static\//i, '');
+        const href = isExternal ? url : (STATIC_BASE_URL + path);
+        const lower = url.toLowerCase();
+
+        const fileNameMatch = url.match(/[^/]+$/);
+        const displayFileName = fileNameMatch ? fileNameMatch[0].replace(/^static\//i, '') : url;
+
+        // 圖片檔案
+        if (/\.(jpe?g|png|gif|webp|bmp)$/i.test(lower)) {
+            // 使用 encodeURI 防止特殊字元導致路徑錯誤
+            const safeHref = encodeURI(href);
+            return `
+                <figure>
+                    <a href="#" onclick="openImageModal('${safeHref}', '${escapeHtml(url)}'); return false;">
+                        <img src="${href}" loading="lazy" alt="${escapeHtml(url)}">
+                    </a>
+                    <figcaption>${escapeHtml(url)}</figcaption>
+                </figure>
+            `;
+        }
+
+        // PDF / zip 顯示為連結
+        if (/\.(pdf|zip)$/i.test(lower)) {
+            const linkText = lower.endsWith('.pdf') ? 'PDF 文件 (點擊開啟)' : '壓縮檔 (點擊下載)';
+            return `<div class="note" style="border-left:3px solid #ff5757;">
+                        <a href="${encodeURI(href)}" target="_blank" style="color:#ff5757;font-weight:600;">
+                            <i class="fas fa-file-alt me-1"></i>${linkText}
+                        </a>
+                    </div>`;
+        }
+
+        // 其他外部連結
+        if (isExternal) {
+            return `<div class="note">
+                        <a href="${encodeURI(href)}" target="_blank" style="color:#2563eb;font-weight:600;">
+                            <i class="fas fa-external-link-alt me-1"></i> 外部參考連結
+                        </a>
+                    </div>`;
+        }
+
+        return '';
+    }
+
+    function renderImages(imageUrls) {
+        if (!imageUrls) return '';
+        if (!Array.isArray(imageUrls)) imageUrls = [imageUrls];
+
+        let html = '';
+        imageUrls.forEach(url => {
+            if (!url) return;
+            html += renderImageOrLink(url);
+        });
+        return html;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // ==========================================================
+    // 載入資料、渲染列表
+    // ==========================================================
+    async function loadAllData() {
+        try {
+            const sresp = await fetch(`${API_URL_SECTIONS}/list`);
+            allSections = await sresp.json();
+
+            const cresp = await fetch(`${API_URL_CARDS}/list`);
+            // 後端回傳的每張 card 需包含 image_urls 欄位（陣列）
+            allCards = await cresp.json();
+
+            renderNavigation();
+            renderContentLayout();
+        } catch (e) {
+            console.error("載入失敗:", e);
+            document.getElementById('content-container').innerHTML = `<p class="text-center text-danger p-5">數據載入失敗，請檢查後端或網路。</p>`;
+        }
+    }
+
+    function renderNavigation() {
+        const navContainer = document.getElementById('header-nav');
+        const selectContainer = document.getElementById('section_key');
+        const toggleBtn = document.getElementById('toggleDragBtn');
+        navContainer.innerHTML = '';
+        if (toggleBtn) navContainer.appendChild(toggleBtn);
+        selectContainer.innerHTML = '';
+
+        allSections.forEach(section => {
+            const key = section.section_key;
+            navContainer.insertAdjacentHTML('afterbegin', `<a href="#${key.toLowerCase()}-anchor">${key}</a>`);
+            selectContainer.insertAdjacentHTML('beforeend', `<option value="${key}">${section.title}</option>`);
+        });
+    }
+
+    function renderContentLayout() {
+        const container = document.getElementById('content-container');
+        container.innerHTML = '';
+
+        const cardsBySection = allCards.reduce((acc, card) => {
+            const key = card.section_key.toUpperCase();
+            acc[key] = acc[key] || [];
+            acc[key].push(card);
+            return acc;
+        }, {});
+
+        allSections.forEach(section => {
+            const key = section.section_key;
+            const cardData = cardsBySection[key] || [];
+
+            let sectionHtml = `
+                <div class="section-anchor" id="${key.toLowerCase()}-anchor"></div>
+                <h2 class="section-title">
+                    ${section.title}
+                    <span class="tag">${section.tag}</span>
+                    <button class="btn-action btn-delete ms-auto" onclick="deleteSection('${key}', event)">
+                        <i class="fas fa-trash-alt"></i> 刪除區塊
+                    </button>
+                    <button class="btn-action btn-edit" onclick="openCardModal('${key}', null)">
+                        <i class="fas fa-plus"></i> 新增筆記
+                    </button>
+                </h2>
+
+                <div class="card-container" data-section-key="${key}" id="container-${key.toLowerCase()}">
+                    ${cardData.map(card => renderCard(card)).join('')}
+                    ${cardData.length === 0 ? `<p class="text-muted p-3 text-center">此區塊目前沒有測試卡片。</p>` : ''}
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', sectionHtml);
+        });
+
+        allSections.forEach(section => initializeSorting(section.section_key));
+    }
+
+    function renderCard(card) {
+        // card.image_urls 預期為陣列；若後端只存 image_url (字串)，請在後端回傳 image_urls: [image_url]
+        const hasSubtitle = card.card_subtitle ? `<small>${card.card_subtitle}</small>` : '';
+        const hasNote = card.note ? `<div class="note">${card.note}</div>` : '';
+        const hasImages = (card.image_urls && card.image_urls.length) ? renderImages(card.image_urls) : '';
+        return `
+            <div class="card" data-card-id="${card.id}">
+                <div class="card-header">
+                    <h3 class="card-title">${card.card_title} ${hasSubtitle}</h3>
+                    <div class="btn-group">
+                         <button class="btn-action btn-edit" onclick="openCardModal('${card.section_key}', ${card.id})">
+                             <i class="fas fa-pencil-alt"></i> 編輯
+                         </button>
+                         <button class="btn-action btn-delete" onclick="deleteCard(${card.id})">
+                             <i class="fas fa-times"></i> 刪除
+                         </button>
+                    </div>
+                </div>
+
+                ${renderContent(card.content)}
+                ${hasImages}
+                ${hasNote}
+            </div>
+        `;
+    }
+
+    // ==========================================================
+    // Sortable drag (same as before)
+    // ==========================================================
+    function initializeSorting(sectionKey) {
+        const container = document.getElementById(`container-${sectionKey.toLowerCase()}`);
+        if (!container || typeof Sortable === 'undefined') return;
+
+        Sortable.create(container, {
+            group: 'ctsv-cards',
+            animation: 150,
+            handle: '.card',
+            ghostClass: 'sortable-ghost',
+            disabled: true,
+            onEnd: async function (evt) {
+                const isMoved = evt.from !== evt.to;
+                const oldSectionKey = evt.from.getAttribute('data-section-key');
+                const newSectionKey = evt.to.getAttribute('data-section-key');
+                const movedCardId = evt.item.getAttribute('data-card-id');
+
+                if (isMoved && movedCardId && oldSectionKey !== newSectionKey) {
+                    await updateCardSectionKey(movedCardId, newSectionKey);
+                }
+
+                await saveNewOrder(newSectionKey);
+
+                if (isMoved && oldSectionKey !== newSectionKey) {
+                    await saveNewOrder(oldSectionKey);
+                }
+
+                loadAllData();
+            }
+        });
+    }
+
+    async function updateCardSectionKey(cardId, newSectionKey) {
+        const card = allCards.find(c => c.id == cardId);
+        if (!card) return;
+        try {
+            const response = await fetch(`${API_URL_CARDS}/update/${cardId}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    section_key: newSectionKey,
+                    card_title: card.card_title,
+                    content: card.content,
+                    card_subtitle: card.card_subtitle,
+                    note: card.note,
+                    image_urls: card.image_urls || []
+                })
+            });
+            if (!response.ok) throw new Error("更新 section key 失敗");
+        } catch (e) {
+            console.error(e);
+            alert("警告: 卡片移動/更新失敗");
+        }
+    }
+
+    async function saveNewOrder(sectionKey) {
+         const container = document.getElementById(`container-${sectionKey.toLowerCase()}`);
+         if (!container) return;
+         const newOrderIds = Array.from(container.children).map(item => item.getAttribute('data-card-id')).filter(Boolean).map(x => parseInt(x));
+         if (newOrderIds.length === 0) return;
+         try {
+             const response = await fetch(`${API_URL_CARDS}/reorder/${sectionKey}`, {
+                 method: 'PUT',
+                 headers: {'Content-Type': 'application/json'},
+                 body: JSON.stringify(newOrderIds)
+             });
+             if (!response.ok) throw new Error("儲存排序失敗");
+         } catch (e) { console.error("saveNewOrder error:", e); }
+    }
+
+    // ==========================================================
+    // Modal control: open (新增/編輯)
+    // ==========================================================
+    function openCardModal(sectionKey, cardId) {
+        // reset
+        formFields.id.value = '';
+        formFields.section_key.value = sectionKey || (allSections[0] && allSections[0].section_key) || '';
+        formFields.card_title.value = '';
+        formFields.card_subtitle.value = '';
+        formFields.content.value = '';
+        formFields.note.value = '';
+        formFields.file_upload.value = '';
+        formFields.existingImagesContainer.innerHTML = '';
+
+        if (cardId) {
+            const card = allCards.find(c => c.id == cardId);
+            if (!card) {
+                alert("找不到該卡片資料（可能已被刪除）");
+                return;
+            }
+            formFields.id.value = card.id;
+            formFields.section_key.value = card.section_key;
+            formFields.card_title.value = card.card_title;
+            formFields.card_subtitle.value = card.card_subtitle || '';
+            formFields.content.value = card.content || '';
+            formFields.note.value = card.note || '';
+            // show existing images
+            const imgs = card.image_urls || [];
+            imgs.forEach((p, idx) => {
+                appendExistingImage(p);
+            });
+        } else {
+            // 新增：一開始空的 existingImages
+        }
+
+        cardModal.show();
+    }
+
+    // append existing image DOM (可刪除)
+    function appendExistingImage(path) {
+        const container = formFields.existingImagesContainer;
+        const item = document.createElement('div');
+        item.className = 'modal-image-item';
+        const isExternal = /^https?:\/\//i.test(path);
+        const relPath = path.replace(/^static\//i, '');
+        const src = isExternal ? path : (STATIC_BASE_URL + relPath);
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'image-thumb';
+        img.alt = path;
+        const cap = document.createElement('div');
+        cap.style.fontSize = '11px';
+        cap.style.maxWidth = '90px';
+        cap.style.wordBreak = 'break-all';
+        cap.textContent = path;
+        const btn = document.createElement('button');
+        btn.className = 'remove-image-btn';
+        btn.type = 'button';
+        btn.textContent = '移除';
+        btn.onclick = () => { container.removeChild(item); };
+        item.appendChild(img);
+        item.appendChild(cap);
+        item.appendChild(btn);
+        // store the path in dataset so we can collect later
+        item.dataset.path = path;
+        container.appendChild(item);
+    }
+
+    // ==========================================================
+    // 儲存卡片（新增/更新） — 支援多檔上傳與 existing images
+    // ==========================================================
+    saveCardButton.addEventListener('click', async () => {
+        // form 驗證
+        if (!document.getElementById('cardForm').checkValidity()) {
+            document.getElementById('cardForm').reportValidity();
+            return;
+        }
+
+        const id = formFields.id.value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL_CARDS}/update/${id}` : `${API_URL_CARDS}/add`;
+
+        // 1) 先把 modal 中剩下的 existing images 收集起來
+        const existingImgs = Array.from(formFields.existingImagesContainer.children).map(el => el.dataset.path).filter(Boolean);
+
+        // 2) 上傳用戶剛選擇的新檔案（若有）
+        const uploadedPaths = [];
+        const files = Array.from(formFields.file_upload.files || []);
+        for (const f of files) {
+            const fd = new FormData();
+            fd.append('file', f);
+            try {
+                const upl = await fetch(API_URL_UPLOAD, { method: 'POST', body: fd });
+                const res = await upl.json();
+                if (upl.ok && res.status === 'ok') {
+                    // res.file_path 例如: xxx.jpg
+                    uploadedPaths.push(res.file_path);
+                } else {
+                    alert('檔案上傳失敗: ' + (res.message || '伺服器錯誤'));
+                    return;
+                }
+            } catch (e) {
+                console.error('upload error', e);
+                alert('檔案上傳失敗，請檢查後端服務');
+                return;
+            }
+        }
+
+        // 3) 最終 image_urls = existingImgs + uploadedPaths
+        const finalImageUrls = existingImgs.concat(uploadedPaths);
+
+        // 4) 準備 payload
+        const payload = {
+            section_key: formFields.section_key.value,
+            card_title: formFields.card_title.value,
+            card_subtitle: formFields.card_subtitle.value,
+            content: formFields.content.value,
+            note: formFields.note.value,
+            image_urls: finalImageUrls
+        };
+
+        try {
+            const resp = await fetch(url, {
+                method: method,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if (resp.ok) {
+                alert(`卡片已${id ? '更新' : '新增'}成功！`);
+                cardModal.hide();
+                loadAllData();
+            } else {
+                const err = await resp.json();
+                alert('操作失敗: ' + (err.message || '伺服器錯誤'));
+            }
+        } catch (e) {
+            console.error('save error', e);
+            alert('連線失敗，請檢查後端');
+        }
     });
-  });
+
+    // ==========================================================
+    // 刪除卡片 / 區塊
+    // ==========================================================
+    async function deleteCard(cardId) {
+        if (!confirm(`確定要刪除這張卡片 ID: ${cardId} 嗎？`)) return;
+        try {
+            const resp = await fetch(`${API_URL_CARDS}/delete/${cardId}`, { method: 'DELETE' });
+            if (resp.ok) {
+                alert('刪除成功');
+                loadAllData();
+            } else {
+                const e = await resp.json();
+                alert('刪除失敗: ' + (e.message || '伺服器錯誤'));
+            }
+        } catch (e) {
+            alert('連線失敗');
+        }
+    }
+
+    async function deleteSection(sectionKey, event) {
+        event.preventDefault();
+        const cardsCount = allCards.filter(c => c.section_key === sectionKey).length;
+        const confirmMsg = cardsCount > 0 ? `警告: 區塊 "${sectionKey}" 下還有 ${cardsCount} 張卡片。確定要刪除整個區塊及其所有卡片嗎？` : `確定要刪除區塊 "${sectionKey}" 嗎？`;
+        if (!confirm(confirmMsg)) return;
+        try {
+            const resp = await fetch(`${API_URL_SECTIONS}/delete/${sectionKey}`, { method: 'DELETE' });
+            if (resp.ok) {
+                alert('區塊刪除成功');
+                loadAllData();
+            } else {
+                const e = await resp.json();
+                alert('刪除失敗: ' + (e.message || '伺服器錯誤'));
+            }
+        } catch (e) {
+            alert('連線失敗');
+        }
+    }
+
+    // ==========================================================
+    // Drag toggle
+    // ==========================================================
+    function toggleDragMode(event) {
+        event.preventDefault();
+        const cardContainers = document.querySelectorAll('.card-container');
+        if (!cardContainers.length) return;
+        let isDraggingEnabled = !cardContainers[0].classList.contains('drag-mode');
+        cardContainers.forEach(cont => {
+            const instance = Sortable.get(cont);
+            if (instance) instance.option("disabled", !isDraggingEnabled);
+            cont.classList.toggle('drag-mode', isDraggingEnabled);
+        });
+        if (isDraggingEnabled) {
+            toggleDragButton.innerHTML = '<i class="fas fa-mouse-pointer me-1"></i>';
+            toggleDragButton.classList.remove('btn-secondary'); toggleDragButton.classList.add('btn-warning');
+        } else {
+            toggleDragButton.innerHTML = '<i class="fas fa-hand-rock me-1"></i>';
+            toggleDragButton.classList.remove('btn-warning'); toggleDragButton.classList.add('btn-secondary');
+        }
+    }
+
+    // ==========================================================
+    // Image preview modal 控制
+    // ==========================================================
+    function openImageModal(src, caption) {
+        try { src = decodeURI(src); } catch (e) {}
+        const img = document.getElementById('imagePreviewImg');
+        const cap = document.getElementById('imagePreviewCaption');
+        img.src = src;
+        img.alt = caption || '';
+        cap.textContent = caption || '';
+
+        const modalEl = document.getElementById('imagePreviewModal');
+        const bsModal = new bootstrap.Modal(modalEl, { keyboard: true });
+        bsModal.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('imagePreviewModal');
+        if (modal) {
+            modal.addEventListener('hidden.bs.modal', function () {
+                const img = document.getElementById('imagePreviewImg');
+                if (img) img.src = '';
+                const cap = document.getElementById('imagePreviewCaption');
+                if (cap) cap.textContent = '';
+            });
+        }
+    });
+
+    // 暴露全域（供 html inline onclick 使用）
+    window.openCardModal = openCardModal;
+    window.deleteCard = deleteCard;
+    window.deleteSection = deleteSection;
+    window.toggleDragMode = toggleDragMode;
+
+    document.addEventListener('DOMContentLoaded', loadAllData);
 </script>
 </body>
 </html>
