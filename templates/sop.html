@@ -13,10 +13,13 @@
         referrerpolicy="no-referrer"
     />
 
+    <!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP Document</title>
     <style>
-        /* =============================== */
-        /* 基礎/通用 樣式 (淺色模式 - 顏色優化) */
-        /* =============================== */
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
@@ -30,18 +33,21 @@
 
         .container {
             width: 94%;
-            max-width: 1500px;
+            /* [比例調整] 1500px -> 1200px */
+            max-width: 1200px;
             margin: 20px auto 40px;
         }
 
         h1 {
-            font-size: 28px;
+            /* [比例調整] 28px -> 24px */
+            font-size: 24px;
             margin: 0 0 6px;
             color: #1e3a8a;
         }
 
         .header-sub {
-            font-size: 14px;
+            /* [比例調整] 28px -> 24px */
+            font-size: 24px;
             color: #4b5563;
             margin-bottom: 10px;
         }
@@ -56,7 +62,8 @@
             border-radius: 999px;
             border: 1px solid #3b82f6;
             color: #3b82f6;
-            font-size: 12px;
+            /* [比例調整] 18px -> 16px */
+            font-size: 16px;
             background: #eff6ff;
             font-weight: 500;
         }
@@ -70,8 +77,8 @@
             padding: 18px 20px 16px;
             margin-top: 18px;
 
-            /* 🌟 修正點：統一區塊寬度並置中 🌟 */
-            max-width: 1500px; /* 設定一個您喜歡的「瘦」寬度 */
+            /* 🌟 [比例調整] 區塊寬度 1500px -> 1200px 🌟 */
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -84,6 +91,7 @@
         }
 
         .sop-title {
+            /* [比例調整] 22px -> 20px */
             font-size: 20px;
             font-weight: 600;
             color: #1e3a8a;
@@ -94,7 +102,8 @@
         .sop-tag {
             padding: 4px 10px;
             border-radius: 999px;
-            font-size: 12px;
+            /* [比例調整] 15px -> 14px */
+            font-size: 14px;
             background: #e0f2f1;
             color: #0d9488;
         }
@@ -108,7 +117,8 @@
 
         .sop-section p {
             margin: 4px 0;
-            font-size: 15px; /* 🌟 調整字體大小，配合圖片縮小 🌟 */
+            /* 🌟 [比例調整] 17px -> 16px (1200px 寬度下的最佳閱讀大小) 🌟 */
+            font-size: 16px;
             line-height: 1.7;
             color: #4b5563;
         }
@@ -117,7 +127,8 @@
         .sop-section ol {
             margin: 6px 0 8px 1.4rem;
             padding: 0;
-            font-size: 15px; /* 🌟 調整字體大小，配合圖片縮小 🌟 */
+            /* 🌟 [比例調整] 17px -> 16px 🌟 */
+            font-size: 16px;
             line-height: 1.7;
             color: #4b5563;
         }
@@ -127,7 +138,7 @@
         }
 
         .note {
-            font-size: 14px; /* 稍微放大 note 區域文字 */
+            font-size: 15px; /* Note 保持 15px 或微調 */
             color: #374151;
             margin-top: 6px;
             padding: 8px 10px;
@@ -145,15 +156,16 @@
 
 
         /* ===== Tables/Code/Details (略過，與上次淺色模式一致) ===== */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { padding: 10px 12px; border: 1px solid #e5e7eb; vertical-align: top; color: #374151; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 15px; }
+        th, td { padding: 10px 12px;    text-align: center; vertical-align: middle; border: 1px solid #e5e7eb; vertical-align: top; color: #374151; }
         th { background: #f3f4f6; font-weight: 600; color: #1f2937; }
         tr:nth-child(even) td { background: #f9fafb; }
+
         .check { font-weight: 700; color: #10b981; }
-        code { font-family: Consolas, "Courier New", monospace; font-size: 12px; background: #f3f4f6; padding: 2px 4px; border-radius: 4px; color: #c2410c; }
-        .code-block { font-family: Consolas, "Courier New", monospace; font-size: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e0e7ff; padding: 10px 12px; white-space: pre-wrap; margin-top: 8px; color: #0369a1; }
+        code { font-family: Consolas, "Courier New", monospace; font-size: 14px; background: #f3f4f6; padding: 2px 4px; border-radius: 4px; color: #c2410c; }
+        .code-block { font-family: Consolas, "Courier New", monospace; font-size: 14px; background: #f8fafc; border-radius: 8px; border: 1px solid #e0e7ff; padding: 10px 12px; white-space: pre-wrap; margin-top: 8px; color: #0369a1; }
         details { background: #f0f9ff; border-radius: 8px; border: 1px solid #bfdbfe; padding: 10px 12px; margin-top: 8px; }
-        details summary { cursor: pointer; font-size: 14px; font-weight: 600; list-style: none; color: #1e40af; }
+        details summary { cursor: pointer; font-size: 16px; font-weight: 600; list-style: none; color: #1e40af; }
 
         /* 🌟 圖片視覺優化 (字體/圖片比例調整) 🌟 */
         img {
@@ -170,7 +182,7 @@
             max-width: 100%;
         }
         figcaption {
-            font-size: 13px;
+            font-size: 14px; /* 微調 */
             color: #4b5563;
             margin-top: 8px;
             text-align: center;
@@ -181,9 +193,10 @@
         .back-link {
             padding: 20px 0 0;
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 18px;
             border-top: 1px solid #e5e7eb; /* 增加一條分隔線 */
-            max-width: 1500px;
+            /* [比例調整] 1500px -> 1200px */
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
             width: 94%;
@@ -214,7 +227,8 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            max-width: 1200px;
+            /* [比例調整] 內部寬度 1200px -> 1000px 以配合外容器 */
+            max-width: 1000px;
             gap: 25px;
         }
 
@@ -237,7 +251,7 @@
             padding: 12px 18px;
             border-radius: 8px;
             text-align: center;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             color: #1e3a8a;
             text-decoration: none;
@@ -263,12 +277,13 @@
  /* ===== 改良版箭頭樣式（替換原本 .flow-arrow-right 與 ::after） ===== */
 .flow-arrow-right {
     /* 固定寬度並保持可縮放（桌面橫向時為水平條） */
-    flex: 0 0 48px;
+    /* [比例調整] 寬度微調 */
+    flex: 0 0 40px;
     height: 8px;
     background: linear-gradient(90deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
     border-radius: 999px;
     position: relative;
-    margin: 0 12px;
+    margin: 0 10px;
     box-shadow: 0 2px 6px rgba(59,130,246,0.12), inset 0 -1px 0 rgba(255,255,255,0.08);
 }
 
@@ -462,9 +477,11 @@
                 必須附上：<br>
                 ・AdbDeviceInfo 截圖<br>
                 ・BuildVerifier 截圖<br>
+                ・BootUp Logo 影片<br>
                 ・FIH_Checklist<br>
+
                 </td>
-                <td>共 3 張截圖 + 1 個 zip + 1 個 xlsx</td>
+                <td>共 3 張截圖 + 1 個 zip + 1 個 mp4 + 1 個 xlsx</td>
             </tr>
             <tr>
                 <td>MR / SMR</td>
@@ -478,34 +495,37 @@
             </tbody>
         </table>
 
-        <div class="note" style="margin-top: 15px; ">
-            <strong style="font-size:14px; color:#333;"> a. AdbDeviceInfo：</strong><br>
+        <div class="note" style="margin-top: 25px; font-size : 16px">
+            <strong style="font-size:17px; color:#333;"> a. AdbDeviceInfo：</strong><br>
+            <br>
             在 Lab 電腦 Ternimal 中輸入 <code>AdbDevice</code>，腳本會自動幫你對 DUT 抓取 fingerprint 等資料，請在第 2 個 Terminal 出現且滑鼠游標出現「╬」符號時點擊滑鼠左鍵截圖，待腳本跑完後會在 tmp 資料夾出現 2 張 AdbDeviceInfo 截圖及 zip 檔：<br>
             <img src="{{ url_for('static', filename='Pretest.jpg') }}" alt="Pretset生成檔案"><br>
         </div>
 
-        <div class="note" style="margin-top: 15px; ">
-            <strong style="font-size:14px; color:#333;"> b. BuildVerifier Tool 設定：</strong><br>
-            Tool 位置: <code>\\10.57.41.153\user$\QA\XTS\Pretest\GMS_Submission_Manager_V1.0.78</code> (請把檔案抓到你的本地位置), 名稱叫 GMS_Submission_Manager.exe<br>
+        <div class="note" style="margin-top: 25px; font-size : 16px">
+            <strong style="font-size:17px; color:#333;"> b. BuildVerifier Tool 設定：</strong><br>
+            <br>
+            Step 1.Tool 位置: <code>\\10.57.41.153\user$\QA\XTS\Pretest\GMS_Submission_Manager_V1.0.78</code> (請把檔案抓到你的本地位置), 名稱叫 GMS_Submission_Manager.exe<br>
             <img src="{{ url_for('static', filename='BuildVerifier0.jpg') }}" alt="GMS_Submission_Manager"><br>
-            打開之後會先請你登入foxconn.corp-partner.google.com(若無帳號請找PM申請，該帳號需要兩段式驗證)，登入後左上角依序選Tool -> Build Verifier。<br>
+            Step 2.打開之後會先請你登入foxconn.corp-partner.google.com(若無帳號請找PM申請，該帳號需要兩段式驗證)，登入後左上角依序選Tool -> Build Verifier。<br>
             <img src="{{ url_for('static', filename='BuildVerifier1.jpg') }}" alt="BuildVerifier"><br>
-            依據本次測試在 Tool 上選擇相對應的 type,下圖以SMR為例。<br>
+            Step 3.依據本次測試在 Tool 上選擇相對應的 type,下圖以SMR為例。<br>
             <img src="{{ url_for('static', filename='BuildVerifier2.jpg') }}" alt="BuildVerifier"><br>
-            Target Build EDI：放「本次測試」由 AdbDeviceInfo 產生的 zip 檔。<br>
-            Base Build EDI：放「上次同 Android 版本的 MR」zip 檔(如果沒有 MR 才找 LR 或 IR)，如附圖：<br>
+            Step 4_1.Target Build EDI：放「本次測試」由 AdbDeviceInfo 產生的 zip 檔。<br>
+            Step 4_2.Base Build EDI：放「上次同 Android 版本的 MR」zip 檔(如果沒有 MR 才找 LR 或 IR)，如附圖：<br>
             <strong style="color:red;">** 若今天測試type為IR，則不需提供 Base Build EDI **</strong><br>
             <img src="{{ url_for('static', filename='BuildVerifier3.jpg') }}" alt="BuildVerifier"><br>
-            把zip檔都放好後，按下Scan等待Tool自行判定<br>
+            Step 5.把zip檔都放好後，按下Scan等待Tool自行判定<br>
             <img src="{{ url_for('static', filename='BuildVerifier4.jpg') }}" alt="BuildVerifier"><br>
-            掃描結束後按下右下角截圖,正常來說只有EOL日期會是紅字，若有遇到出現其他Block、Warning等狀況，請Comment在JIRA上<br>
+            Step 6.掃描結束後按下右下角截圖,正常來說只有EOL日期會是紅字，若有遇到出現其他Block、Warning等狀況，請Comment在JIRA上<br>
             <img src="{{ url_for('static', filename='BuildVerifier5.jpg') }}" alt="BuildVerifier"><br>
-            截圖會生成在資料夾的 VerifierSnapshot<br>
+            Step 7.截圖會生成在資料夾的 VerifierSnapshot<br>
             <img src="{{ url_for('static', filename='BuildVerifier6.jpg') }}" alt="BuildVerifier"><br>
         </div>
 
-        <div class="note" style="margin-top: 15px; ">
-            <strong style="font-size:14px; color:#333;"> c. FIH_CheckList：</strong><br>
+        <div class="note" style="margin-top: 25px; font-size : 16px">
+            <strong style="font-size:17px; color:#333;"> c. FIH_CheckList：</strong><br>
+            <br>
             最新的 FIH_CheckList 報告都會放在：<code>/home/fih/CHECKLIST_LATEST/FIH_GMS_CheckList_XXXX.xlsx</code><br>
             <img src="{{ url_for('static', filename='CheckList.jpg') }}" alt="CheckList報告"><br>
             必填的欄位為：一般送件、BootupLogo；其餘依據 Jira 上 PM 提供之規格做 CheckList 確認。<br>
@@ -513,7 +533,16 @@
             <img src="{{ url_for('static', filename='FIH_CheckList1.jpg') }}" alt="一般送件"><br>
             必要2. BootupLogo<br>
             <img src="{{ url_for('static', filename='FIH_CheckList2.jpg') }}" alt="BootUpLogo"><br>
+                - Step 1.從 Factory Reset 的介面開始錄影，點擊 Erase all data 等待手機重設<br>
+                <br>
+                - Step 2.檢查 DUT 出現的 Logo 畫面是否符合 Google 之規定，請依據 Pretest 上內容詳細確認。<br>
+                <br>
+                - Step 3.進入 SUW 設定(連上WIFI，出現add accout畫面)後，回到桌面，就能停止錄影。 附上範例影片:<br>
+            <br>
+            <video controls style="max-width: 50%; height: auto; display: block; margin: 0 auto;">
+                <source src="{{ url_for('static', filename='BootUpLogo.mp4') }}" type="video/mp4"></video><br>
 
+            <br>
             除必要的一般送件、BootupLogo，請依照JIRA上提供的資訊，額外付上需要的CheckList，以下圖為例:<br>
 
             <div style="display: flex; gap: 10px; justify-content: center; align-items: flex-start; margin-top: 10px;">
@@ -526,7 +555,7 @@
             </figcaption>
         </div>
 
-            <p style="margin-top: 15px;">
+            <p style="margin-top: 15px;font-size: 16px">
                 確認完畢後請附在 Jira 上，以圖例，假設專案樣機名稱叫 ABC，檔名就改為 <code>FIH_GMS_CheckList_2025111_ABC.xlsx</code>，並附在JIRA上。
             </p>
 
@@ -550,7 +579,7 @@
             <li>
                 不同客戶需要的 driver / Tool 不盡相同，若客戶沒有另外提供，可在下方找到通用 Flash SOP 與相關工具：<br>
                 資料夾共同位置 :
-                <span style="font-size: 1.1em; color: #1e3a8a; text-decoration: underline;">
+                <span style="font-size: 1.0em; color: #1e3a8a; text-decoration: underline;">
                     <strong> \\10.57.45.213\3pl\Ready_to_GoogleDrive\Flash_sop</strong>
                 </span>
             </li>
@@ -578,7 +607,7 @@
                     <code style="color: #1e3a8a;">mtt start</code>（開啟服務並透過網址存取）<br>
                     <code style="color: #1e3a8a;">mtt stop</code>（關閉服務）<br>
                     <p style=" margin-top: 5px;">＊ mtt start 跑完需要點擊 FireFox Web Browser 才會跑出 ATS 網頁介面。</p>
-                    <img src="{{ url_for('static', filename='ATS0.jpg') }}" alt="ATS" style="width: 50%; height: auto; display: block;"><br>
+                    <img src="{{ url_for('static', filename='ATS0.jpg') }}" alt="ATS" style="width: 100%; height: auto; display: block;"><br>
                 </div>
             </li>
 
@@ -590,7 +619,7 @@
                         step 1. 必須先關閉 ATS 服務 : <code style="color: #1e3a8a;">mtt stop</code>（關閉ATS）<br>
                         step 2. 確保新開 terminal 及 adb 是一個正確的乾淨環境 : <code style="color: #1e3a8a;">adb kill-server</code><br>
                         step 3. 從Bundle中下載客戶指定之測試版本到QA本機位置並解壓縮，如下圖: (以15_r6為例,測試版本下方會提到)<br>
-                        <img src="{{ url_for('static', filename='Terminal.jpg') }}" alt="Terminal" style="width: 50%; height: auto; display: block;"><br>
+                        <img src="{{ url_for('static', filename='Terminal.jpg') }}" alt="Terminal" style="width: 80%; height: auto; display: block;"><br>
                     </div>
                 </div>
             </li>
@@ -790,27 +819,29 @@
                 <p><strong>CTS測試也分 ATS 及 Teminal 兩種:</strong></p>
             </ul>
 
-                <div class="note" style="margin-top: 15px; ">
-                    <strong style="font-size:14px; color:#333;"> a. ATS<br></strong>
+                <div class="note" style="margin-top: 15px; font-size : 16px ">
+                    <strong style="font-size:17px; color:#333;"> a. ATS<br></strong>
+                    <br>
                         前面已提過，ATS 只需單純跑預設的 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試。
                         <div>
                         step 1. 已CTS 15_r6 為例，選擇完 Android15 點擊 Run Test 後，會看到以下畫面，確認完表格填寫內容即可按下 Next Step。<br>
-                            <img src="{{ url_for('static', filename='ATS_Run1.jpg') }}" alt="ATS_Run1"><br>
+                            <img src="{{ url_for('static', filename='ATS_Run1.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run1"><br>
                         step 2. 記得勾選執行測試項目之樣機，若忘記哪些是User Build的機器，可在 Ternimal 輸入DUTShow 做檢查。
-                            <img src="{{ url_for('static', filename='ATS_Run2.jpg') }}" alt="ATS_Run2"><br>
+                            <img src="{{ url_for('static', filename='ATS_Run2.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run2"><br>
                         step 3. 按下Next Step
-                            <img src="{{ url_for('static', filename='ATS_Run3.jpg') }}" alt="ATS_Run3"><br>
+                            <img src="{{ url_for('static', filename='ATS_Run3.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run3"><br>
                         step 4. 按下browse，並在 local 位置中尋找 CTS15_r6 測試包，除STS外其他項目(GTS、VTS、GSI)步驟都相同
-                            <img src="{{ url_for('static', filename='ATS_Run4.jpg') }}" alt="ATS_Run4"><br>
+                            <img src="{{ url_for('static', filename='ATS_Run4.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run4"><br>
                         step 4.1.STS 不同的地方在於版本會跟隨月份顯示R幾-月份，請先確認測試版本，以及STS測試只選擇 arm64.zip 。
-                            <img src="{{ url_for('static', filename='ATS_Run4_1.jpg') }}" alt="ATS_Run4_1"><br>
+                            <img src="{{ url_for('static', filename='ATS_Run4_1.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run4_1"><br>
                         step 5. 再次確認輸入的內容是否正確，若沒問題就可點擊 Start Test Run 開始測試。
-                            <img src="{{ url_for('static', filename='ATS_Run5.jpg') }}" alt="ATS_Run5"><br>
+                            <img src="{{ url_for('static', filename='ATS_Run5.jpg') }}" style="width: 30%; height: auto; display: block; " alt="ATS_Run5"><br>
                     </div>
                 </div>
 
-                <div class="note" style="margin-top: 15px; ">
-                    <strong style="font-size:14px; color:#333;"> b. Terminal<br></strong>
+                <div class="note" style="margin-top: 15px; font-size : 16px ">
+                    <strong style="font-size:17px; color:#333;"> b. Terminal<br></strong>
+                    <br>
                         由於CTS測試須從 CTS -> MCTS -> TOT 的步驟做測試，使用 Termianl 執行時，需先將<strong>禁用動態下載將預設的 True 改為 False</strong>，避免首次測試與 MCTS 動態下載功能衝突。<br>
                     <div>
                         step 1. 點進CTS中tools的資料夾，並找到cts-tradefed<br>
@@ -856,14 +887,22 @@
 
 
 
-        <div class="note" style="margin-top: 15px; ">
-            <strong style="font-size:14px; color:#333;"> a. ATS<br></strong>
-                        點選出現 Fail 結果的項目中，並按下 Rerun 按鈕，網頁會記錄先前設定的資料再執行Retry。<br>
-                        <img src="{{ url_for('static', filename='Retry_ATS.jpg') }}" alt="Retry_ATS"><br>
+        <div class="note" style="margin-top: 15px; font-size : 16px ">
+            <strong style="font-size:17px; color:#333;"> a. ATS<br></strong>
+            <br>
+                        step 1. 點選 View 查看有Test Failures 的項目<br>
+                        <img src="{{ url_for('static', filename='Retry_ATS1.jpg') }}" style="width: 40%; height: auto;" alt="Retry_ATS1"><br>
+                        step 2. 點擊 Progress --> Completed --> View Output Files<br>
+                        <img src="{{ url_for('static', filename='ATS3.jpg') }}" style="width: 40%; height: auto;" alt="ATS3"><br>
+                        step 3. 點擊查看整份的 test_result_failures_suite.html，並根據生成的 Report 去判斷，樣機要如何設定跟 Retry。<br>
+                        <img src="{{ url_for('static', filename='ATS4.jpg') }}" style="width: 40%; height: auto;" alt="ATS4"><br>
+                        step 4. 點選出現 Fail 結果的項目中，並按下 Rerun 按鈕，網頁會記錄先前設定的資料再執行Retry。<br>
+                        <img src="{{ url_for('static', filename='Retry_ATS.jpg') }}" style="width: 40%; height: auto;" alt="Retry_ATS"><br>
 
         </div>
-            <div class="note" style="margin-top: 15px; ">
-            <strong style="font-size:14px; color:#333;"> b. Terminal<br></strong>
+            <div class="note" style="margin-top: 15px; font-size : 16px ">
+            <strong style="font-size:17px; color:#333;"> b. Terminal<br></strong>
+                <br>
                         Teminal 跑完測試後會自動生成結果，以圖為例就有30項TestCases Fail以及有Modules未完成。可以去資料夾中檢查
                        <img src="{{ url_for('static', filename='Retry_TF.jpg') }}" style="width: 30%; height: auto;" alt="Retry_TF"><br>
                     <div>
@@ -972,6 +1011,10 @@
                     <strong> \\10.57.45.213\3pl\該專案資料夾</strong>
                 </span>
         </p>
+        <ul>
+            <li> GTSI 跟 GTS-Root 請額外在GTS檔案內新增資料夾。</li>
+        </ul>
+
         <img src="{{ url_for('static', filename='FIH_Report.jpg') }}" alt="FIH_Report"><br>
         <p></p>
 

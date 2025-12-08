@@ -33,15 +33,25 @@
     .android-subtitle { font-size:14px; margin:12px 0 8px; color:#4b5563; display:inline-flex; align-items:center; gap:6px; }
     .card-container { min-height:50px; }
     .card { background:#fff; border-radius:10px; padding:16px 18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(15,23,42,0.07); border:1px solid #e5e7eb; position:relative; }
-    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid #eee; }
+    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid #eee; cursor:grab; }
     .card-title { font-size:15px; font-weight:600; color:#111827; margin:0; }
     .card small { font-size:11px; color:#6b7280; }
-    .card ul li, .card ol li, .card p {font-size: 13px !important; line-height: 1.5; /* 確保行高正常，避免擠壓 */}
+    .card ul li, .card ol li, .card p {font-size: 13px !important; line-height: 1.5; /* 確保行高正常，避免擠壓 */ }
     .card ul li code, .card ol li code, .card p code,
     .card ul li b, .card ol li b, .card p b {font-size: 13px !important; font-weight: 700;}
-    figure { margin:8px 0; padding:0; max-width:240px; text-align:center; display:inline-block; vertical-align:top; margin-right:8px; }
-    figure img { max-width:100%; border-radius:6px; border:1px solid #ddd; display:block; cursor:pointer; }
-    figure figcaption { font-size:11px; color:#6b7280; margin-top:4px; word-break:break-all; }
+    /* 改為直排：figure 改成 block 並置中 */
+    figure {
+      margin:8px 0;
+      padding:0;
+      max-width:320px;
+      width:100%;
+      text-align:center;
+      display:block; /* 由 inline-block 改為 block，改為每張一行 */
+      margin-left: 0;
+      margin-right: auto;
+    }
+    figure img { max-width:100%; border-radius:6px; border:1px solid #ddd; display:block; margin:0 auto; cursor:pointer; object-fit:contain; }
+    figure figcaption { font-size:11px; color:#6b7280; margin-top:6px; word-break:break-all; text-align:center; }
     .note { margin-top:10px; font-size:12px; color:#374151; background:#eff6ff; border-radius:6px; padding:6px 8px; border-left:3px solid #2563eb; }
     .btn-action { padding:5px 10px; font-size:12px; border-radius:5px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; line-height:1; }
     .btn-edit { background-color:#3b82f6; color:white; border:1px solid #2563eb; }
@@ -53,6 +63,31 @@
     .small-muted { font-size:12px; color:#6b7280; }
     /* image preview modal tweaks */
     .modal-xl { max-width:1200px; }
+
+    /* 卡片 attachments 改為垂直排列 */
+    .card-attachments {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* 影片顯示跟圖片一致，佔整行 */
+    .card-attachments .video-block {
+      max-width: 300px;
+      width: 100%;
+      margin-left: 0;
+      margin-right: auto;
+      display: block;
+    }
+    .card-attachments .video-block video {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #000;
+      display: block;
+    }
+
   </style>
 </head>
 <body>
@@ -116,7 +151,7 @@
 
                     <div class="mb-3">
                         <label for="file_upload" class="form-label">從本機上傳圖片/附件（可多選）</label>
-                        <input type="file" class="form-control" id="file_upload" name="file" multiple accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.bmp,.webp">
+                        <input type="file" class="form-control" id="file_upload" name="file" multiple accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.bmp,.webp,.mp4">
                         <small class="form-text small-muted">支援多選，上傳後會把檔案儲存到 static/uploads/，並自動加入圖片清單。</small>
                     </div>
 
@@ -241,16 +276,33 @@
         const fileNameMatch = url.match(/[^/]+$/);
         const displayFileName = fileNameMatch ? fileNameMatch[0].replace(/^static\//i, '') : url;
 
+        //  影片檔案
+        if (/\.(mp4|webm|ogg)$/i.test(lower)) {
+            // 使用 href（已包含 STATIC_BASE_URL 或外部連結）
+            const safeHref = encodeURI(href);
+            return `
+                <div class="video-block">
+                    <video controls>
+                        <source src="${safeHref}">
+                        您的瀏覽器不支援此影片標籤。
+                    </video>
+                    <div style="font-size:11px; color:#6b7280; margin-top:6px; word-break:break-all; text-align:center;">
+                        ${escapeHtml(displayFileName)}
+                    </div>
+                </div>
+            `;
+        }
+
         // 圖片檔案
         if (/\.(jpe?g|png|gif|webp|bmp)$/i.test(lower)) {
             // 使用 encodeURI 防止特殊字元導致路徑錯誤
             const safeHref = encodeURI(href);
             return `
                 <figure>
-                    <a href="#" onclick="openImageModal('${safeHref}', '${escapeHtml(url)}'); return false;">
-                        <img src="${href}" loading="lazy" alt="${escapeHtml(url)}">
+                    <a href="#" onclick="openImageModal('${safeHref}', '${escapeHtml(displayFileName)}'); return false;">
+                        <img src="${safeHref}" loading="lazy" alt="${escapeHtml(displayFileName)}">
                     </a>
-                    <figcaption>${escapeHtml(url)}</figcaption>
+                    <figcaption>${escapeHtml(displayFileName)}</figcaption>
                 </figure>
             `;
         }
@@ -258,8 +310,9 @@
         // PDF / zip 顯示為連結
         if (/\.(pdf|zip)$/i.test(lower)) {
             const linkText = lower.endsWith('.pdf') ? 'PDF 文件 (點擊開啟)' : '壓縮檔 (點擊下載)';
+            const safeHref = encodeURI(href);
             return `<div class="note" style="border-left:3px solid #ff5757;">
-                        <a href="${encodeURI(href)}" target="_blank" style="color:#ff5757;font-weight:600;">
+                        <a href="${safeHref}" target="_blank" style="color:#ff5757;font-weight:600;">
                             <i class="fas fa-file-alt me-1"></i>${linkText}
                         </a>
                     </div>`;
@@ -267,8 +320,9 @@
 
         // 其他外部連結
         if (isExternal) {
+            const safeHref = encodeURI(href);
             return `<div class="note">
-                        <a href="${encodeURI(href)}" target="_blank" style="color:#2563eb;font-weight:600;">
+                        <a href="${safeHref}" target="_blank" style="color:#2563eb;font-weight:600;">
                             <i class="fas fa-external-link-alt me-1"></i> 外部參考連結
                         </a>
                     </div>`;
@@ -354,12 +408,11 @@
                 <h2 class="section-title">
                     ${section.title}
                     <span class="tag">${section.tag}</span>
-                    <button class="btn-action btn-delete ms-auto" onclick="deleteSection('${key}', event)">
-                        <i class="fas fa-trash-alt"></i> 刪除區塊
-                    </button>
-                    <button class="btn-action btn-edit" onclick="openCardModal('${key}', null)">
-                        <i class="fas fa-plus"></i> 新增筆記
-                    </button>
+
+                        <button class="btn-action btn-edit ms-auto" onclick="openCardModal('${key}', null)">
+                            <i class="fas fa-plus"></i> 新增筆記
+                        </button>
+
                 </h2>
 
                 <div class="card-container" data-section-key="${key}" id="container-${key.toLowerCase()}">
@@ -393,7 +446,9 @@
                 </div>
 
                 ${renderContent(card.content)}
-                ${hasImages}
+                <div class="card-attachments">
+                    ${hasImages}
+                </div>
                 ${hasNote}
             </div>
         `;
@@ -409,7 +464,7 @@
         Sortable.create(container, {
             group: 'ctsv-cards',
             animation: 150,
-            handle: '.card',
+            handle: '.card-header', // 改成 header 為 handle（比較直覺）
             ghostClass: 'sortable-ghost',
             disabled: true,
             onEnd: async function (evt) {
@@ -517,10 +572,26 @@
         const isExternal = /^https?:\/\//i.test(path);
         const relPath = path.replace(/^static\//i, '');
         const src = isExternal ? path : (STATIC_BASE_URL + relPath);
-        const img = document.createElement('img');
-        img.src = src;
-        img.className = 'image-thumb';
-        img.alt = path;
+
+        let mediaEl;
+          if (/\.(mp4|webm|ogg)$/i.test(path)) {
+                // 影片用 icon 代替預覽
+                mediaEl = document.createElement('div');
+                mediaEl.innerHTML = '<i class="fas fa-video fa-2x text-muted"></i>';
+                mediaEl.style.width = '80px';
+                mediaEl.style.height = '60px';
+                mediaEl.style.display = 'flex';
+                mediaEl.style.alignItems = 'center';
+                mediaEl.style.justifyContent = 'center';
+                mediaEl.style.border = '1px solid #ddd';
+                mediaEl.style.borderRadius = '6px';
+          } else {
+                mediaEl = document.createElement('img');
+                // encodeURI 避免特殊字元造成問題
+                try { mediaEl.src = encodeURI(src); } catch(e){ mediaEl.src = src; }
+                mediaEl.className = 'image-thumb';
+          }
+
         const cap = document.createElement('div');
         cap.style.fontSize = '11px';
         cap.style.maxWidth = '90px';
@@ -531,7 +602,7 @@
         btn.type = 'button';
         btn.textContent = '移除';
         btn.onclick = () => { container.removeChild(item); };
-        item.appendChild(img);
+        item.appendChild(mediaEl);
         item.appendChild(cap);
         item.appendChild(btn);
         // store the path in dataset so we can collect later

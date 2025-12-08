@@ -1,493 +1,400 @@
-ctsv_gtsi
-================================================================
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>手動測試說明 - GTS-I & CTS Verifier</title>
+  <meta charset="UTF-8">
+  <title>XTS Retry List</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
     body {
       margin: 0;
-      padding: 0;
-      background: #f4f7fb;
-      color: #111827;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
     }
 
-    header {
-      background: #2563eb;
-      color: #ffffff;
-      padding: 16px 32px;
+    .flash-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-      letter-spacing: 0.05em;
+    .flash-header-title {
+      font-size: 22px;
+      font-weight: 600;
     }
 
-    header .subtitle {
+    .flash-header-subtitle {
       font-size: 13px;
-      opacity: 0.9;
+      color: #9ca3af;
+      margin-top: 4px;
     }
 
-    main {
-      max-width: 1080px;
-      margin: 24px auto 32px;
-      padding: 0 16px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      margin: 24px 0 12px;
-      color: #1f2933;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .section-title span.tag {
-      font-size: 12px;
-      padding: 2px 8px;
+    .flash-suite-tag {
+      padding: 6px 14px;
       border-radius: 999px;
-      background: #dbeafe;
-      color: #1d4ed8;
+      border: 1px solid #22c1c3;
+      font-size: 13px;
+      color: #e5e7eb;
     }
 
-    .android-subtitle {
-      font-size: 14px;
-      margin: 12px 0 8px;
-      color: #4b5563;
+    .flash-section {
+      margin-top: 18px;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: #020617;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.55);
+      border: 1px solid #1e293b;
+    }
+
+    .flash-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .flash-section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .flash-section-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34,193,195,0.12);
+      color: #22c1c3;
+    }
+
+    .flash-section p {
+      margin: 4px 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #e5e7eb;
+    }
+
+    .flash-section ul,
+    .flash-section ol {
+      margin: 6px 0 4px 1.4rem;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #e5e7eb;
+    }
+
+    .flash-flow-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+      border: 1px solid #334155;
+    }
+
+    .flash-flow-table th,
+    .flash-flow-table td {
+      padding: 8px 10px;
+      border-top: 1px solid #334155;
+      vertical-align: top;
+    }
+
+    .flash-flow-table th {
+      background: #0b1220;
+      color: #e2e8f0;
+      text-align: left;
+      border-bottom: 1px solid #475569;
+    }
+
+    .flash-flow-table tbody tr:hover {
+      background: rgba(148,163,184,0.08);
+      transition: background 0.16s ease;
+    }
+
+    .flash-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .android-subtitle span.badge {
-      font-size: 11px;
+      justify-content: center;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
-      border: 1px solid #e5e7eb;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #111827;
-    }
-
-    .card small {
       font-size: 11px;
-      color: #6b7280;
+      font-weight: 600;
+      color: #0b1120;
+      margin-right: 4px;
     }
+    .flash-badge-cts { background:#fbbf24; }
+    .flash-badge-gts { background:#22c1c3; }
+    .flash-badge-sts { background:#f97316; }
+    .flash-badge-vts { background:#38bdf8; }
 
-    .card ul {
-      margin: 6px 0 0;
-      padding-left: 18px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .note {
-      margin-top: 6px;
+    .flash-note {
       font-size: 12px;
-      color: #374151;
-      background: #eff6ff;
-      border-radius: 6px;
-      padding: 6px 8px;
-      border-left: 3px solid #2563eb;
+      color: #9ca3af;
+      margin-top: 6px;
     }
 
-    code {
+    .flash-code {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #020617;
+      border: 1px solid #1f2937;
       font-family: Consolas, "Courier New", monospace;
       font-size: 12px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .photo-section-title {
-      font-size: 16px;
-      margin: 24px 0 8px;
-      color: #111827;
-    }
-
-    .photo-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .photo-grid figure {
-      margin: 0;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 8px;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
-      border: 1px solid #e5e7eb;
-      max-width: 180px;
-      text-align: center;
-    }
-
-    .photo-grid img {
-      max-width: 100%;
-      border-radius: 8px;
-      display: block;
-    }
-
-    .photo-grid figcaption {
-      margin-top: 4px;
-      font-size: 11px;
-      color: #6b7280;
-    }
-
-    .back-link {
-      margin-top: 24px;
-      font-size: 13px;
-    }
-
-    .back-link a {
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
-    }
-
-    /* 🔹 新增 / 編輯 / 刪除 工具列：移到最下面 */
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      margin-top: 24px;
-    }
-
-    .toolbar button {
-      border: 1px solid #d1d5db;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      background: #ffffff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
-    }
-
-    .toolbar button:hover {
-      background: #eff6ff;
-      border-color: #2563eb;
-    }
-
-    .toolbar button.active {
-      background: #2563eb;
-      color: #ffffff;
-      border-color: #2563eb;
+      white-space: pre-wrap;
+      color: #e5e7eb;
     }
   </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>手動測試說明</h1>
-    <div class="subtitle">GTS-I / CTS Verifier / MADA Check List</div>
-  </div>
-</header>
 
-<main>
-  <!-- GTS-I 區塊 -->
-  <h2 class="section-title">
-    GTS-I 手動測試 : Android 13 以上才需測 <strong>GTS-I（GTS Interactive）</strong>
-    <span class="tag">GTS-I</span>
-  </h2>
-
-    <div class="android-subtitle">
-        <span class="badge" style="font-size: 15px;"><b>Gts Interactive 測試環境架設</b></span>
+  <div class="flash-header">
+    <div>
+      <div class="flash-header-title">Flash SW Flow / 燒錄流程</div>
+      <div class="flash-header-subtitle">
+        ◎ 除了 STS 以外，所有 XTS 測試（包含 Pretest）一律先燒錄 <strong>User Build</strong> 再進行測試。
       </div>
-
-    <div class="card-title"></div>
-    <ul>
-      Step 1 . 在 /home/fih/XTS 位置下載指定版本的 GTS 包並複製到本機位置進行測試 <br>
-      Step 2 . 在 ternimal 執行 gts-tradefed ，按下 Enter，建立Google tradefed 的環境<br>
-      Step 3 . 輸入 run gts-interactive。<br>
-
-    </ul>
-  </div>
-
-    <div class="card">
-    <div class="card-title">GtsInteractiveOverUsbTestCases</div>
-    <ul>
-      Step 1 . 測試Usb Over Wifi 時，需使用iPhone Hotspot與DUT建立 Wi-Fi 連線。<br>
-      Step 2 . DUT 按下Setting -> Debugging  -> Wireless -> 顯示ip。<br>
-      Step 3 . 在Terminal 輸入 adb connect xxx.xxx.xxx.xxx:xxxx (ip位置)。<br>
-      Step 4 . 關閉電腦乙太網路。<br>
-      Step 5 . 拔掉 DUT 連接電腦的 cable ，並在 tradefed 輸入 ld 確認 iphone 提供的 ip 位置是online的<br>
-      Step 6 . 利用WiFi連線的adb進行後續步驟依照提示詞依序進行<br>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">AndroidAutoOverUsbInteractiveHostTest</div>
-    <small>Test item：只要測項名稱有顯示 OverUsb 就都要連上iphone hotspot，利用WiFi連線的adb進行測試</small>
-    <ul>
-      <li>測試 Android Auto 時，待DUT前置WiFi步驟連線完成後，需接上<b>車機</b>進行測試。</li>
-      <li>車機有額外提供獨立電源，請確認接線是否正確，另外背板有一Type-C孔，可跟DUT做連接。</li>
-    </ul>
-    <div class="note">
-      建議紀錄：請注意DUT與車機是否有正常連線，畫面是否可正常投影至車機。
     </div>
+    <div class="flash-suite-tag">XTS TEST – FLASH SW FLOW</div>
   </div>
 
-  <div class="card">
-    <div class="card-title">Madachecklist SetupWizard - QRCode / NFC Tag</div>
+  <!-- 整體原則 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">前情提要</div>
+      <span class="flash-section-tag">General Rules</span>
+    </div>
+    <p>✯ <strong>除了 STS 外，所有 XTS 測試項目（CTS / CTS Verifier / GTS / GTS-Interactive / GTS-Root / CTS-on-GSI / VTS…）以及 Pretest，一律先燒錄 User Build SW。</strong></p>
+    <p>✯ 只有<strong>STS</strong> 測試會燒 <strong>Userdebug SW</strong>。</p>
+    <p>✯  <strong>Android 15（A15）以上版本</strong> 新增額外側項：</p>
     <ul>
-      <li>Madachecklist SetupWizard 第 2 與第 3 張截圖需要使用下列工具：<br>
-
-          <br>
-          2. <b>SetupWizard Qrcode</b>：額外附在 \\10.57.41.153\user$\QA\XTS\GTSI\QR Code<br>
-          <img src="{{ url_for('static', filename='GTSI/QR Code/QRCode_SetupWizard.png') }}" style="width: 40%; height: auto;" alt="QR Code 設置精靈"><br>
-          3.<b>Nfc Tag</b> : 請確認為此張 Tag，避免測試錯誤。</li><br>
-            <img src="{{ url_for('static', filename='NFC_Tag.jpg') }}" style="width: 40%; height: auto;" alt="NFC_Tag"><br>
-      <li>以上兩種方式皆用於 <b>work provisioning</b> 測試。</li>
+      <li>A15 以上：需依圖燒錄 <strong>GTS-Root</strong> 進行測試。</li>
+      <li>A15 以下：<strong>不需要</strong> 燒錄 GTS-Root，其他流程相同。</li>
     </ul>
   </div>
 
-  <div class="card">
-    <div class="card-title">GtsInteractiveMadachecklistTest 除Case9_2以外截圖請參照pdf </div>
-    <a href="{{ url_for('static', filename='GTSI/GTS_Interactive_Setupwizard_PART1_oldversion.pdf') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
-                GTS_Interactive_Setupwizard_PART1_oldversion.pdf
-            </a><br>
+  <!-- Flash Flow 對照表 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">Flash Flow 對照表</div>
+      <span class="flash-section-tag"> XTS From </span>
+    </div>
+
+       <img src="{{ url_for('static', filename='Flash.jpg') }}" style="width: 75%; height: auto;" alt="Flash"><br>
+
+    <table class="flash-flow-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">起點 / SW 類型</th>
+          <th style="width: 28%;">燒錄組合</th>
+          <th style="width: 30%;">對應測試項目</th>
+          <th>備註</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3">Partner Submit<br>→ <strong>User Build SW</strong></td>
+          <td>User Build SW 單獨</td>
+          <td>
+            <span class="flash-badge flash-badge-cts">CTS</span>
+            <span class="flash-badge flash-badge-cts">CTS VERIFIER</span>
+          </td>
+          <td>最基本的合規測試組合。</td>
+        </tr>
+        <tr>
+          <td>User Build SW 單獨</td>
+          <td>
+            <span class="flash-badge flash-badge-gts">GTS</span>
+          </td>
+          <td>一般 GTS 測試流程，沒有 root / debug 要求。</td>
+        </tr>
+        <tr>
+          <td>User Build SW + Vendor-Boot Debug</td>
+          <td>
+            <span class="flash-badge flash-badge-gts">GTS INTERACTIVE</span><br>
+            <span class="flash-badge flash-badge-gts">GTS-ROOT</span>（A15↑）
+          </td>
+          <td>需額外燒錄 Vendor-Boot Debug；A15 以上才需要 GTS-Root。</td>
+        </tr>
+
+        <tr>
+          <td rowspan="2">Partner Submit<br>→ User Build SW + Google GSI</td>
+          <td>User Build SW + Google GSI</td>
+          <td>
+            <span class="flash-badge flash-badge-cts">CTS-ON-GSI</span>
+          </td>
+          <td>需依專屬流程下載 GSI 並修改 fastboot bat 檔（見下方 CTS-on-GSI 章節）。</td>
+        </tr>
+        <tr>
+          <td>User Build SW + Google GSI + Vendor-Boot Debug</td>
+          <td>
+            <span class="flash-badge flash-badge-vts">VTS</span>
+          </td>
+          <td>在 CTS-on-GSI 基礎上再加 Vendor-Boot Debug 以進行 VTS 測試。</td>
+        </tr>
+
+        <tr>
+          <td>Partner Submit<br>→ <strong>Userdebug SW</strong></td>
+          <td>Userdebug SW 單獨</td>
+          <td>
+            <span class="flash-badge flash-badge-sts">STS</span>
+          </td>
+          <td>僅 STS 測試使用，不與其他 XTS 項目共用。</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+    <!-- PM 版本來源 & SOP 區 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">版本來源與 Flash SOP</div>
+      <span class="flash-section-tag">Image &amp; SOP</span>
+    </div>
+
+    <p><strong>客戶提供的版本 Image：</strong></p>
     <ul>
-      <li>Case9_2 測試條件要求SetupWizard介面「<b>完全不連網路</b>」直接進入主頁。</li>
-      <li>該截圖請改成：<br>
-        <img src="{{ url_for('static', filename='GtsInteractiveMadachecklistTest.jpg') }}" style="width: 40%; height: auto;" alt="GtsInteractiveMadachecklistTest">
+      <li>PM 會將客戶提供之版本放置於：<br>
+        <code>\\10.57.45.213\3pl\該專案名稱</code>
       </li>
     </ul>
-    <div class="note">
-      測試時需確認：裝置從開機到 SetupWizard 全程未連上任何網路，且畫面內容需與截圖一致。
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="card-title">✯ TOT版本(Preview)</div>
+    <p><strong>若客戶未提供燒錄 SOP：</strong></p>
     <ul>
-      <li>GTSI 也有提供TOT的版本，只是名稱不相同叫做「 Preview 」</li>
-      <li>Preview 版的GTS測試包，也會附在/home/fih/XTS/GTS的資料夾內，資料夾名稱會特別標示。</li>
-      <li>若已完全根據提示詞測試確認無法通過，則可使用Preview版本，進行驗證確認該項測試在DUT上為Fail。</li>
-      <li>若依舊為Fail，則須將其測試過程及結果截圖，並回報給RD分析。</li>
-    </ul>
-  </div>
-
-  <!-- CTS Verifier 區塊 -->
-  <h2 class="section-title">
-    CTS Verifier 手動測試
-    <span class="tag">CTS Verifier</span>
-  </h2>
-
-
-  <div class="card">
-    <div class="card-title">Audio Loopback Latency Test</div>
-    <ul>
-      <li>第 2 個子項的 <b>Analog 測試</b> 需要使用 <b>3.5mm loopback dongle</b>。</li>
-      <li>需將已封起來的回收用 loopback dongle <b>接在耳機孔</b> 做 loopback 測試。</li>
-      <li>loopback dongle 圖示 : </li><br>
-      <img src="{{ url_for('static', filename='LoopBack.jpg') }}" style="width: 40%; height: auto;" alt="LoopBack">
-    </ul>
-    <div class="note">
-      測試時確認：請依圖片上的loopback dongle做測試，以免影響 Latency 結果。
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Voicemail Broadcast Test</div>
-    <ul>
-      <li>台灣地區 <b>未支援 Voicemail 服務</b>。</li>
-      <li>需搭配 <b>NowSMS Server</b> 進行模擬測試。</li>
-      <li>附上壓縮檔:
-      <a href="{{ url_for('static', filename='CTSV/NowSMS.zip') }}" target="_blank" style="color: #ff5757; font-weight: 600;">
-            NowSMS.zip
-      </a>進行測試，密碼為:Foxconn123<br>
-
-    </ul>
-    <div class="note">
-      由於先前同仁架設之伺服器已消失，需重新架設(須研究)。
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Java MIDI Test / Native MIDI Test</div>
-    <ul>
-      <li><code>MIDI_BLE.apk</code> 會在每一台實驗室電腦的/home/fih/XTS/CTS/MIDI_BLE中</li>
-      <li>只需安裝並使用 <b>1.11 版本</b> 即可，不需照pdf步驟另外到 Google Play 商店下載最新版。</li>
-    </ul>
-    <div class="note">
-      測試前確認：裝置已安裝MIDI_BLE.APK。
-    </div>
-  </div>
-
-    <div class="card">
-    <div class="card-title">✯ Camera ITS 測項</div>
-    <ul>
-      <li>Camera ITS 測項比較特別需要架設測試環境，必須要在實驗室的regular field-of-view (RFoV) box中測試(黑色測試箱)，並需額外準備一台做Reference的平板</li><br>
-        <ul>
-      Step 1 . 開啟Ternimal 根據你的 Android 版本並initialize測試環境，輸入source ITS.sh 版本。以A15為例，輸入 source ITS.sh 15。 <br>
-            <img src="{{ url_for('static', filename='ITS_setup1.jpg') }}" style="width: 50%; height: auto;" alt="ITS_setup1"><br>
-      Step 2 . 將測試環境拉到自己資料夾的位置，用來SetUp及修改內部Comfig:<code> cd '/home/fih/USER/QA/XXX/CTSV/android-cts-verifier-15_r5-linux_x86-arm/android-cts-verifier/CameraITS'</code><br>
-            <img src="{{ url_for('static', filename='ITS.jpg') }}" style="width: 50%; height: auto;" alt="ITS"><br>
-      Step 3 . 輸入<code>source build/envsetup.sh</code><br>
-      Step 4 . 根據提示詞輸入 <code>adb -s <"Serial ID"> shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier</code>。<br>
-            Step 5 . 更改內部Comfig<br>
-            <img src="{{ url_for('static', filename='ITS2.jpg') }}" style="width: 50%; height: auto;" alt="ITS2"><br>
-            <b>根據目前的測試環境、DUT Serial Number、Arduino、Light</b>等等進行修改<br>
-            <img src="{{ url_for('static', filename='ITS3.jpg') }}" style="width: 50%; height: auto;" alt="ITS3"><br>
-      Step 6 . 執行Python檔案 <code>python tools/run_all_tests.py camera=0 scenes=1</code> 開始測試<br>(Camera argument值0是後鏡頭;1是前鏡頭，另外scenes可以選擇測試範圍 ，若未輸入則全部測試)<br>
-            <img src="{{ url_for('static', filename='ITS_setup2.jpg') }}" style="width: 100%; height: auto;" alt="ITS_setup2"><br>
-
-        </ul>
-
-      <li>自動化測試，待全部測試完才會出結果</li>
-        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">ITS Test - Sensor Fusion（Test Pattern）</div>
-    <ul>
-      <li>Sensor Fusion 會需要使用 <b>上方有滾輪的箱子</b>做測試，並需要測試額外的 <b>Test Pattern</b>紙張。</li>
-      <li>圖示可能會隨版本更新，因此若 Test Pattern 測試無法通過：
-        <ul>
-          <li>請至 Google CTS Verifier 對應項目查詢官方範例圖片與說明。</li>
-          <li>依照官方提供的指引，確認測試步驟與畫面是否正確。</li>
-          <li>Android 15 Pattern 圖例:</li><br>
-            <img src="{{ url_for('static', filename='ITS_Fusion.jpg') }}" style="width: 40%; height: auto;" alt="ITS_Fusion">
-        </ul>
+      <li>PM 也會將整理好的通用 Flash SOP 放在：<br>
+        <code>\\10.57.45.213\3pl\Ready_to_GoogleDrive\Flash_sop</code>
       </li>
-        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
+      <li>實際執行時，仍需依照「客戶 / 專案」的要求選擇正確的 SOP 流程。</li>
     </ul>
-    <div class="note">
-        詳細Google參考資料:
-      <a href="https://source.android.com/docs/compatibility/cts/sensor-fusion-box-assembly" target="_blank" style="color: #ff5757; font-weight: 600;">
-        ITS Test - Sensor Fusion
-        </a>
+  </div>
+
+  <!-- User / UserDebug Build -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">User / UserDebug Build</div>
+      <span class="flash-section-tag">Build Type</span>
+    </div>
+
+    <p><strong>進入3pl資料夾後 ，3種zip直接抓下來：</strong></p>
+    <ol>
+      <img src="{{ url_for('static', filename='Flash2.jpg') }}" style="width: 60%; height: auto;" alt="Flash2"><br>
+        <br>
+      <li>User Build: 以下圖為客戶就有提供windows環境的bat檔 跟 Linux環境的sh檔 <br></li>
+        <img src="{{ url_for('static', filename='Flash3.jpg') }}" style="width: 30%; height: auto;" alt="Flash3"><br>
+      <li>UserDebug Build:概念跟User Build一樣，只是要注意彼此不同包。<br></li>
+      <li>客戶自家燒錄Tool及Driver: (Tool 因每一家客戶不同就不多作介紹)<br></li>
+    </ol>
+      <ul>
+          <li>燒錄時，樣機需要進入Fastboot Mode，如果客戶有提供腳本通常可直接執行bat檔；若無則需要手動輸入指令或按下指定按鍵(通常為關機鍵+音量下鍵)</li>
+          <div class="flash-section">燒錄步驟：<br>
+            <ol>
+                <li>在 Terminal 輸入 adb reboot bootloader 樣機會進入 Bootloader 界面<br></li>
+                <li>進入第一層後，輸入 fastboot devices 檢查電腦有無driver，如果沒driver，電腦在第一層會找不到樣機型號<br></li>
+                    如果找不到型號，打開裝置管理員，你應該能看到一個帶有警示符號的Android裝置<br>
+                <img src="{{ url_for('static', filename='driver.jpg') }}" style="width: 30%; height: auto;" alt="driver"><br>
+                    更新你的驅動程式<br>
+                <img src="{{ url_for('static', filename='driver2.jpg') }}" style="width: 30%; height: auto;" alt="driver2"><br>
+                    把驅動路徑抓到電腦裡，driver 附在 : \\10.57.41.153\user$\QA\XTS\Pretest\usb_driver_r13-windows\usb_driver(帳號:fih；密碼:Foxconn123)<br>
+                <img src="{{ url_for('static', filename='driver3.jpg') }}" style="width: 30%; height: auto;" alt="driver3"><br>
+                    按下讓我從電腦上的可用驅動程式清單中挑選<br>
+                <img src="{{ url_for('static', filename='driver4.jpg') }}" style="width: 30%; height: auto;" alt="driver4"><br>
+                    點擊AndroidDevice並按下一步<br>
+                <img src="{{ url_for('static', filename='driver5.jpg') }}" style="width: 30%; height: auto;" alt="driver5"><br>
+                    點選Android Bootloader Interface 並按下一步<br>
+                <img src="{{ url_for('static', filename='driver6.jpg') }}" style="width: 30%; height: auto;" alt="driver6"><br>
+                    更新警告按是，就更新完畢了<br>
+                <img src="{{ url_for('static', filename='driver7.jpg') }}" style="width: 30%; height: auto;" alt="driver7"><br>
+                    若仍 driver 更新後樣機依舊無法正確被 PC 辨識，請詢問 PM 或 RD，確認該專案是否有特殊 Driver 或特殊安裝步驟
+                <li>認到devices後，輸入  fastboot reboot fastboot  進入fastbootMode，在第2層才能燒機<br></li>
+                <li>Terminal會顯示進度，若沒有燒完沒有自動開機的話，輸入 fastboot -w ，最後輸入 fastboot reboot  把重新開機。<br></li>
+            </ol>
+
+            </div>
+
+      </ul>
+
+  </div>
+
+    <!-- Driver 注意事項 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">Driver / 連線問題注意事項</div>
+      <span class="flash-section-tag">Driver Tips</span>
+    </div>
+
+    <p><strong>不同客戶可能使用不同 Driver：</strong></p>
+    <ul>
+      <li>若客戶沒有特別提供 Driver 安裝包，可以先嘗試公司預設版本：<br>
+        <code>\\10.57.41.153\user$\QA\XTS</code>
+      </li>
+      <li>若仍無法正確被 PC / ATS 辨識，請儘早詢問 PM 或 RD，確認該專案是否有客製 Driver 或特殊安裝步驟。</li>
+    </ul>
+
+    <div class="flash-note">
+      快速上手。
     </div>
   </div>
-    <div class="card">
-    <div class="card-title">ITS Test - CameraWebcamTest</div>
-    <ul>
-      <li>在 regular field-of-view (RFoV) box中測試</li><br>
-      Step 1 . 開啟Ternimal 根據你的 Android 版本並initialize測試環境，輸入source ITS.sh 版本 W。以A15為例，輸入 source ITS.sh 15 W。 <br>
-            <img src="{{ url_for('static', filename='ITS_W2.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W2"><br>
-      Step 2 . 將測試環境拉到自己資料夾的位置，用來SetUp及修改內部Comfig:<code> cd '/home/fih/USER/QA/XXX/CTSV/android-cts-verifier-15_r5-linux_x86-arm/android-cts-verifier/CameraWebcamTest'</code><br>
-            <img src="{{ url_for('static', filename='ITS_W.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W"><br>
-      Step 3 . 更改內部Comfig，修改DUT Serial Number<br>
-            <img src="{{ url_for('static', filename='ITS_W4.jpg') }}" style="width: 50%; height: auto;" alt="ITS_W4"><br>
-      Step 4 .執行測試Python檔 <code> python run_webcam_test.py -c config.yml</code>。<br>
-            <img src="{{ url_for('static', filename='ITS_W3.jpg') }}" style="width: 80%; height: auto;" alt="ITS_W3"><br>
-        <li>log會存在tmp下 (如有fail, 需要提供log給RD)</li>
-    </ul>
-  </div>
 
-    <div class="card">
-    <div class="card-title">ITS Test - CameraWebcamTest</div>
-    <ul>
-      <li>在 regular field-of-view (RFoV) box中測試</li><br>
-      Step 1 . 需要準備一個PN532 NFC reader。 <br>
-            <img src="{{ url_for('static', filename='PN532.jpg') }}" style="width: 50%; height: auto;" alt="PN532"><br>
-      Step 2 . DUT需額外安裝apk<code> adb install -r -g NfcEmulatorTestApp.apk</code>(如果應版本問題下載不了，請再額外輸入<code>adb shell am compat enable ALLOW_TEST_API_ACCESS com.android.cts.verifier</code>)<br>
-      Step 3 . DUT的Settings->開啟NFC->並將PN532 NFC chip那一面靠着DUT的NFC位置,并且DUT和PN532 Chip都要接到PC<br>
-      Step 4 .在Terminal中輸入source ITS.sh 15<br>
-      Step 5 .cd 到MultiDevice位置中<br>
-            <img src="{{ url_for('static', filename='MultiDevice.jpg') }}" style="width: 80%; height: auto;" alt="MultiDevice"><br>
+  <!-- CTS-on-GSI 專區 -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">CTS-on-GSI 燒錄流程</div>
+      <span class="flash-section-tag">CTS-ON-GSI</span>
+    </div>
 
-      Step 6 .並更改config 中 DUT ID 及 pn532_serial_path的值(先將PN532 Chip接上電腦並輸入<code> ls /dev/ttyUSB*</code>看path位置)<br>
-         <img src="{{ url_for('static', filename='MultiDevice2.jpg') }}" style="width: 80%; height: auto;" alt="MultiDevice2"><br>
-      Step 7 .輸入 source build/envsetup.sh<br>
-      Step 8 .執行Python檔 MultiDevice$ <code>python3 tools/run_all_tests.py </code>並等待測試結果<br>
-        <li>若本項有單條測項錯誤，請使用TOT版本再跑一次</li>
-        <li>log會存在tmp下 (如有fail, 需要提供這個給RD)</li>
-    </ul>
+    <p>CTS-on-GSI 需要額外從內網下載 Google GSI，並修改 fastboot bat 檔中的 system image 路徑，步驟如下：</p>
 
-  </div>
+    <ol>
+      <li>開啟內網網站：<strong>http://10.57.42.97/XTS/</strong> → 進入 <strong>VTS</strong> 資料夾。<br></li>
+        <img src="{{ url_for('static', filename='GSI.jpg') }}" style="width: 30%; height: auto;" alt="GSI"><br>
+      <li>依照 JiRA 上標示的 Android 版本選擇，例如 Android 12.1：<br>
+             <code>VTS-12.1_r14/</code> → 再進到底下的 <code>R14</code> 子資料夾。<br>
+          <img src="{{ url_for('static', filename='GSI3.jpg') }}" style="width: 30%; height: auto;" alt="GSI3"><br>
+      </li>
+      <li>
+        在資料夾中找到對應架構的 <strong>signed GSI_arm64 zip</strong>，例如：<br>
+        <code>signed-gsi_arm64-img-13267304.zip</code><br>
+          <img src="{{ url_for('static', filename='GSI4.jpg') }}" style="width: 30%; height: auto;" alt="GSI4"><br></li>
+        <li>下載並解壓縮後，裡面會有一個 system image:<br>
+          <img src="{{ url_for('static', filename='GSI5.jpg') }}" style="width: 30%; height: auto;" alt="GSI5"><br>
+      </li>
+      <li>
+        將這個 <strong>system image</strong> 複製到「客戶提供UserBuild」的資料夾中（根據客戶提供的SOP，進行Google System 的燒錄），<br>
+      </li>
+    </ol>
 
+    <div class="flash-section">可能遇到情形：<br>
+   <ol>
+       <li>客戶提供燒錄bat檔，就需要將檔案中既有的system.img，改成自己抓對應版本的system.img<br></li>
+       <li>客戶提供自家SOP及燒錄指令<br></li>
+       <li>未提供則在Fastboot Mode 輸入 fastboot flash system system.img，若為lock樣機需去客戶提供資料中找解鎖指令。<br></li>
+   </ol>
 
-  <!-- MADA Check List -->
-  <h2 class="section-title">
-    MADA Check List
-    <span class="tag">MADA </span>
-  </h2>
+    </div>
 
-
-   <div class="card">
-    <div class="card-title"></div>
-    <ul>
-      <li>最新版本的MADA都會放在: <b>/home/fih/CHECKLIST_LATEST/GMS_Mada Compliance Form - (External sharing).docx</b>。</li>
-      <li>內部會需要用到的測試apk也都放在相同位置：<br>
-          <img src="{{ url_for('static', filename='MADA.jpg') }}" style="width: 70%; height: auto;" alt="MADA"><br>
-          <li>封面黃色部分，請依照要求輸入指令提供<b>DUT Name 以及 Fingerprint。</b><br>
-            <img src="{{ url_for('static', filename='MADA2.jpg') }}" style="width: 70%; height: auto;" alt="MADA3"><br>
-          <li>測試MADA時，請依照Google規定步驟，提供所要求之圖片。</li><br>
-          <li>完成每個測項，並附上照片後，<b>請在最右側輸入pass</b>；若該DUT無該功能或高/低於測試版本，則在<b>右側註明原因並填上N/A</b>。<br>
-            <img src="{{ url_for('static', filename='MADA3.jpg') }}" style="width: 70%; height: auto;" alt="MADA3"><br>
-            </li>
-    </ul>
-  </div>
-
-    <div class="card">
-    <div class="card-title">M63 - Android Auto discoverability</div>
-    <ul>
-      <li>車機這條測項，只有手機的樣機需要測試，測試時需錄影提供影片給Google查驗</li>
-      <li>Google有提供範例影片，影片需要錄製到打開Google Map 並確認定位已在車機上顯示。<br>
-         <a href="https://www.youtube.com/watch?v=FzBJqehq3As" target="_blank" style="color: #ff5757; font-weight: 600;">
-        Android Auto discoverability
-         </a>
-       <li>須在MADA上註明影片的名稱及附上影片位置並提供給PM</li>
-    </ul>
   </div>
 
 
 
-  <!-- 🔹 新增 / 編輯 / 刪除 工具列：放在頁面最下面 -->
-  <div class="toolbar">
-    <button type="button" class="active" data-mode="create">＋ 新增</button>
-    <button type="button" data-mode="edit">✎ 編輯</button>
-    <button type="button" data-mode="delete">🗑 刪除</button>
+  <!-- VTS -->
+  <div class="flash-section">
+    <div class="flash-section-header">
+      <div class="flash-section-title">VTS 燒錄流程</div>
+      <span class="flash-section-tag">VTS</span>
+    </div>
+
+    <p><strong>VTS會比GSI多燒一個 Vendor-boot-Debug</strong></p>
+
+    <ol>
+      <li>客戶一定會需要提供，因此要特別先找vendor_boot-debug.img 放在哪，若客戶沒提供則盡速跟PM反應。<br></li>
+      <li>依客戶SOP為準，若無輸入fastboot flash vendor_boot vendor_boot-debug.img，燒入VTS</li>
+    </ol>
+
   </div>
 
-  <div class="back-link">
-    <a href="/">← 回到首頁</a>
-  </div>
-</main>
+    <div class="back-link">
+        <a href="/">← 回到首頁</a>
+    </div>
 
-<script>
-  // 切換按鈕外觀，之後你要接後端或切換不同區塊再往這裡加就好
-  document.querySelectorAll(".toolbar button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".toolbar button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      // const mode = btn.dataset.mode; // create / edit / delete
-      // TODO: 之後可以依 mode 顯示不同表單 / dialog
-    });
-  });
-</script>
 </body>
 </html>
