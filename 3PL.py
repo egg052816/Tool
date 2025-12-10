@@ -714,11 +714,6 @@ def ctsv_gtsi():
     return render_template("ctsv_gtsi.html")
 
 
-@app.route("/save")
-def save():
-    return render_template("save.html")
-
-
 # --- 圖片路徑修復補丁 (Magic Route) ---
 @app.route('/ctsv_gtsi/<path:filename>')
 def serve_ctsv_image_fallback(filename):

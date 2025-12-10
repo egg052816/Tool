@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>XTS Retry List & Flash Flow (SOP Mode)</title>
   <style>
+    /* --- 增加平滑捲動效果 --- */
+    html {
+      scroll-behavior: smooth;
+    }
 
     /* --- 現代科技文件配色 (Modern Tech Doc Theme) --- */
     :root {
@@ -26,10 +30,8 @@
       --accent-secondary: #4f46e5; /* 次要：靛藍 (Indigo) - 用於標籤 */
       --accent-warning: #d97706;   /* 警示：深琥珀 (Amber) - 用於注意 */
 
-      /* --- NEW: 紅色強調風格 (用於代碼) --- */
-      /* --code-bg-red: #fee2e2;    不再需要背景色 */
-      --code-text-red: #0f172a; /* 改用稍微亮一點的深紅，對比更明顯 */
-      /* --code-border-red: #fca5a5; 不再需要邊框色 */
+      /* 程式碼區塊 */
+      --code-text-red: #0f172a;
     }
 
     * {
@@ -38,7 +40,6 @@
 
     body {
       margin: 0;
-      /* [比例調整] 1200px 適用的內距 */
       padding: 45px 30px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: var(--bg-body);
@@ -47,7 +48,6 @@
     }
 
     .container {
-      /* [重點修改] 寬度設定為 1200px */
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -69,7 +69,6 @@
     }
 
     .flash-header-title {
-      /* [比例調整] 標題稍微加大 */
       font-size: 34px;
       font-weight: 800;
       letter-spacing: -0.5px;
@@ -77,16 +76,28 @@
       color: var(--text-strong);
     }
 
+    /* 修改為按鈕樣式 */
     .flash-suite-tag {
       padding: 10px 22px;
       border-radius: 8px;
       background: var(--accent-primary);
-      font-size: 14px; /* 稍微加大 */
+      font-size: 14px;
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 1px;
       white-space: nowrap;
       box-shadow: 0 4px 6px -1px rgba(14, 116, 144, 0.3);
+      text-decoration: none; /* 去除底線 */
+      display: inline-block;
+      transition: all 0.2s ease; /* 加入過渡動畫 */
+      cursor: pointer;
+    }
+
+    /* 滑鼠懸停效果 */
+    .flash-suite-tag:hover {
+      background: #155e75; /* 加深顏色 */
+      transform: translateY(-2px); /* 微微上浮 */
+      box-shadow: 0 6px 12px rgba(14, 116, 144, 0.4);
     }
 
     /* --- 卡片區塊設計 --- */
@@ -94,11 +105,11 @@
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      /* [比例調整] 區塊內距加大 */
       padding: 38px;
       margin-bottom: 32px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
       transition: all 0.2s ease;
+      scroll-margin-top: 100px; /* 預留捲動後的頂部空間，避免被 Header 遮擋 */
     }
 
     .flash-section:hover {
@@ -116,7 +127,6 @@
     }
 
     .flash-section-title {
-      /* [比例調整] 區塊標題 */
       font-size: 26px;
       font-weight: 700;
       color: var(--text-strong);
@@ -148,7 +158,6 @@
     /* --- 文字與列表 --- */
     p {
       margin: 0 0 18px 0;
-      /* [比例調整] 內文 18px (閱讀最舒適) */
       font-size: 18px;
       color: var(--text-main);
     }
@@ -166,7 +175,6 @@
 
     li {
       margin-bottom: 12px;
-      /* [比例調整] 列表文字 */
       font-size: 18px;
     }
 
@@ -201,7 +209,7 @@
     .flash-flow-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 17px; /* [比例調整] 表格字體 */
+      font-size: 17px;
       background: var(--bg-card);
     }
 
@@ -244,7 +252,7 @@
     .flash-badge-sts { background: #ffedd5; color: #9a3412; border: 1px solid #fdba74; }
     .flash-badge-vts { background: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
 
-    /* --- 程式碼與路徑 (保持紅色無框風格) --- */
+    /* --- 程式碼與路徑 --- */
     code {
       font-family: 'Consolas', 'Monaco', monospace;
       background: none;
@@ -260,9 +268,8 @@
     .flash-note {
       background: #fffbeb;
       border-left: 6px solid var(--accent-warning);
-      padding: 22px 28px; /* Note 內距加大 */
+      padding: 22px 28px;
       border-radius: 0 10px 10px 0;
-      /* [比例調整] Note 文字 */
       font-size: 18px;
       color: #92400e;
       margin-top: 28px;
@@ -271,7 +278,7 @@
 
     /* --- SOP Step Container --- */
     .sop-step {
-        margin-bottom: 45px; /* Step 間距加大 */
+        margin-bottom: 45px;
         padding-bottom: 28px;
         border-bottom: 2px dashed var(--border-color);
         position: relative;
@@ -282,7 +289,6 @@
 
     .sop-step-title {
         font-weight: 800;
-        /* [比例調整] 步驟標題 */
         font-size: 22px;
         color: var(--accent-primary);
         margin-bottom: 20px;
@@ -303,7 +309,6 @@
       text-decoration: none;
       color: var(--accent-primary);
       font-weight: 700;
-      /* [比例調整] 按鈕尺寸 */
       font-size: 16px;
       padding: 14px 38px;
       border: 3px solid var(--accent-primary);
@@ -328,7 +333,9 @@
     <div class="flash-header-content">
       <div class="flash-header-title">Flash SW Flow / 燒錄流程 SOP</div>
     </div>
-    <div class="flash-suite-tag">FLASH SW FLOW</div>
+    <a href="#user-build" class="flash-suite-tag">User / UserDebug Build</a>
+    <a href="#gsi" class="flash-suite-tag">GSI</a>
+    <a href="#vts" class="flash-suite-tag">VTS</a>
   </div>
 
   <div class="flash-section">
@@ -379,7 +386,7 @@
     </ul>
   </div>
 
-  <div class="flash-section">
+  <div class="flash-section" id="user-build">
     <div class="flash-section-header">
       <div class="flash-section-title">User / UserDebug Build 燒錄教學</div>
       <span class="flash-section-tag">SOP Steps</span>
@@ -400,11 +407,12 @@
     </div>
 
     <div class="flash-note">
-        燒錄時，樣機需要進入 Fastboot Mode。如果客戶有提供腳本通常可直接執行 bat 檔；若無則需要手動輸入指令或按下指定按鍵 (通常為關機鍵+音量下鍵)。
+        ★ Linux 的電腦有內建通用驅動，因此不須額外更新Driver就能直接燒錄。<br>
+        若為Windows環境，大多數樣機在燒錄時都需要進入 Bootloader Mode 更新驅動程式，詳細資訊依照客戶SOP為主。
     </div>
 
     <div style="background: #f8fafc; border-radius: 12px; padding: 32px; margin-top: 32px; border: 2px solid var(--border-color);">
-        <h3 style="margin-top:0; color:var(--text-strong); border-bottom: 2px solid var(--accent-primary); padding-bottom: 12px; display: inline-block;">詳細燒錄與 Driver 更新步驟：</h3>
+        <h3 style="margin-top:0; color:var(--text-strong); border-bottom: 2px solid var(--accent-primary); padding-bottom: 12px; display: inline-block;">Driver 更新步驟：</h3>
 
         <div style="margin-top: 24px;">
             <div class="sop-step">
@@ -456,46 +464,26 @@
                  <span class="sop-step-title">Step 8. 完成更新</span>
                  <p>系統會跳出更新警告視窗，請按「是」，即可完成更新。</p>
                  <img src="{{ url_for('static', filename='driver7.jpg') }}" class="sop-image" alt="完成更新">
+                <p>更新完畢 Terminal 會顯示進入燒錄步驟，等待樣機完成燒錄並重新開機。</p>
 
                 <p style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 6px; border-left: 4px solid #ef4444; margin-top: 20px;">
                     <strong>⚠ 注意：</strong> 若 Driver 更新後樣機依舊無法正確被 PC 辨識，請立即詢問 PM 或 RD，確認該專案是否有特殊 Driver 或特殊安裝步驟。
                 </p>
             </div>
-
-             <div class="sop-step">
-                 <span class="sop-step-title">Step 9. 開始燒錄</span>
-                 <p>電腦成功認到 devices 後，輸入 <code>fastboot reboot fastboot</code> 進入 fastbootd Mode (第二層)，才能開始燒機。</p>
-                 <p>Terminal 會顯示進度，若沒有燒完沒有自動開機的話，輸入 <code>fastboot -w</code> 清除資料，最後輸入 <code>fastboot reboot</code> 重新開機。</p>
-            </div>
         </div>
     </div>
   </div>
 
-  <div class="flash-section">
-    <div class="flash-section-header">
-      <div class="flash-section-title">Driver / 連線問題注意事項</div>
-      <span class="flash-section-tag">Driver Tips</span>
-    </div>
-
-    <p><strong>不同客戶可能使用不同 Driver：</strong></p>
-    <ul>
-      <li>若客戶沒有特別提供 Driver 安裝包，可以先嘗試公司預設版本：<br>
-        <code>\\10.57.41.153\user$\QA\XTS</code>
-      </li>
-      <li>若仍無法正確被 PC / ATS 辨識，請儘早詢問 PM 或 RD，確認該專案是否有客製 Driver 或特殊安裝步驟。</li>
-    </ul>
-  </div>
-
-  <div class="flash-section">
+  <div class="flash-section" id="gsi">
     <div class="flash-section-header">
       <div class="flash-section-title">CTS-on-GSI 燒錄流程 SOP</div>
       <span class="flash-section-tag">CTS-ON-GSI</span>
     </div>
 
-    <p>CTS-on-GSI 需要額外從內網下載 Google GSI，並修改 fastboot bat 檔中的 system image 路徑，步驟如下：</p>
+    <p>CTS-on-GSI 需要額外從內網中下載Google System Image 做燒錄，步驟如下：</p>
 
     <div class="sop-step">
-        <span class="sop-step-title">Step 1. 進入內網 GSI 資料夾</span>
+        <span class="sop-step-title">Step 1. 進入內網 VTS 資料夾</span>
         <p>開啟內網網站：<a href="http://10.57.42.97/XTS/" target="_blank"><strong>http://10.57.42.97/XTS/</strong></a> → 進入 <strong>VTS</strong> 資料夾。</p>
         <img src="{{ url_for('static', filename='GSI.jpg') }}" class="sop-image" alt="GSI Folder">
     </div>
@@ -522,16 +510,26 @@
     </div>
 
     <div style="background: #ecfeff; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid var(--accent-primary); color: var(--text-main);">
-       <strong>可能遇到情形：</strong>
+       <strong style="font-size : 20px">可能遇到情形：</strong>
        <ol style="margin-bottom: 0;">
-           <li>客戶提供燒錄 bat 檔，就需要將檔案中既有的 <code>system.img</code>，改成自己抓對應版本的 system.img。</li>
-           <li>客戶提供自家 SOP 及燒錄指令。</li>
-           <li>未提供則在 Fastboot Mode 輸入 <code>fastboot flash system system.img</code>，若為 lock 樣機需去客戶提供資料中找解鎖指令。</li>
+           <li>客戶提供自家 SOP。</li>
+           <li>客戶提供燒錄 bat 檔 :<br>
+               將檔案中既有的 <code>system.img</code>，更新成剛才下載對應版本的 <code>system.img</code>。</li>
+           <li>若都未提供則 :<br>
+               <p>先<code>fastboot devices</code>，電腦認到 devices 後，輸入 <code>fastboot reboot fastboot</code> 進入 fastbootd Mode (第二層)，才能開始燒機。</p>
+               <p>在 Fastboot Mode 輸入 <code>fastboot flash system system.img</code>，若為 lock 樣機需去客戶提供資料中找解鎖指令。</p>
+               <p>若沒有燒完沒有自動開機的話，輸入 <code>fastboot -w</code> 清除資料，最後輸入 <code>fastboot reboot</code> 重新開機。</p>
+           </li>
+
        </ol>
+
+
+
+
     </div>
   </div>
 
-  <div class="flash-section">
+  <div class="flash-section" id="vts">
     <div class="flash-section-header">
       <div class="flash-section-title">VTS 燒錄流程</div>
       <span class="flash-section-tag">VTS</span>

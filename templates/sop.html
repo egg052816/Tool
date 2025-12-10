@@ -13,12 +13,6 @@
         referrerpolicy="no-referrer"
     />
 
-    <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOP Document</title>
     <style>
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -33,39 +27,14 @@
 
         .container {
             width: 94%;
-            /* [比例調整] 1500px -> 1200px */
             max-width: 1200px;
             margin: 20px auto 40px;
         }
 
         h1 {
-            /* [比例調整] 28px -> 24px */
             font-size: 24px;
             margin: 0 0 6px;
             color: #1e3a8a;
-        }
-
-        .header-sub {
-            /* [比例調整] 28px -> 24px */
-            font-size: 24px;
-            color: #4b5563;
-            margin-bottom: 10px;
-        }
-
-        /* 移除 header-tag 的浮動，將其內聯在標題下方 */
-        .header-tag-wrapper {
-             margin-bottom: 20px;
-        }
-        .header-tag {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
-            /* [比例調整] 18px -> 16px */
-            font-size: 16px;
-            background: #eff6ff;
-            font-weight: 500;
         }
 
         /* ===== SOP Sections (內容區塊) ===== */
@@ -76,8 +45,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             padding: 18px 20px 16px;
             margin-top: 18px;
-
-            /* 🌟 [比例調整] 區塊寬度 1500px -> 1200px 🌟 */
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
@@ -91,7 +58,6 @@
         }
 
         .sop-title {
-            /* [比例調整] 22px -> 20px */
             font-size: 20px;
             font-weight: 600;
             color: #1e3a8a;
@@ -102,7 +68,6 @@
         .sop-tag {
             padding: 4px 10px;
             border-radius: 999px;
-            /* [比例調整] 15px -> 14px */
             font-size: 14px;
             background: #e0f2f1;
             color: #0d9488;
@@ -111,13 +76,10 @@
             color: #9333ea !important;
             font-weight: 700;
         }
-        .sop-tag a:hover {
-             text-decoration: none;
-        }
+        .sop-tag a:hover { text-decoration: none; }
 
         .sop-section p {
             margin: 4px 0;
-            /* 🌟 [比例調整] 17px -> 16px (1200px 寬度下的最佳閱讀大小) 🌟 */
             font-size: 16px;
             line-height: 1.7;
             color: #4b5563;
@@ -127,18 +89,15 @@
         .sop-section ol {
             margin: 6px 0 8px 1.4rem;
             padding: 0;
-            /* 🌟 [比例調整] 17px -> 16px 🌟 */
             font-size: 16px;
             line-height: 1.7;
             color: #4b5563;
         }
 
-        .sop-section li {
-             margin-bottom: 5px;
-        }
+        .sop-section li { margin-bottom: 5px; }
 
         .note {
-            font-size: 15px; /* Note 保持 15px 或微調 */
+            font-size: 15px;
             color: #374151;
             margin-top: 6px;
             padding: 8px 10px;
@@ -146,18 +105,12 @@
             border-radius: 6px;
             border-left: 4px solid #fcd34d;
         }
-        .note strong {
-             color: #1f2937;
-        }
-        .note hr {
-            border-color:#e5e7eb;
-            margin: 15px 0;
-        }
+        .note strong { color: #1f2937; }
+        .note hr { border-color:#e5e7eb; margin: 15px 0; }
 
-
-        /* ===== Tables/Code/Details (略過，與上次淺色模式一致) ===== */
+        /* Tables & Code */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 15px; }
-        th, td { padding: 10px 12px;    text-align: center; vertical-align: middle; border: 1px solid #e5e7eb; vertical-align: top; color: #374151; }
+        th, td { padding: 10px 12px; text-align: center; vertical-align: middle; border: 1px solid #e5e7eb; vertical-align: top; color: #374151; }
         th { background: #f3f4f6; font-weight: 600; color: #1f2937; }
         tr:nth-child(even) td { background: #f9fafb; }
 
@@ -167,9 +120,9 @@
         details { background: #f0f9ff; border-radius: 8px; border: 1px solid #bfdbfe; padding: 10px 12px; margin-top: 8px; }
         details summary { cursor: pointer; font-size: 16px; font-weight: 600; list-style: none; color: #1e40af; }
 
-        /* 🌟 圖片視覺優化 (字體/圖片比例調整) 🌟 */
+        /* 🌟 圖片視覺優化 (修正：改回較大尺寸) 🌟 */
         img {
-            max-width: 60%; /* 圖片佔用空間調整為60% */
+            max-width: 95%; /* 從 60% 改回 95%，避免圖片太小 */
             height: auto;
             border: 1px solid #d1d5db;
             border-radius: 4px;
@@ -177,40 +130,141 @@
             display: block;
             margin: 15px auto;
         }
-        .note img {
-            width: auto !important;
-            max-width: 100%;
-        }
-        figcaption {
-            font-size: 14px; /* 微調 */
-            color: #4b5563;
-            margin-top: 8px;
-            text-align: center;
-            line-height: 1.5;
-        }
+        .note img { width: auto !important; max-width: 100%; }
+        figcaption { font-size: 14px; color: #4b5563; margin-top: 8px; text-align: center; line-height: 1.5; }
 
-        /* 🌟 回到首頁間距修正 🌟 */
+        /* 回到首頁 */
         .back-link {
             padding: 20px 0 0;
             margin-top: 20px;
             font-size: 18px;
-            border-top: 1px solid #e5e7eb; /* 增加一條分隔線 */
-            /* [比例調整] 1500px -> 1200px */
+            border-top: 1px solid #e5e7eb;
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
             width: 94%;
         }
-        .back-link a {
-            padding: 10px 0;
+        .back-link a { padding: 10px 0; display: inline-block; }
+
+
+        /* ========================================= */
+        /* ★ 新增：ATS 與 Terminal 的專屬 UI 框設計 ★ */
+        /* ========================================= */
+
+        /* 1. ATS 樣式框 (亮色系，模擬網頁視窗) */
+        .frame-ats {
+            border: 2px solid #bfdbfe; /* 亮藍色邊框 */
+            background-color: #f8fbff; /* 極淺藍背景 */
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(59, 130, 246, 0.05);
+        }
+        /* ATS 標題標籤 */
+        .frame-ats::before {
+            content: "ATS (Web UI)";
             display: inline-block;
+            background-color: #eff6ff;
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid #bfdbfe;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* ================================================= */
+        /* ★ Terminal 樣式框 (macOS 風格 + 深色系優化) ★ */
+        /* ================================================= */
+        .frame-terminal {
+            background-color: #1e1e1e; /* 深黑背景 */
+            border-radius: 12px;
+            padding: 45px 25px 25px; /* 上方增加 padding 給標題列與按鈕 */
+            margin: 25px 0;
+            color: #d1d5db; /* 預設淺色文字 */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25); /* 更有立體感的陰影 */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #374151; /* 細緻邊框 */
+            font-family: Consolas, "Courier New", monospace; /* 強制等寬字體 */
+        }
+
+        /* 1. macOS 紅黃綠燈號 (左上角裝飾) */
+        .frame-terminal::after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56; /* 紅 */
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f; /* 黃, 綠 */
+        }
+
+        /* 2. Terminal 標題 (正上方) */
+        .frame-terminal::before {
+            content: "Terminal"; /* 或是 user@server ~ % */
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #9ca3af; /* 淺灰 */
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-family: system-ui, -apple-system, sans-serif; /* 標題用無襯線字體比較好看 */
+        }
+
+        /* ★ Terminal 內部強制覆蓋樣式 (Override) ★ */
+        /* 強制將原本深色的文字轉為淺色，以便在深色背景閱讀 */
+        .frame-terminal p,
+        .frame-terminal li,
+        .frame-terminal div,
+        .frame-terminal span {
+            color: #e5e7eb !important;
+            font-family: Consolas, "Courier New", monospace; /* 內容統一等寬 */
+        }
+        .frame-terminal strong {
+            color: #ffffff !important; /* 強調文字變全白 */
+        }
+        /* 讓 Terminal 內的連結變亮一點 */
+        .frame-terminal a {
+            color: #60a5fa !important;
+            text-decoration: underline;
+        }
+        /* 行內代碼 Code 樣式 */
+        .frame-terminal code {
+            background-color: #2d2d2d !important; /* 代碼底色深灰 */
+            color: #fbbf24 !important; /* 金黃色 */
+            border: 1px solid #444 !important;
+        }
+        /* 區塊代碼 Code Block 樣式 */
+        .frame-terminal .code-block {
+            background-color: #000000 !important; /* 全黑 */
+            color: #4ade80 !important; /* 駭客綠 */
+            border: 1px solid #333 !important;
+        }
+        /* 如果 Terminal 裡面有 Note，也要改成深色風格 */
+        .frame-terminal .note {
+            background-color: #374151 !important;
+            border-left-color: #fbbf24 !important;
+            border: 1px solid #4b5563 !important;
+            color: #e5e7eb !important;
+        }
+        .frame-terminal img {
+            opacity: 0.9;
+            border: 1px solid #555;
+            box-shadow: none;
         }
 
 
         /* =============================== */
-        /* 流程圖 (Flowchart) 樣式 - 最終 4+3 佈局 */
+        /* 流程圖 (Flowchart) 樣式 */
         /* =============================== */
-
         .flowchart-container {
             display: flex;
             flex-direction: column;
@@ -222,16 +276,13 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             margin: 22px 0 26px;
         }
-
         .flowchart-steps-wrapper {
             display: flex;
             flex-direction: column;
             width: 100%;
-            /* [比例調整] 內部寬度 1200px -> 1000px 以配合外容器 */
             max-width: 1000px;
             gap: 25px;
         }
-
         .flow-row {
             display: flex;
             justify-content: space-between;
@@ -239,14 +290,7 @@
             gap: 15px;
             padding: 0 10px;
         }
-
-
-        .flow-step-wrap {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-
+        .flow-step-wrap { display: flex; align-items: center; flex-grow: 1; }
         .flow-step-node {
             padding: 12px 18px;
             border-radius: 8px;
@@ -259,128 +303,45 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
             box-sizing: border-box;
-            /* 讓節點在 4 步驟中佔用較少寬度，在 3 步驟中佔用較多寬度 */
         }
+        .flow-step-node:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+        .flow-step-node.process { background-color: #f0f9ff; border: 2px solid #60a5fa; }
 
-        .flow-step-node:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* 統一所有流程節點為 process 樣式 */
-        .flow-step-node.process,
-        .flow-step-node.key-decision {
-            background-color: #f0f9ff;
-            border: 2px solid #60a5fa;
-        }
-
- /* ===== 改良版箭頭樣式（替換原本 .flow-arrow-right 與 ::after） ===== */
-.flow-arrow-right {
-    /* 固定寬度並保持可縮放（桌面橫向時為水平條） */
-    /* [比例調整] 寬度微調 */
-    flex: 0 0 40px;
-    height: 8px;
-    background: linear-gradient(90deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
-    border-radius: 999px;
-    position: relative;
-    margin: 0 10px;
-    box-shadow: 0 2px 6px rgba(59,130,246,0.12), inset 0 -1px 0 rgba(255,255,255,0.08);
-}
-
-/* 箭頭頭（用三角形） */
-.flow-arrow-right::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -10px;               /* 讓箭頭在條的右端外側 */
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 14px solid #3b82f6; /* 箭頭顏色與流程節點配色保持一致 */
-    filter: drop-shadow(0 2px 4px rgba(12,74,150,0.12));
-}
-
-    /* 隱藏最後一個節點旁的箭頭（維持原本行為） */
-    .flow-step-wrap:last-child .flow-arrow-right {
-        display: none;
-    }
-
-    /* ===== 響應式：在小螢幕改成垂直箭頭（直條 + 向下箭頭） ===== */
-    @media (max-width: 992px) {
         .flow-arrow-right {
-            /* 變成直立條（高度變大、寬度變窄） */
-            flex: 0 0 10px;
-            width: 10px;
-            height: 48px;
-            margin: 8px 0;
-            background: linear-gradient(180deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
+            flex: 0 0 40px;
+            height: 8px;
+            background: linear-gradient(90deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
             border-radius: 999px;
+            position: relative;
+            margin: 0 10px;
+            box-shadow: 0 2px 6px rgba(59,130,246,0.12), inset 0 -1px 0 rgba(255,255,255,0.08);
         }
-
         .flow-arrow-right::after {
-            /* 將三角箭頭旋轉並置於下方 */
-            right: 50%;
-            top: auto;
-            bottom: -10px;
-            transform: translateX(50%) rotate(90deg);
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
+            content: "";
+            position: absolute;
+            top: 50%; right: -10px; transform: translateY(-50%);
+            width: 0; height: 0;
+            border-top: 10px solid transparent; border-bottom: 10px solid transparent;
             border-left: 14px solid #3b82f6;
+            filter: drop-shadow(0 2px 4px rgba(12,74,150,0.12));
         }
+        .flow-step-wrap:last-child .flow-arrow-right { display: none; }
 
-        .flow-step-wrap {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .flow-step-wrap:last-child .flow-arrow-right {
-            display: none;
-        }
-    }
-
-        .flow-step-wrap:last-child .flow-arrow-right {
-            display: none;
-        }
-
-        /* 響應式調整：在小螢幕下變回垂直單欄 */
         @media (max-width: 992px) {
-            .flowchart-steps-wrapper {
-                gap: 0;
-            }
-            .flow-row {
-                flex-direction: column;
-                gap: 0;
-                width: 100%;
-                margin-bottom: 20px;
-            }
-
-            .flow-step-wrap {
-                width: 100%;
-                flex-direction: column;
-                margin-bottom: 10px;
-            }
-
             .flow-arrow-right {
-                width: 3px;
-                height: 30px;
-                background-color: #9ca3af;
-                margin: 5px 0;
+                flex: 0 0 10px; width: 10px; height: 48px; margin: 8px 0;
+                background: linear-gradient(180deg, #7cc0ff 0%, #60a5fa 60%, #3b82f6 100%);
             }
-
             .flow-arrow-right::after {
-                top: auto;
-                bottom: 0;
-                left: -5px;
-                right: auto;
-                border-width: 6px;
-                border-color: #9ca3af transparent transparent transparent;
+                right: 50%; top: auto; bottom: -10px;
+                transform: translateX(50%) rotate(90deg);
+                border-left: 14px solid #3b82f6;
             }
-
-            .flow-step-wrap:last-child .flow-arrow-right {
-                display: none;
-            }
+            .flow-step-wrap { flex-direction: column; align-items: center; }
+            .flow-step-wrap:last-child .flow-arrow-right { display: none; }
+            .flowchart-steps-wrapper { gap: 0; }
+            .flow-row { flex-direction: column; gap: 0; width: 100%; margin-bottom: 20px; }
+            .flow-step-wrap { width: 100%; flex-direction: column; margin-bottom: 10px; }
         }
     </style>
 </head>
@@ -393,61 +354,37 @@
         <h2 style="color:#3b82f6; font-size: 1.6rem; margin: 10px 0 20px; border: none; padding: 0;">
             <i class="fas fa-stream"></i> XTS 流程圖
         </h2>
-
         <div class="flowchart-steps-wrapper">
-
-
             <div class="flow-row">
                 <div class="flow-step-wrap">
-                    <a href="#pretest" class="flow-step-node process">
-                        <i class="fas fa-mobile-alt"></i> 1. Pretest & FIH_CheckList
-                    </a>
+                    <a href="#pretest" class="flow-step-node process"><i class="fas fa-mobile-alt"></i> 1. Pretest & FIH_CheckList</a>
                     <div class="flow-arrow-right"></div>
                 </div>
-
                 <div class="flow-step-wrap">
-                    <a href="#flash" class="flow-step-node process">
-                        <i class="fas fa-bolt"></i> 2. Flash Image 燒錄
-                    </a>
+                    <a href="#flash" class="flow-step-node process"><i class="fas fa-bolt"></i> 2. Flash Image 燒錄</a>
                     <div class="flow-arrow-right"></div>
                 </div>
-
                 <div class="flow-step-wrap">
-                    <a href="#ats" class="flow-step-node process">
-                        <i class="fas fa-terminal"></i> 3. ATS / Terminal 環境架設
-                    </a>
+                    <a href="#ats" class="flow-step-node process"><i class="fas fa-terminal"></i> 3. ATS / Terminal 環境架設</a>
                     <div class="flow-arrow-right"></div>
                 </div>
-
                 <div class="flow-step-wrap">
-                    <a href="#runxts" class="flow-step-node process">
-                        <i class="fas fa-play-circle"></i> 4. Run XTS
-                    </a>
+                    <a href="#runxts" class="flow-step-node process"><i class="fas fa-play-circle"></i> 4. Run XTS</a>
                     <div class="flow-arrow-right"></div>
                 </div>
             </div>
-
-
             <div class="flow-row">
                 <div class="flow-arrow-right"></div>
                  <div class="flow-step-wrap">
-                    <a href="#retry" class="flow-step-node process">
-                        <i class="fas fa-redo-alt"></i> 5. Fail 測項 Retry & Waiver ID 提交
-                    </a>
+                    <a href="#retry" class="flow-step-node process"><i class="fas fa-redo-alt"></i> 5. Fail 測項 Retry & Waiver ID 提交</a>
                     <div class="flow-arrow-right"></div>
                 </div>
-
                 <div class="flow-step-wrap">
-                    <a href="#reportcheck" class="flow-step-node process">
-                        <i class="fas fa-clipboard-check"></i> 6. Report Check Tool 確認報告
-                    </a>
+                    <a href="#reportcheck" class="flow-step-node process"><i class="fas fa-clipboard-check"></i> 6. Report Check Tool 確認報告</a>
                     <div class="flow-arrow-right"></div>
                 </div>
-
                 <div class="flow-step-wrap">
-                    <a href="#submit" class="flow-step-node process">
-                        <i class="fas fa-paper-plane"></i> 7. FIH報告提交
-                    </a>
+                    <a href="#submit" class="flow-step-node process"><i class="fas fa-paper-plane"></i> 7. FIH報告提交</a>
                     <div class="flow-arrow-right"></div>
                 </div>
             </div>
@@ -479,7 +416,6 @@
                 ・BuildVerifier 截圖<br>
                 ・BootUp Logo 影片<br>
                 ・FIH_Checklist<br>
-
                 </td>
                 <td>共 3 張截圖 + 1 個 zip + 1 個 mp4 + 1 個 xlsx</td>
             </tr>
@@ -530,36 +466,30 @@
             <img src="{{ url_for('static', filename='CheckList.jpg') }}" alt="CheckList報告"><br>
             必填的欄位為：一般送件、BootupLogo；其餘依據 Jira 上 PM 提供之規格做 CheckList 確認。<br>
             必要1. 一般送件<br>
-            <img src="{{ url_for('static', filename='FIH_CheckList1.jpg') }}" alt="一般送件"><br>
+            <img src="{{ url_for('static', filename='FIH_CheckList1.jpg') }}" style="max-width: 1000px !important;" alt="一般送件">
             必要2. BootupLogo<br>
-            <img src="{{ url_for('static', filename='FIH_CheckList2.jpg') }}" alt="BootUpLogo"><br>
+            <img src="{{ url_for('static', filename='FIH_CheckList2.jpg') }}" style="max-width: 1000px !important;"  alt="BootUpLogo"><br>
                 - Step 1.從 Factory Reset 的介面開始錄影，點擊 Erase all data 等待手機重設<br>
                 <br>
                 - Step 2.檢查 DUT 出現的 Logo 畫面是否符合 Google 之規定，請依據 Pretest 上內容詳細確認。<br>
                 <br>
                 - Step 3.進入 SUW 設定(連上WIFI，出現add accout畫面)後，回到桌面，就能停止錄影。 附上範例影片:<br>
             <br>
-            <video controls style="max-width: 50%; height: auto; display: block; margin: 0 auto;">
+            <video controls style="max-width: 40%; height: auto; display: block; margin: 0 auto;">
                 <source src="{{ url_for('static', filename='BootUpLogo.mp4') }}" type="video/mp4"></video><br>
-
             <br>
             除必要的一般送件、BootupLogo，請依照JIRA上提供的資訊，額外付上需要的CheckList，以下圖為例:<br>
-
             <div style="display: flex; gap: 10px; justify-content: center; align-items: flex-start; margin-top: 10px;">
                 <img src="{{ url_for('static', filename='JIRA.jpg') }}" alt="JIRA 客戶樣機資訊" style="max-width: 48%; height: auto;">
                 <img src="{{ url_for('static', filename='FIH_CheckList3.jpg') }}" alt="特殊送件-EDLA" style="max-width: 48%; height: auto;">
             </div>
-
             <figcaption style="font-size: 13px; color: #4b5563; margin-top: 8px; text-align: center;">
                 左圖為 JIRA 客戶樣機 SKU 地區版本，以圖例 EDLA - 歐洲 ； 右圖為 特殊送件-EDLA。
             </figcaption>
         </div>
-
             <p style="margin-top: 15px;font-size: 16px">
                 確認完畢後請附在 Jira 上，以圖例，假設專案樣機名稱叫 ABC，檔名就改為 <code>FIH_GMS_CheckList_2025111_ABC.xlsx</code>，並附在JIRA上。
             </p>
-
-        </div>
     </div>
 
     <div class="sop-section" id="flash">
@@ -567,12 +497,10 @@
             <div class="sop-title">2. Flash Image 燒錄</div>
             <div class="sop-tag">Flash</div>
         </div>
-
         <p><strong>版本差異說明：</strong></p>
         <ul>
             <li>Android 15 以上：額外需要多測 <strong>GTS-ROOT</strong>。</li>
         </ul>
-
         <p><strong>Flash Image 注意事項：</strong></p>
         <ul>
             <li>在 <strong>Bootloader Mode</strong> 下，如果裝置管理員或在 Tenimal 下 fastboot devices 偵測不到 device，請先檢查 driver。</li>
@@ -584,7 +512,6 @@
                 </span>
             </li>
         </ul>
-
         <p class="note">
             <a href="/flash_image" title="前往 Flash Image 頁面">
                 燒錄 Image 的詳細資訊請至 Flash 頁面
@@ -599,31 +526,30 @@
         </div>
 
         <p><strong>ATS / Terminal 操作原則（2 選 1）：</strong></p>
-        <ol style="color: #3b82f6;">
-            <li style="margin-top: 15px;">
-                <strong style="color: #3b82f6;">ATS 服務啟動與關閉（Web UI）</strong>
-                <div style="margin-top: 5px; padding-left: 10px; color: #4b5563;">
-                    <p>可在 Teminal 下指令控制 Android Test Station 服務的生命週期：</p>
-                    <code style="color: #1e3a8a;">mtt start</code>（開啟服務並透過網址存取）<br>
-                    <code style="color: #1e3a8a;">mtt stop</code>（關閉服務）<br>
-                    <p style=" margin-top: 5px;">＊ mtt start 跑完需要點擊 FireFox Web Browser 才會跑出 ATS 網頁介面。</p>
-                    <img src="{{ url_for('static', filename='ATS0.jpg') }}" alt="ATS" style="width: 100%; height: auto; display: block;"><br>
-                </div>
-            </li>
 
-            <li>
-                <strong style="color: #3b82f6;"> Terminal 執行 </strong>
-                <div style="margin-top: 5px; padding-left: 10px; color: #4b5563;">
-                    <p>若想在 Terminal環境執行 Tradefed，必須確保環境無殘留進程：</p>
-                    <div>
-                        step 1. 必須先關閉 ATS 服務 : <code style="color: #1e3a8a;">mtt stop</code>（關閉ATS）<br>
-                        step 2. 確保新開 terminal 及 adb 是一個正確的乾淨環境 : <code style="color: #1e3a8a;">adb kill-server</code><br>
-                        step 3. 從Bundle中下載客戶指定之測試版本到QA本機位置並解壓縮，如下圖: (以15_r6為例,測試版本下方會提到)<br>
-                        <img src="{{ url_for('static', filename='Terminal.jpg') }}" alt="Terminal" style="width: 80%; height: auto; display: block;"><br>
-                    </div>
+        <div class="frame-ats">
+            <p><strong style="color: #3b82f6; font-size: 1.1em;">ATS 服務啟動與關閉（Web UI）</strong></p>
+            <div style="margin-top: 5px; padding-left: 10px; color: #4b5563;">
+                <p>可在 Teminal 下指令控制 Android Test Station 服務的生命週期：</p>
+                <code style="color: #1e3a8a;">mtt start</code>（開啟服務並透過網址存取）<br>
+                <code style="color: #1e3a8a;">mtt stop</code>（關閉服務）<br>
+                <p style=" margin-top: 5px;">＊ mtt start 跑完需要點擊 FireFox Web Browser 才會跑出 ATS 網頁介面。</p>
+                <img src="{{ url_for('static', filename='ATS0.jpg') }}" alt="ATS" style="display: block;">
+            </div>
+        </div>
+
+        <div class="frame-terminal">
+            <p><strong style="color: #4ade80; font-size: 1.1em;">Terminal 執行</strong></p>
+            <div style="margin-top: 5px; padding-left: 10px;">
+                <p>若想在 Terminal環境執行 Tradefed，必須確保環境無殘留進程：</p>
+                <div>
+                    step 1. 必須先關閉 ATS 服務 : <code>mtt stop</code>（關閉ATS）<br>
+                    step 2. 確保新開 terminal 及 adb 是一個正確的乾淨環境 : <code>adb kill-server</code><br>
+                    step 3. 從Bundle中下載客戶指定之測試版本到QA本機位置並解壓縮，如下圖: (以15_r6為例,測試版本下方會提到)<br>
+                    <img src="{{ url_for('static', filename='Terminal.jpg') }}" alt="Terminal" style="display: block;">
                 </div>
-            </li>
-        </ol>
+            </div>
+        </div>
     </div>
 
     <div class="sop-section" id="runxts">
@@ -650,77 +576,28 @@
             </li>
         </ul>
 
-            <p><strong>不同 Stage 對應可執行的 XTS 組合：</strong></p>
-
+        <p><strong>不同 Stage 對應可執行的 XTS 組合：</strong></p>
         <table class="table-small">
             <thead>
             <tr>
-                <th>Stage / Item</th>
-                <th>CTS</th>
-                <th>GSI</th>
-                <th>CTSV</th>
-                <th>GTS</th>
-                <th>GTSI</th>
-                <th>GTS Root</th>
-                <th>VTS</th>
-                <th>STS</th>
+                <th>Stage / Item</th> <th>CTS</th> <th>GSI</th> <th>CTSV</th> <th>GTS</th> <th>GTSI</th> <th>GTS Root</th> <th>VTS</th> <th>STS</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td>IR</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
+                <td>IR</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td>
             </tr>
             <tr>
-                <td>LR</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
+                <td>LR</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td>
             </tr>
             <tr>
-                <td>MR</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
-                <td class="check">✓</td>
+                <td>MR</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td> <td class="check">✓</td>
             </tr>
             <tr>
-                <td>VBA</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="check">✓</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>VBA</td> <td></td> <td></td> <td></td> <td class="check">✓</td> <td></td> <td></td> <td></td> <td></td>
             </tr>
             <tr>
-                <td>SMR</td>
-                <td class="check">✓</td>
-                <td></td>
-                <td></td>
-                <td class="check">✓</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="check">✓</td>
+                <td>SMR</td> <td class="check">✓</td> <td></td> <td></td> <td class="check">✓</td> <td></td> <td></td> <td></td> <td class="check">✓</td>
             </tr>
             </tbody>
         </table>
@@ -763,26 +640,20 @@
             </li>
         </ul>
 
-            <p>CTS 請跑 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試 </p>
-                <img src="{{ url_for('static', filename='ATS1.jpg') }}" alt="ATS">
-                <p>除CTS外測試,請跑當季度[FIH]的Tool，也一樣依據客戶指定版本按下Run Test做測試 </p>
-                <img src="{{ url_for('static', filename='ATS2.jpg') }}" alt="ATS2">
-
-        <p><strong>* * CTS 區別 * *</strong></p>
-            <div style="margin-top: 25px;">
+        <div style="margin-top: 25px;">
+            <p style= "font-size : 20px"><strong>★  CTS 區別 : </strong></p>
             <ul style="list-style-type: disc; color: #4b5563; padding-left: 20px;">
                 <li>
-                    <strong>CTS測試請依CTS -> MCTS -> TOT 的步驟做測試。</strong>
+                    由於 CTS 測試過程中會產生巨量的 Logs 與暫存數據，若硬碟空間耗盡會導致測試異常終止，並無法生成測試報告，因此會建議把GPU測試的 DeqpTestCase 分開測試避免上述問題
+                    <div class="code-block" style=" font-size: 1rem;">把 CTS 拆成 : <strong> DeqpTestCase + 其他所有非 DeqpTestCase </strong>
+    ➤ Deqp : <strong>run cts -m CtsDeqpTestCases</strong>
+    ➤ 非 Deqp : <strong>run cts --exclude-filter CtsDeqpTestCases </strong></div>
                 </li>
-
-                <li>
-                    在 <strong>Android 12</strong> 之後，CTS 新增了一個測試套件 MCTS（MainLine CTS），方便獨立驗證和確保可更新的系統組件的相容性。<br>
-                </li>
-
+                <li><strong>CTS測試請依CTS -> MCTS -> TOT 的步驟做測試。</strong></li>
+                <li>在 <strong>Android 12</strong> 之後，CTS 新增了一個測試套件 MCTS（MainLine CTS），方便獨立驗證和確保可更新的系統組件的相容性。<br></li>
                 <li style="margin-top: 15px; margin-bottom: 20px;">
                     <strong style="color: #3b82f6;">MainLine CTS 涵蓋範圍</strong>
-                    <table class="table table-bordered table-dark table-sm"
-                            style="max-width: 700px; margin-top: 8px; font-size: 0.9rem;">
+                    <table class="table table-bordered table-dark table-sm" style="max-width: 700px; margin-top: 8px; font-size: 0.9rem;">
                         <thead>
                         <tr style="background-color: #f3f4f6;">
                             <th style="color:#1f2937;">Android / MCTS 預設</th>
@@ -791,69 +662,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>A12</td>
-                            <td class="text-center" style="color:#ef4444;">X</td>
-                            <td class="text-center" style="color:#ef4444;">X</td>
-                        </tr>
-                        <tr>
-                            <td>A13</td>
-                            <td class="text-center" style="color:#ef4444;">X</td>
-                            <td class="text-center" style="color:#ef4444;">X</td>
-                        </tr>
-                        <tr>
-                            <td>A14</td>
-                            <td class="text-center" style="color:#ef4444;">X</td>
-                            <td class="text-center" style="color:#10b981;">✓</td>
-                        </tr>
-                        <tr>
-                            <td>A15(以上)</td>
-                            <td class="text-center" style="color:#10b981;">✓</td>
-                            <td class="text-center" style="color:#10b981;">✓</td>
-                        </tr>
+                        <tr><td>A12</td><td class="text-center" style="color:#ef4444;">X</td><td class="text-center" style="color:#ef4444;">X</td></tr>
+                        <tr><td>A13</td><td class="text-center" style="color:#ef4444;">X</td><td class="text-center" style="color:#ef4444;">X</td></tr>
+                        <tr><td>A14</td><td class="text-center" style="color:#ef4444;">X</td><td class="text-center" style="color:#10b981;">✓</td></tr>
+                        <tr><td>A15(以上)</td><td class="text-center" style="color:#10b981;">✓</td><td class="text-center" style="color:#10b981;">✓</td></tr>
                         </tbody>
                     </table>
                     只有版本為 <strong>Android 14</strong>，ATS 跟 Teminal 預測不相同
                 </li>
-
                 <p><strong>CTS測試也分 ATS 及 Teminal 兩種:</strong></p>
             </ul>
 
-                <div class="note" style="margin-top: 15px; font-size : 16px ">
-                    <strong style="font-size:17px; color:#333;"> a. ATS<br></strong>
-                    <br>
-                        前面已提過，ATS 只需單純跑預設的 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試。
-                        <div>
-                        step 1. 已CTS 15_r6 為例，選擇完 Android15 點擊 Run Test 後，會看到以下畫面，確認完表格填寫內容即可按下 Next Step。<br>
-                            <img src="{{ url_for('static', filename='ATS_Run1.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run1"><br>
-                        step 2. 記得勾選執行測試項目之樣機，若忘記哪些是User Build的機器，可在 Ternimal 輸入DUTShow 做檢查。
-                            <img src="{{ url_for('static', filename='ATS_Run2.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run2"><br>
-                        step 3. 按下Next Step
-                            <img src="{{ url_for('static', filename='ATS_Run3.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run3"><br>
-                        step 4. 按下browse，並在 local 位置中尋找 CTS15_r6 測試包，除STS外其他項目(GTS、VTS、GSI)步驟都相同
-                            <img src="{{ url_for('static', filename='ATS_Run4.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run4"><br>
-                        step 4.1.STS 不同的地方在於版本會跟隨月份顯示R幾-月份，請先確認測試版本，以及STS測試只選擇 arm64.zip 。
-                            <img src="{{ url_for('static', filename='ATS_Run4_1.jpg') }}" style="width: 30%; height: auto;" alt="ATS_Run4_1"><br>
-                        step 5. 再次確認輸入的內容是否正確，若沒問題就可點擊 Start Test Run 開始測試。
-                            <img src="{{ url_for('static', filename='ATS_Run5.jpg') }}" style="width: 30%; height: auto; display: block; " alt="ATS_Run5"><br>
-                    </div>
+            <div class="frame-ats">
+                <br>
+                <p>CTS 在 ATS 環境中，請跑 Default/Custom Test Suites，並根據客戶指定版本按下Run Test做測試 </p>
+                <img src="{{ url_for('static', filename='ATS1.jpg') }}" alt="ATS">
+                <p>除CTS外測試,請跑當季度[FIH]的Tool，也一樣依據客戶指定版本按下Run Test做測試 </p>
+                <img src="{{ url_for('static', filename='ATS2.jpg') }}" alt="ATS2">
+                <br>
+                <div>
+                    <p style="font-size : 17px;"> <strong>詳細步驟(以CTS 15_r6 為例):</strong></p><br>
+                    step 1. 選擇 Android15 並點擊 Run Test 後，會看到以下畫面，確認完表格填寫內容即可按下 Next Step。<br>
+                    <img src="{{ url_for('static', filename='ATS_Run1.jpg') }}" style="width: 90%; height: auto;" alt="ATS_Run1"><br>
+                    step 2. 記得勾選執行測試項目之樣機，若忘記哪些是User Build的機器，可在 Ternimal 輸入DUTShow 做檢查。
+                    <img src="{{ url_for('static', filename='ATS_Run2.jpg') }}" style="width: 90%; height: auto;" alt="ATS_Run2"><br>
+                    step 3. 按下Next Step
+                    <img src="{{ url_for('static', filename='ATS_Run3.jpg') }}" style="width: 90%; height: auto;" alt="ATS_Run3"><br>
+                    step 4. 按下browse，並在 local 位置中尋找 CTS15_r6 測試包，除STS外其他項目(GTS、VTS、GSI)步驟都相同
+                    <img src="{{ url_for('static', filename='ATS_Run4.jpg') }}" style="width: 90%; height: auto;" alt="ATS_Run4"><br>
+                    step 4.1.STS 不同的地方在於版本會跟隨月份顯示R幾-月份，請先確認測試版本，以及STS測試只選擇 arm64.zip 。
+                    <img src="{{ url_for('static', filename='ATS_Run4_1.jpg') }}" style="width: 90%; height: auto;" alt="ATS_Run4_1"><br>
+                    step 5. 再次確認輸入的內容是否正確，若沒問題就可點擊 Start Test Run 開始測試。
+                    <img src="{{ url_for('static', filename='ATS_Run5.jpg') }}" style="width: 90%; height: auto; display: block; " alt="ATS_Run5"><br>
                 </div>
+            </div>
 
-                <div class="note" style="margin-top: 15px; font-size : 16px ">
-                    <strong style="font-size:17px; color:#333;"> b. Terminal<br></strong>
-                    <br>
-                        由於CTS測試須從 CTS -> MCTS -> TOT 的步驟做測試，使用 Termianl 執行時，需先將<strong>禁用動態下載將預設的 True 改為 False</strong>，避免首次測試與 MCTS 動態下載功能衝突。<br>
-                    <div>
-                        step 1. 點進CTS中tools的資料夾，並找到cts-tradefed<br>
-                            <img src="{{ url_for('static', filename='TF.jpg') }}" alt="TF"><br>
-                        step 2. 打開tradefed，並將指令「 ENABLE_XTS_DYNAMIC_DOWNLOADER 」由 True 改為 False 並存檔 (A14以下預設都是False，但還請再次確認):
-                            <img src="{{ url_for('static', filename='Dyn.jpg') }}" alt="Dyn"><br>
-                        step 3.在 ternimal 執行 cts-tradefed ，按下 Enter，建立Google tradefed 的環境
-                            <img src="{{ url_for('static', filename='TF1.jpg') }}" alt="TF1"><br>
-                        step 4.輸入執行指令，以圖為例輸入<strong>run cts --shard-count 3</strong>，若DUT只有一台，則只需輸入<strong>run cts </strong>，按下Enter即開始測試。
-                            <img src="{{ url_for('static', filename='TF2.jpg') }}" alt="TF2"><br>
-                    </div>
+            <div class="frame-terminal">
+                <br>
+                由於CTS測試須從 CTS -> MCTS -> TOT 的步驟做測試，使用 Termianl 執行時，需先將<code>禁用動態下載將預設的 True 改為 False</code>，避免首次測試與 MCTS 動態下載功能衝突。<br>
+                <br>
+                <div>
+                    step 1. 點進CTS中tools的資料夾，並找到cts-tradefed<br>
+                    <img src="{{ url_for('static', filename='TF.jpg') }}" alt="TF"><br>
+                    step 2. 打開tradefed，並將指令「 ENABLE_XTS_DYNAMIC_DOWNLOADER 」由 True 改為 False 並存檔 (A14以下預設都是False，但還請再次確認):
+                    <img src="{{ url_for('static', filename='Dyn.jpg') }}" alt="Dyn"><br>
+                    step 3.在 ternimal 執行 cts-tradefed ，按下 Enter，建立Google tradefed 的環境
+                    <img src="{{ url_for('static', filename='TF1.jpg') }}" alt="TF1"><br>
+                    step 4.輸入執行指令，以圖為例輸入<strong>run cts -m CtsDeqpTestCases --shard-count 3</strong> -s Serial ID 1 -s 2 -s 3 ，按下Enter即開始測試。
+                    <img src="{{ url_for('static', filename='TF2.jpg') }}" alt="TF2"><br>
                 </div>
+            </div>
         </div>
 
         <p >
@@ -862,6 +720,7 @@
                 Mainline CTS (MCTS).pdf
             </a>
         </p>
+    </div>
 
     <div class="sop-section" id="retry">
         <div class="sop-section-header">
@@ -873,55 +732,49 @@
             </div>
         </div>
 
-          <p>Retry 也分為 ATS 及 Teminal 兩種 </p><br>
-        <p><strong>Ternimal 測試指令提示：</strong></p>
-                <div class="code-block" style="font-size: 1rem;">
-    lr : 可看到歷史報告紀錄、Serial ID。<br>
-    Retry : <strong>run retry --retry </strong>Serial ID<br>
-    單台樣機 :-s Serial Number<br>
-    多台樣機 : --shard-count 樣機數量 -s 樣機1 -s 樣機2<br>
-    單台樣機Retry :  run retry --retry 0 <strong>-s abc1</strong><br>
-    多台樣機Retry : run retry --retry 0 <strong>--shard-count 2</strong> -s abc1 -s abc2<br>
-                </div>
+        <p>Retry 也分為 ATS 及 Teminal 兩種 </p><br>
+            <p><strong>Ternimal 測試指令提示：</strong></p>
+            <div class="code-block" style="font-size: 1rem;">
+lr : 可看到歷史報告紀錄、Session ID。<br>
+Retry : <strong>run retry --retry </strong>Session ID<br>
+單台樣機 :-s Serial Number<br>
+多台樣機 : --shard-count 樣機數量 -s 樣機1 -s 樣機2<br>
+單台樣機Retry :  run retry --retry 0 <strong>-s abc1</strong><br>
+多台樣機Retry : run retry --retry 0 <strong>--shard-count 2</strong> -s abc1 -s abc2<br>
+            </div>
 
-
-
-
-        <div class="note" style="margin-top: 15px; font-size : 16px ">
-            <strong style="font-size:17px; color:#333;"> a. ATS<br></strong>
+        <div class="frame-ats">
             <br>
-                        step 1. 點選 View 查看有Test Failures 的項目<br>
-                        <img src="{{ url_for('static', filename='Retry_ATS1.jpg') }}" style="width: 40%; height: auto;" alt="Retry_ATS1"><br>
-                        step 2. 點擊 Progress --> Completed --> View Output Files<br>
-                        <img src="{{ url_for('static', filename='ATS3.jpg') }}" style="width: 40%; height: auto;" alt="ATS3"><br>
-                        step 3. 點擊查看整份的 test_result_failures_suite.html，並根據生成的 Report 去判斷，樣機要如何設定跟 Retry。<br>
-                        <img src="{{ url_for('static', filename='ATS4.jpg') }}" style="width: 40%; height: auto;" alt="ATS4"><br>
-                        step 4. 點選出現 Fail 結果的項目中，並按下 Rerun 按鈕，網頁會記錄先前設定的資料再執行Retry。<br>
-                        <img src="{{ url_for('static', filename='Retry_ATS.jpg') }}" style="width: 40%; height: auto;" alt="Retry_ATS"><br>
-
+            step 1. 點選 View 查看有Test Failures 的項目<br>
+            <img src="{{ url_for('static', filename='Retry_ATS1.jpg') }}" style="width: 90%; height: auto;" alt="Retry_ATS1"><br>
+            step 2. 點擊 Progress --> Completed --> View Output Files<br>
+            <img src="{{ url_for('static', filename='ATS3.jpg') }}" style="width: 90%; height: auto;" alt="ATS3"><br>
+            step 3. 點擊查看整份的 test_result_failures_suite.html，並根據生成的 Report 去判斷，樣機要如何設定跟 Retry。<br>
+            <img src="{{ url_for('static', filename='ATS4.jpg') }}" style="width: 90%; height: auto;" alt="ATS4"><br>
+            step 4. 點選出現 Fail 結果的項目中，並按下 Rerun 按鈕，網頁會記錄先前設定的資料再執行Retry。<br>
+            <img src="{{ url_for('static', filename='Retry_ATS.jpg') }}" style="width: 90%; height: auto;" alt="Retry_ATS"><br>
         </div>
-            <div class="note" style="margin-top: 15px; font-size : 16px ">
-            <strong style="font-size:17px; color:#333;"> b. Terminal<br></strong>
-                <br>
-                        Teminal 跑完測試後會自動生成結果，以圖為例就有30項TestCases Fail以及有Modules未完成。可以去資料夾中檢查
-                       <img src="{{ url_for('static', filename='Retry_TF.jpg') }}" style="width: 30%; height: auto;" alt="Retry_TF"><br>
-                    <div>
-                        step 1. 點進results資料夾，所有錯誤的TestCases都被整理到test_result_failures_suite.Html上<br>
-                            <img src="{{ url_for('static', filename='Retry_TF3.jpg') }}" alt="Retry_TF3"><br>
-                        step 2. Fail TestCases 會有Details給你看錯誤項目，可以根據內容進行Retry<br>
-                            <img src="{{ url_for('static', filename='Retry_TF4.jpg') }}" style="width: 30%; height: auto;" alt="Retry_TF4"><br>
-                        step 3. 確認完錯誤內容後，在terminal上輸入<strong> lr </strong>可以確認歷史的List Report，並且也會顯示本次測試的 Serial Id。<br>
-                            <img src="{{ url_for('static', filename='Retry_TF2.jpg') }}" style="width: 50%; height: auto;" alt="Retry_TF2"><br>
-                        step 4. 可再輸入指令<strong>run retry --retry -s Serial ID</strong>，根據那次的測試結果進行Retry。<br>
-                            <img src="{{ url_for('static', filename='Retry_TF5.jpg') }}" alt="Retry_TF5"><br>
-                    </div>
 
+        <div class="frame-terminal">
+            <br>
+            Teminal 跑完測試後會自動生成結果，以圖為例就有30項TestCases Fail以及有Modules未完成。可以去資料夾中檢查
+            <img src="{{ url_for('static', filename='Retry_TF.jpg') }}" style="width: 90%; height: auto;" alt="Retry_TF"><br>
+            <div>
+                step 1. 點進results資料夾，所有錯誤的TestCases都被整理到test_result_failures_suite.Html上<br>
+                <img src="{{ url_for('static', filename='Retry_TF3.jpg') }}" alt="Retry_TF3"><br>
+                step 2. Fail TestCases 會有Details給你看錯誤項目，可以根據內容進行Retry<br>
+                <img src="{{ url_for('static', filename='Retry_TF4.jpg') }}" style="width: 90%; height: auto;" alt="Retry_TF4"><br>
+                step 3. 確認完錯誤內容後，在terminal上輸入<strong> lr </strong>可以確認歷史的List Report，並且也會顯示本次測試的 Session Id。<br>
+                <img src="{{ url_for('static', filename='Retry_TF2.jpg') }}" style="width: 90%; height: auto;" alt="Retry_TF2"><br>
+                step 4. 可再輸入指令<strong>run retry --retry -s Session ID</strong>，根據那次的測試結果進行Retry。<br>
+                <img src="{{ url_for('static', filename='Retry_TF5.jpg') }}" alt="Retry_TF5"><br>
+            </div>
         </div>
 
         <p>Retry 策略分成「非 CTS 測項」與「CTS 測項」兩大類，外加「ToT + Waiver」特別情境。 </p>
         <p><strong>何謂TOT?</strong></p>
-            <p>TOT 為 Google 本月更新的程式碼版本，並未經過廣泛測試或正式釋出的最新程式碼，又稱 Daily Build，資料位於本機XTS當中，請一樣將測試包下載到自己的local位置。</p>
-            <img src="{{ url_for('static', filename='TOT.jpg') }}" alt="TOT"><br>
+        <p>TOT 為 Google 本月更新的程式碼版本，並未經過廣泛測試或正式釋出的最新程式碼，又稱 Daily Build，資料位於本機XTS當中，請一樣將測試包下載到自己的local位置。</p>
+        <img src="{{ url_for('static', filename='TOT.jpg') }}" alt="TOT"><br>
 
         <details open>
             <summary>非 CTS 測項 Retry 原則</summary>
@@ -984,12 +837,12 @@
 
     <div class="sop-section" id="reportcheck">
         <div class="sop-section-header">
-            <div class="sop-title">6. Report Check Tool 確認報告</div>
+            <div class="sop-title">6. ReportCheck Tool 確認報告</div>
             <div class="sop-tag">Report</div>
         </div>
 
         <p>
-            完成所有測試後，請使用 <strong>ReportCheck Tool</strong>，做一次完整的報告檢查，確認以下事項：
+            完成所有測試後，請在Termianl 上輸入<code>ReportCheck [ Report位置 ]</code>，做一次完整的報告檢查，並確認以下事項：
         </p>
         <ul>
             <li>產生的報告結果是否有無不為Waiver的錯誤。</li>
