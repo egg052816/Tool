@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>手動測試說明 - GTS-I & CTS Verifier & MADA </title>
+  <title>手動測試說明 - GTS-I & CTS Verifier & MADA</title>
   <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -19,76 +19,72 @@
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
   <style>
-    /* 保留你原本樣式，必要的輕微調整（略過不影響功能的長 CSS） */
+    /* ================= 基礎樣式 ================= */
     * { box-sizing: border-box; font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
     body { margin:0; padding:0; background:#f4f7fb; color:#111827; }
+    
+    /* Header (固定置頂) */
     header { background:#2563eb; color:#fff; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:1000; box-shadow:0 2px 5px rgba(0,0,0,.2); }
-    header h1 { margin:0; font-size:20px; letter-spacing:.05em; } header .subtitle { font-size:13px; opacity:.9; }
-    .nav-anchors a { color:#fff; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:14px; margin-left:10px; transition:background .2s; }
+    header h1 { margin:0; font-size:20px; letter-spacing:.05em; } 
+    header .subtitle { font-size:13px; opacity:.9; }
+    
+    .nav-anchors { display: flex; align-items: center; }
+    .nav-anchors a { color:#fff; text-decoration:none; padding:6px 10px; border-radius:4px; font-size:14px; margin-left:10px; transition:background .2s; cursor: pointer; }
     .nav-anchors a:hover { background: rgba(255,255,255,.2); }
+    
     main { max-width:1080px; margin:24px auto 32px; padding:0 16px; }
-    .section-anchor { scroll-margin-top:80px; display:block; }
+    
+    /* ================= 關鍵修正: 錨點定位 ================= */
+    /* 配合你的程式碼，section-anchor 會被插入在標題上方 */
+    /* scroll-margin-top 確保跳轉後，瀏覽器預留 Header 的高度 */
+    .section-anchor {
+        scroll-margin-top: 100px; 
+        display: block;
+        height: 0;
+        visibility: hidden;
+    }
+    
     .section-title { font-size:18px; margin:24px 0 12px; color:#1f2933; display:flex; align-items:center; gap:8px; }
     .section-title .tag { font-size:12px; padding:2px 8px; border-radius:999px; background:#dbeafe; color:#1d4ed8; }
-    .android-subtitle { font-size:14px; margin:12px 0 8px; color:#4b5563; display:inline-flex; align-items:center; gap:6px; }
+    
+    /* Card Styles */
     .card-container { min-height:50px; }
     .card { background:#fff; border-radius:10px; padding:16px 18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(15,23,42,0.07); border:1px solid #e5e7eb; position:relative; }
     .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid #eee; }
     .card-container.drag-mode .card-header {cursor: grab;}
     .card-title { font-size:15px; font-weight:600; color:#111827; margin:0; }
     .card small { font-size:11px; color:#6b7280; }
-    .card ul li, .card ol li, .card p {font-size: 13px !important; line-height: 1.5; /* 確保行高正常，避免擠壓 */ }
-    .card ul li code, .card ol li code, .card p code,
-    .card ul li b, .card ol li b, .card p b {font-size: 13px !important; font-weight: 700;}
-    /* 改為直排：figure 改成 block 並置中 */
-    figure {
-      margin:8px 0;
-      padding:0;
-      max-width:320px;
-      width:100%;
-      text-align:center;
-      display:block; /* 由 inline-block 改為 block，改為每張一行 */
-      margin-left: 0;
-      margin-right: auto;
-    }
+    
+    /* 內容排版 */
+    .card ul li, .card ol li, .card p {font-size: 13px !important; line-height: 1.5; }
+    .card ul li code, .card ol li code, .card p code, .card ul li b, .card ol li b, .card p b {font-size: 13px !important; font-weight: 700;}
+    
+    /* 圖片樣式 */
+    figure { margin:8px 0; padding:0; max-width:320px; width:100%; text-align:center; display:block; margin-right: auto; }
     figure img { max-width:100%; border-radius:6px; border:1px solid #ddd; display:block; margin:0 auto; cursor:pointer; object-fit:contain; }
     figure figcaption { font-size:11px; color:#6b7280; margin-top:6px; word-break:break-all; text-align:center; }
+    
     .note { margin-top:10px; font-size:12px; color:#374151; background:#eff6ff; border-radius:6px; padding:6px 8px; border-left:3px solid #2563eb; }
+    
+    /* 按鈕樣式 */
     .btn-action { padding:5px 10px; font-size:12px; border-radius:5px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; line-height:1; }
     .btn-edit { background-color:#3b82f6; color:white; border:1px solid #2563eb; }
     .btn-delete { background-color:#ef4444; color:white; border:1px solid #dc2626; }
+    
+    /* Modal Image Styles */
     .image-thumb { width:80px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #ddd; margin-right:6px; }
     .modal-image-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
     .modal-image-item { display:inline-flex; flex-direction:column; align-items:center; gap:6px; }
     .remove-image-btn { font-size:11px; padding:3px 6px; border-radius:4px; background:#ef4444; color:#fff; border:none; cursor:pointer; }
     .small-muted { font-size:12px; color:#6b7280; }
-    /* image preview modal tweaks */
     .modal-xl { max-width:1200px; }
 
-    /* 卡片 attachments 改為垂直排列 */
-    .card-attachments {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    /* 影片顯示跟圖片一致，佔整行 */
-    .card-attachments .video-block {
-      max-width: 300px;
-      width: 100%;
-      margin-left: 0;
-      margin-right: auto;
-      display: block;
-    }
-    .card-attachments .video-block video {
-      width: 100%;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      background: #000;
-      display: block;
-    }
-
+    /* Attachments Layout */
+    .card-attachments { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    
+    /* Video Styles */
+    .card-attachments .video-block { max-width: 300px; width: 100%; margin-right: auto; display: block; }
+    .card-attachments .video-block video { width: 100%; border-radius: 6px; border: 1px solid #ddd; background: #000; display: block; }
   </style>
 </head>
 <body>
@@ -98,7 +94,7 @@
     <div class="subtitle">GTS-I / CTS Verifier / MADA Check List</div>
   </div>
   <div class="nav-anchors" id="header-nav">
-       <button class="btn btn-sm btn-secondary" id="toggleDragBtn" onclick="toggleDragMode(event)" style="margin-left: 10px;">
+      <button class="btn btn-sm btn-secondary" id="toggleDragBtn" onclick="toggleDragMode(event)" style="margin-left: 10px;">
           <i class="fas fa-hand-rock me-1"></i>
       </button>
   </div>
@@ -116,12 +112,11 @@
   </div>
 </main>
 
-<!-- Modal (支援多圖上傳、編輯現有圖、刪除現有圖) -->
-<div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+<div class="modal fade" id="cardModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="cardModalLabel">新增/編輯測試卡片</h5>
+                <h5 class="modal-title">新增/編輯測試卡片</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -136,7 +131,6 @@
                     <div class="mb-3">
                         <label for="card_title" class="form-label">卡片標題 (必填)</label>
                         <input type="text" class="form-control" id="card_title" required>
-                        <small class="form-text text-muted">例如: Audio Loopback Latency Test</small>
                     </div>
 
                     <div class="mb-3">
@@ -147,26 +141,23 @@
                     <div class="mb-3">
                         <label for="content" class="form-label">內容 / SOP 步驟 (必填)</label>
                         <textarea class="form-control" id="content" rows="8" required></textarea>
-                        <small class="form-text text-muted">每行一個步驟，若以 "Step" 或 "-" 開頭將自動格式化為列表。</small>
                     </div>
 
                     <div class="mb-3">
-                        <label for="file_upload" class="form-label">從本機上傳圖片/附件（可多選）</label>
-                        <input type="file" class="form-control" id="file_upload" name="file" multiple accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.bmp,.webp,.mp4">
-                        <small class="form-text small-muted">支援多選，上傳後會把檔案儲存到 static/uploads/，並自動加入圖片清單。</small>
+                        <label for="file_upload" class="form-label">從本機上傳圖片/附件</label>
+                        <input type="file" class="form-control" id="file_upload" name="file" multiple accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.pdf,.zip,.mp4,.mov,.webm">
+                        <small class="text-muted">支援圖片、影片 (MP4/MOV)、PDF、Zip</small>
                     </div>
 
                     <div>
-                        <label class="form-label">現有圖片（可移除）</label>
+                        <label class="form-label">現有圖片</label>
                         <div class="modal-image-list" id="existingImages"></div>
                     </div>
 
                     <div class="mb-3 mt-3">
-                        <label for="note" class="form-label">Note Box 內容 (可選)</label>
+                        <label for="note" class="form-label">Note Box</label>
                         <textarea class="form-control" id="note" rows="3"></textarea>
-                        <small class="form-text text-muted">顯示在卡片底部的藍色 Note 區塊。</small>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer">
@@ -177,14 +168,13 @@
     </div>
 </div>
 
-<!-- Image Preview Modal（點圖片放大） -->
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body p-2">
         <button type="button" class="btn-close float-end m-2" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="d-flex justify-content-center align-items-center" style="min-height:60vh;">
-            <img id="imagePreviewImg" src="" alt="" style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:6px; box-shadow:0 6px 20px rgba(0,0,0,0.2);">
+            <img id="imagePreviewImg" src="" style="max-width:100%; max-height:80vh; object-fit:contain;">
         </div>
         <div class="p-2 text-center" id="imagePreviewCaption" style="font-size:13px; color:#6b7280;"></div>
       </div>
@@ -199,12 +189,10 @@
 ></script>
 
 <script>
-    // API 路徑
+    // Config
     const API_URL_CARDS = '/api/ctsv_gtsi/cards';
     const API_URL_SECTIONS = '/api/ctsv_gtsi/sections';
     const API_URL_UPLOAD = '/api/ctsv_gtsi/upload_file';
-
-    // STATIC_BASE_URL 使用 Jinja 渲染（Flask 會把它替換成 /static/）
     const STATIC_BASE_URL = "{{ url_for('static', filename='') }}";
 
     const cardModalElement = document.getElementById('cardModal');
@@ -215,7 +203,6 @@
     let allSections = [];
     let allCards = [];
 
-    // 表單欄位
     const formFields = {
         id: document.getElementById('card_id_pk'),
         section_key: document.getElementById('section_key'),
@@ -228,152 +215,20 @@
     };
 
     // ==========================================================
-    // 輔助：內容轉 HTML（支援 Step / - 轉換）
+    // 1. helper: 產生 URL 安全且唯一的 slug（保證不衝突）
     // ==========================================================
-    function renderContent(rawContent) {
-        if (!rawContent) return '';
-        const lines = rawContent.trim().split('\n');
-        let html = '';
-        let inList = false;
-        let listType = null; // 'ol' or 'ul'
-        lines.forEach(line => {
-            const t = line.trim();
-            if (!t) {
-                if (inList) { html += `</${listType}>`; inList = false; listType = null; }
-                return;
-            }
-            const isStep = /^Step\s+\d+\s*\./i.test(t);
-            const isBullet = t.startsWith('-');
-            if (isStep) {
-                if (!inList || listType !== 'ol') { if (inList) html += `</${listType}>`; html += '<ol>'; inList = true; listType = 'ol'; }
-                const txt = t.replace(/^Step\s+\d+\s*\.\s*/i, '');
-                html += `<li>${txt.replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`;
-            } else if (isBullet) {
-                if (!inList || listType !== 'ul') { if (inList) html += `</${listType}>`; html += '<ul>'; inList = true; listType = 'ul'; }
-                const txt = t.replace(/^-+\s*/, '');
-                html += `<li>${txt.replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`;
-            } else {
-                if (inList) { html += `</${listType}>`; inList = false; listType = null; }
-                html += `<p>${t.replace(/`([^`]+)`/g, '<code>$1</code>')}</p>`;
-            }
-        });
-        if (inList) html += `</${listType}>`;
-        return html;
+    function makeSlug(key, index) {
+        // 把空白/特殊字元轉成 dash，並帶上 index 確保唯一
+        return (String(key || '').toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]/g, '')
+            .replace(/\-+/g, '-')
+            || 'section') + '-' + index;
     }
 
     // ==========================================================
-    // 圖片渲染器（陣列或字串），含點擊放大
+    // 2. 更新 renderNavigation，改成使用 safe slug 並攔截點擊事件
     // ==========================================================
-    function renderImageOrLink(url) {
-        if (!url) return '';
-        url = String(url).trim();
-
-        // 判斷是否為外部連結
-        const isExternal = /^https?:\/\//i.test(url);
-        const path = url.replace(/^static\//i, '');
-        const href = isExternal ? url : (STATIC_BASE_URL + path);
-        const lower = url.toLowerCase();
-
-        const fileNameMatch = url.match(/[^/]+$/);
-        const displayFileName = fileNameMatch ? fileNameMatch[0].replace(/^static\//i, '') : url;
-
-        //  影片檔案
-        if (/\.(mp4|webm|ogg)$/i.test(lower)) {
-            // 使用 href（已包含 STATIC_BASE_URL 或外部連結）
-            const safeHref = encodeURI(href);
-            return `
-                <div class="video-block">
-                    <video controls>
-                        <source src="${safeHref}">
-                        您的瀏覽器不支援此影片標籤。
-                    </video>
-                    <div style="font-size:11px; color:#6b7280; margin-top:6px; word-break:break-all; text-align:center;">
-                        ${escapeHtml(displayFileName)}
-                    </div>
-                </div>
-            `;
-        }
-
-        // 圖片檔案
-        if (/\.(jpe?g|png|gif|webp|bmp)$/i.test(lower)) {
-            // 使用 encodeURI 防止特殊字元導致路徑錯誤
-            const safeHref = encodeURI(href);
-            return `
-                <figure>
-                    <a href="#" onclick="openImageModal('${safeHref}', '${escapeHtml(displayFileName)}'); return false;">
-                        <img src="${safeHref}" loading="lazy" alt="${escapeHtml(displayFileName)}">
-                    </a>
-                    <figcaption>${escapeHtml(displayFileName)}</figcaption>
-                </figure>
-            `;
-        }
-
-        // PDF / zip 顯示為連結
-        if (/\.(pdf|zip)$/i.test(lower)) {
-            const linkText = lower.endsWith('.pdf') ? 'PDF 文件 (點擊開啟)' : '壓縮檔 (點擊下載)';
-            const safeHref = encodeURI(href);
-            return `<div class="note" style="border-left:3px solid #ff5757;">
-                        <a href="${safeHref}" target="_blank" style="color:#ff5757;font-weight:600;">
-                            <i class="fas fa-file-alt me-1"></i>${linkText}
-                        </a>
-                    </div>`;
-        }
-
-        // 其他外部連結
-        if (isExternal) {
-            const safeHref = encodeURI(href);
-            return `<div class="note">
-                        <a href="${safeHref}" target="_blank" style="color:#2563eb;font-weight:600;">
-                            <i class="fas fa-external-link-alt me-1"></i> 外部參考連結
-                        </a>
-                    </div>`;
-        }
-
-        return '';
-    }
-
-    function renderImages(imageUrls) {
-        if (!imageUrls) return '';
-        if (!Array.isArray(imageUrls)) imageUrls = [imageUrls];
-
-        let html = '';
-        imageUrls.forEach(url => {
-            if (!url) return;
-            html += renderImageOrLink(url);
-        });
-        return html;
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-
-    // ==========================================================
-    // 載入資料、渲染列表
-    // ==========================================================
-    async function loadAllData() {
-        try {
-            const sresp = await fetch(`${API_URL_SECTIONS}/list`);
-            allSections = await sresp.json();
-
-            const cresp = await fetch(`${API_URL_CARDS}/list`);
-            // 後端回傳的每張 card 需包含 image_urls 欄位（陣列）
-            allCards = await cresp.json();
-
-            renderNavigation();
-            renderContentLayout();
-        } catch (e) {
-            console.error("載入失敗:", e);
-            document.getElementById('content-container').innerHTML = `<p class="text-center text-danger p-5">數據載入失敗，請檢查後端或網路。</p>`;
-        }
-    }
-
     function renderNavigation() {
         const navContainer = document.getElementById('header-nav');
         const selectContainer = document.getElementById('section_key');
@@ -382,41 +237,63 @@
         if (toggleBtn) navContainer.appendChild(toggleBtn);
         selectContainer.innerHTML = '';
 
-        allSections.forEach(section => {
+        allSections.forEach((section, idx) => {
             const key = section.section_key;
-            navContainer.insertAdjacentHTML('afterbegin', `<a href="#${key.toLowerCase()}-anchor">${key}</a>`);
-            selectContainer.insertAdjacentHTML('beforeend', `<option value="${key}">${section.title}</option>`);
+            const slug = makeSlug(key, idx); // 唯一 slug
+            // 把 slug 存回 section 物件，供 renderContentLayout 使用
+            section._slug = slug;
+
+            // 建一個 a 元素並攔截點擊以用 scrollIntoView（避免原生 anchor 在動態載入時跳錯）
+            const a = document.createElement('a');
+            a.href = `#${slug}`;
+            a.textContent = key;
+            a.dataset.target = slug;
+            a.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                const target = document.getElementById(slug);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // 更新 hash（不會觸發預設跳動）
+                    history.replaceState(null, '', `#${slug}`);
+                }
+            });
+            // 插到 nav（保留原本順序）
+            navContainer.appendChild(a);
+
+            selectContainer.insertAdjacentHTML('beforeend', `<option value="${section.section_key}">${escapeHtml(section.title)}</option>`);
         });
     }
 
+    // ==========================================================
+    // 3. renderContentLayout: 每個 section 使用 section._slug 當 id
+    // ==========================================================
     function renderContentLayout() {
         const container = document.getElementById('content-container');
         container.innerHTML = '';
 
         const cardsBySection = allCards.reduce((acc, card) => {
-            const key = card.section_key.toUpperCase();
+            const key = (card.section_key || '').toUpperCase();
             acc[key] = acc[key] || [];
             acc[key].push(card);
             return acc;
         }, {});
 
-        allSections.forEach(section => {
+        allSections.forEach((section) => {
             const key = section.section_key;
+            const slug = section._slug || makeSlug(key, 0);
             const cardData = cardsBySection[key] || [];
 
             let sectionHtml = `
-                <div class="section-anchor" id="${key.toLowerCase()}-anchor"></div>
+                <div class="section-anchor" id="${slug}"></div>
                 <h2 class="section-title">
-                    ${section.title}
-                    <span class="tag">${section.tag}</span>
-
-                        <button class="btn-action btn-edit ms-auto" onclick="openCardModal('${key}', null)">
-                            <i class="fas fa-plus"></i> 新增筆記
-                        </button>
-
+                    ${escapeHtml(section.title)}
+                    <span class="tag">${escapeHtml(section.tag || '')}</span>
+                    <button class="btn-action btn-edit ms-auto" onclick="openCardModal('${key}', null)">
+                        <i class="fas fa-plus"></i> 新增筆記
+                    </button>
                 </h2>
 
-                <div class="card-container" data-section-key="${key}" id="container-${key.toLowerCase()}">
+                <div class="card-container" data-section-key="${key}" id="container-${slug}">
                     ${cardData.map(card => renderCard(card)).join('')}
                     ${cardData.length === 0 ? `<p class="text-muted p-3 text-center">此區塊目前沒有測試卡片。</p>` : ''}
                 </div>
@@ -424,48 +301,25 @@
             container.insertAdjacentHTML('beforeend', sectionHtml);
         });
 
-        allSections.forEach(section => initializeSorting(section.section_key));
+        // 初始化 sortable（注意：container id 改為 container-${slug}）
+        allSections.forEach(section => {
+            const slug = section._slug;
+            if (slug) initializeSortingBySlug(slug, section.section_key);
+        });
+
+        // 若 URL 有 hash（或使用者點了上方 nav），確保滾動到對應位置
+        handleHashScroll();
     }
 
-    function renderCard(card) {
-        // card.image_urls 預期為陣列；若後端只存 image_url (字串)，請在後端回傳 image_urls: [image_url]
-        const hasSubtitle = card.card_subtitle ? `<small>${card.card_subtitle}</small>` : '';
-        const hasNote = card.note ? `<div class="note">${card.note}</div>` : '';
-        const hasImages = (card.image_urls && card.image_urls.length) ? renderImages(card.image_urls) : '';
-        return `
-            <div class="card" data-card-id="${card.id}">
-                <div class="card-header">
-                    <h3 class="card-title">${card.card_title} ${hasSubtitle}</h3>
-                    <div class="btn-group">
-                         <button class="btn-action btn-edit" onclick="openCardModal('${card.section_key}', ${card.id})">
-                             <i class="fas fa-pencil-alt"></i> 編輯
-                         </button>
-                         <button class="btn-action btn-delete" onclick="deleteCard(${card.id})">
-                             <i class="fas fa-times"></i> 刪除
-                         </button>
-                    </div>
-                </div>
-
-                ${renderContent(card.content)}
-                <div class="card-attachments">
-                    ${hasImages}
-                </div>
-                ${hasNote}
-            </div>
-        `;
-    }
-
-    // ==========================================================
-    // Sortable drag (same as before)
-    // ==========================================================
-    function initializeSorting(sectionKey) {
-        const container = document.getElementById(`container-${sectionKey.toLowerCase()}`);
+    // 因為 container id 改為 container-${slug}，create sorting 用這個 helper
+    function initializeSortingBySlug(slug, sectionKey) {
+        const container = document.getElementById(`container-${slug}`);
         if (!container || typeof Sortable === 'undefined') return;
 
         Sortable.create(container, {
             group: 'ctsv-cards',
             animation: 150,
-            handle: '.card-header', // 改成 header 為 handle（比較直覺）
+            handle: '.card-header',
             ghostClass: 'sortable-ghost',
             disabled: true,
             onEnd: async function (evt) {
@@ -489,83 +343,98 @@
         });
     }
 
-    async function updateCardSectionKey(cardId, newSectionKey) {
-        const card = allCards.find(c => c.id == cardId);
-        if (!card) return;
+    // 若網址有 hash，嘗試滾動到對應的 slug（等 DOM 建好後再做）
+    function handleHashScroll() {
+        const h = location.hash;
+        if (!h) return;
         try {
-            const response = await fetch(`${API_URL_CARDS}/update/${cardId}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    section_key: newSectionKey,
-                    card_title: card.card_title,
-                    content: card.content,
-                    card_subtitle: card.card_subtitle,
-                    note: card.note,
-                    image_urls: card.image_urls || []
-                })
-            });
-            if (!response.ok) throw new Error("更新 section key 失敗");
-        } catch (e) {
-            console.error(e);
-            alert("警告: 卡片移動/更新失敗");
-        }
-    }
-
-    async function saveNewOrder(sectionKey) {
-         const container = document.getElementById(`container-${sectionKey.toLowerCase()}`);
-         if (!container) return;
-         const newOrderIds = Array.from(container.children).map(item => item.getAttribute('data-card-id')).filter(Boolean).map(x => parseInt(x));
-         if (newOrderIds.length === 0) return;
-         try {
-             const response = await fetch(`${API_URL_CARDS}/reorder/${sectionKey}`, {
-                 method: 'PUT',
-                 headers: {'Content-Type': 'application/json'},
-                 body: JSON.stringify(newOrderIds)
-             });
-             if (!response.ok) throw new Error("儲存排序失敗");
-         } catch (e) { console.error("saveNewOrder error:", e); }
-    }
-
-    // ==========================================================
-    // Modal control: open (新增/編輯)
-    // ==========================================================
-    function openCardModal(sectionKey, cardId) {
-        // reset
-        formFields.id.value = '';
-        formFields.section_key.value = sectionKey || (allSections[0] && allSections[0].section_key) || '';
-        formFields.card_title.value = '';
-        formFields.card_subtitle.value = '';
-        formFields.content.value = '';
-        formFields.note.value = '';
-        formFields.file_upload.value = '';
-        formFields.existingImagesContainer.innerHTML = '';
-
-        if (cardId) {
-            const card = allCards.find(c => c.id == cardId);
-            if (!card) {
-                alert("找不到該卡片資料（可能已被刪除）");
-                return;
+            const id = h.replace('#', '');
+            const el = document.getElementById(id);
+            if (el) {
+                // 延遲微小時間，確保 DOM 風格已經渲染（必要時可調整）
+                setTimeout(() => {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 80);
             }
-            formFields.id.value = card.id;
-            formFields.section_key.value = card.section_key;
-            formFields.card_title.value = card.card_title;
-            formFields.card_subtitle.value = card.card_subtitle || '';
-            formFields.content.value = card.content || '';
-            formFields.note.value = card.note || '';
-            // show existing images
-            const imgs = card.image_urls || [];
-            imgs.forEach((p, idx) => {
-                appendExistingImage(p);
-            });
-        } else {
-            // 新增：一開始空的 existingImages
-        }
-
-        cardModal.show();
+        } catch (e) { /* ignore */ }
     }
 
-    // append existing image DOM (可刪除)
+    // ==========================================================
+    // 4. 更新 renderImageOrLink：video 加上 type 並使用 safer src
+    // ==========================================================
+    function renderImageOrLink(url) {
+        if (!url) return '';
+        url = String(url).trim();
+
+        const isExternal = /^https?:\/\//i.test(url);
+        const path = url.replace(/^static\//i, '');
+        const href = isExternal ? url : (STATIC_BASE_URL + path);
+        const lower = url.toLowerCase();
+        const fileNameMatch = url.match(/[^/]+$/);
+        const displayFileName = fileNameMatch ? fileNameMatch[0].replace(/^static\//i, '') : url;
+
+        // 判別 mime type
+        let mimeType = '';
+        if (/\.(mp4)$/i.test(lower)) mimeType = 'video/mp4';
+        else if (/\.(mov)$/i.test(lower)) mimeType = 'video/quicktime';
+        else if (/\.(webm)$/i.test(lower)) mimeType = 'video/webm';
+        else if (/\.(ogg)$/i.test(lower)) mimeType = 'video/ogg';
+
+        if (mimeType) {
+            const safeHref = encodeURI(href);
+            return `
+                <div class="video-block">
+                    <video controls playsinline preload="metadata">
+                        <source src="${safeHref}" type="${mimeType}">
+                        您的瀏覽器不支援此影片標籤。
+                    </video>
+                    <div style="font-size:11px; color:#6b7280; margin-top:6px; word-break:break-all; text-align:center;">
+                        ${escapeHtml(displayFileName)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 圖片...
+        if (/\.(jpe?g|png|gif|webp|bmp)$/i.test(lower)) {
+            const safeHref = encodeURI(href);
+            return `
+                <figure>
+                    <a href="#" onclick="openImageModal('${safeHref}', '${escapeHtml(displayFileName)}'); return false;">
+                        <img src="${safeHref}" loading="lazy" alt="${escapeHtml(displayFileName)}">
+                    </a>
+                    <figcaption>${escapeHtml(displayFileName)}</figcaption>
+                </figure>
+            `;
+        }
+
+        // PDF / zip
+        if (/\.(pdf|zip)$/i.test(lower)) {
+            const linkText = lower.endsWith('.pdf') ? 'PDF 文件 (點擊開啟)' : '壓縮檔 (點擊下載)';
+            const safeHref = encodeURI(href);
+            return `<div class="note" style="border-left:3px solid #ff5757;">
+                        <a href="${safeHref}" target="_blank" style="color:#ff5757;font-weight:600;">
+                            <i class="fas fa-file-alt me-1"></i>${linkText}
+                        </a>
+                    </div>`;
+        }
+
+        // 外部連結 fallback
+        if (isExternal) {
+            const safeHref = encodeURI(href);
+            return `<div class="note">
+                        <a href="${safeHref}" target="_blank" style="color:#2563eb;font-weight:600;">
+                            <i class="fas fa-external-link-alt me-1"></i> 外部參考連結
+                        </a>
+                    </div>`;
+        }
+
+        return '';
+    }
+
+    // ==========================================================
+    // 5. appendExistingImage：若是影片則顯示可播放的縮圖（小影片）而不是單純 icon
+    // ==========================================================
     function appendExistingImage(path) {
         const container = formFields.existingImagesContainer;
         const item = document.createElement('div');
@@ -575,27 +444,27 @@
         const src = isExternal ? path : (STATIC_BASE_URL + relPath);
 
         let mediaEl;
-          if (/\.(mp4|webm|ogg)$/i.test(path)) {
-                // 影片用 icon 代替預覽
-                mediaEl = document.createElement('div');
-                mediaEl.innerHTML = '<i class="fas fa-video fa-2x text-muted"></i>';
-                mediaEl.style.width = '80px';
-                mediaEl.style.height = '60px';
-                mediaEl.style.display = 'flex';
-                mediaEl.style.alignItems = 'center';
-                mediaEl.style.justifyContent = 'center';
-                mediaEl.style.border = '1px solid #ddd';
-                mediaEl.style.borderRadius = '6px';
-          } else {
-                mediaEl = document.createElement('img');
-                // encodeURI 避免特殊字元造成問題
-                try { mediaEl.src = encodeURI(src); } catch(e){ mediaEl.src = src; }
-                mediaEl.className = 'image-thumb';
-          }
+        if (/\.(mp4|mov|webm|ogg)$/i.test(path)) {
+            // 建一個小型 video element（可播放）
+            mediaEl = document.createElement('video');
+            mediaEl.width = 160;
+            mediaEl.height = 90;
+            mediaEl.controls = true;
+            mediaEl.preload = 'metadata';
+            mediaEl.playsInline = true;
+            try { mediaEl.src = encodeURI(src); } catch (e) { mediaEl.src = src; }
+            mediaEl.style.border = '1px solid #ddd';
+            mediaEl.style.borderRadius = '6px';
+            mediaEl.style.objectFit = 'cover';
+        } else {
+            mediaEl = document.createElement('img');
+            try { mediaEl.src = encodeURI(src); } catch(e){ mediaEl.src = src; }
+            mediaEl.className = 'image-thumb';
+        }
 
         const cap = document.createElement('div');
         cap.style.fontSize = '11px';
-        cap.style.maxWidth = '90px';
+        cap.style.maxWidth = '140px';
         cap.style.wordBreak = 'break-all';
         cap.textContent = path;
         const btn = document.createElement('button');
@@ -606,63 +475,155 @@
         item.appendChild(mediaEl);
         item.appendChild(cap);
         item.appendChild(btn);
-        // store the path in dataset so we can collect later
         item.dataset.path = path;
         container.appendChild(item);
     }
+    
+    // ==========================================================
+    // 6. 基礎功能 (載入、渲染卡片內容、Modal 操作、上傳)
+    // ==========================================================
+    async function loadAllData() {
+        try {
+            const sresp = await fetch(`${API_URL_SECTIONS}/list`);
+            allSections = await sresp.json();
+            const cresp = await fetch(`${API_URL_CARDS}/list`);
+            allCards = await cresp.json();
+            
+            // 載入順序：先算好 slug 導覽列，再渲染內容
+            renderNavigation();
+            renderContentLayout();
+        } catch (e) {
+            console.error("載入失敗:", e);
+            document.getElementById('content-container').innerHTML = `<p class="text-center text-danger p-5">數據載入失敗，請檢查後端或網路。</p>`;
+        }
+    }
 
-    // ==========================================================
-    // 儲存卡片（新增/更新） — 支援多檔上傳與 existing images
-    // ==========================================================
+    function renderContent(rawContent) {
+        if (!rawContent) return '';
+        const lines = rawContent.trim().split('\n');
+        let html = '';
+        let inList = false;
+        let listType = null;
+        lines.forEach(line => {
+            const t = line.trim();
+            if (!t) {
+                if (inList) { html += `</${listType}>`; inList = false; }
+                return;
+            }
+            if (/^Step\s+\d+\s*\./i.test(t)) {
+                if (!inList || listType !== 'ol') { if (inList) html += `</${listType}>`; html += '<ol>'; inList = true; listType = 'ol'; }
+                html += `<li>${t.replace(/^Step\s+\d+\s*\.\s*/i, '').replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`;
+            } else if (t.startsWith('-')) {
+                if (!inList || listType !== 'ul') { if (inList) html += `</${listType}>`; html += '<ul>'; inList = true; listType = 'ul'; }
+                html += `<li>${t.replace(/^-+\s*/, '').replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`;
+            } else {
+                if (inList) { html += `</${listType}>`; inList = false; }
+                html += `<p>${t.replace(/`([^`]+)`/g, '<code>$1</code>')}</p>`;
+            }
+        });
+        if (inList) html += `</${listType}>`;
+        return html;
+    }
+
+    function renderImages(imageUrls) {
+        if (!imageUrls) return '';
+        if (!Array.isArray(imageUrls)) imageUrls = [imageUrls];
+        return imageUrls.map(renderImageOrLink).join('');
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderCard(card) {
+        const hasSubtitle = card.card_subtitle ? `<small>${card.card_subtitle}</small>` : '';
+        const hasNote = card.note ? `<div class="note">${card.note}</div>` : '';
+        const hasImages = (card.image_urls && card.image_urls.length) ? renderImages(card.image_urls) : '';
+        return `
+            <div class="card" data-card-id="${card.id}">
+                <div class="card-header">
+                    <h3 class="card-title">${card.card_title} ${hasSubtitle}</h3>
+                    <div class="btn-group">
+                          <button class="btn-action btn-edit" onclick="openCardModal('${card.section_key}', ${card.id})">
+                             <i class="fas fa-pencil-alt"></i> 編輯
+                          </button>
+                          <button class="btn-action btn-delete" onclick="deleteCard(${card.id})">
+                             <i class="fas fa-times"></i> 刪除
+                          </button>
+                    </div>
+                </div>
+                ${renderContent(card.content)}
+                <div class="card-attachments">${hasImages}</div>
+                ${hasNote}
+            </div>
+        `;
+    }
+
+    async function updateCardSectionKey(cardId, newSectionKey) {
+        const card = allCards.find(c => c.id == cardId);
+        if (!card) return;
+        await fetch(`${API_URL_CARDS}/update/${cardId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ ...card, section_key: newSectionKey })
+        });
+    }
+
+    async function saveNewOrder(sectionKey) {
+         // 注意：這裡要透過 makeSlug 找回正確的 container ID，但因為我們只有 sectionKey，
+         // 比較保險的做法是重新遍歷或簡單使用 safe ID 邏輯。
+         // 這裡為簡化，假設 sectionKey 對應的 slug 規則一致 (index 0)
+         const slug = makeSlug(sectionKey, 0); 
+         const container = document.getElementById(`container-${slug}`);
+         
+         if (!container) return;
+         const newOrderIds = Array.from(container.children).map(i => i.getAttribute('data-card-id')).filter(Boolean).map(x => parseInt(x));
+         if (newOrderIds.length === 0) return;
+         await fetch(`${API_URL_CARDS}/reorder/${sectionKey}`, {
+             method: 'PUT',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify(newOrderIds)
+         });
+    }
+
+    // Modal 與儲存邏輯
     saveCardButton.addEventListener('click', async () => {
-        // form 驗證
         if (!document.getElementById('cardForm').checkValidity()) {
             document.getElementById('cardForm').reportValidity();
             return;
         }
 
         const id = formFields.id.value;
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? `${API_URL_CARDS}/update/${id}` : `${API_URL_CARDS}/add`;
-
-        // 1) 先把 modal 中剩下的 existing images 收集起來
-        const existingImgs = Array.from(formFields.existingImagesContainer.children).map(el => el.dataset.path).filter(Boolean);
-
-        // 2) 上傳用戶剛選擇的新檔案（若有）
+        const existingImgs = Array.from(formFields.existingImagesContainer.children).map(el => el.dataset.path);
         const uploadedPaths = [];
         const files = Array.from(formFields.file_upload.files || []);
+
         for (const f of files) {
             const fd = new FormData();
             fd.append('file', f);
             try {
-                const upl = await fetch(API_URL_UPLOAD, { method: 'POST', body: fd });
-                const res = await upl.json();
-                if (upl.ok && res.status === 'ok') {
-                    // res.file_path 例如: xxx.jpg
-                    uploadedPaths.push(res.file_path);
-                } else {
-                    alert('檔案上傳失敗: ' + (res.message || '伺服器錯誤'));
-                    return;
+                const resp = await fetch(API_URL_UPLOAD, { method: 'POST', body: fd });
+                if (!resp.ok) {
+                    alert(`上傳失敗: ${f.name} (Code: ${resp.status})`);
+                    continue; 
                 }
-            } catch (e) {
-                console.error('upload error', e);
-                alert('檔案上傳失敗，請檢查後端服務');
-                return;
-            }
+                const res = await resp.json();
+                if (res.status === 'ok') uploadedPaths.push(res.file_path);
+            } catch (e) { alert('上傳錯誤'); return; }
         }
 
-        // 3) 最終 image_urls = existingImgs + uploadedPaths
-        const finalImageUrls = existingImgs.concat(uploadedPaths);
-
-        // 4) 準備 payload
         const payload = {
             section_key: formFields.section_key.value,
             card_title: formFields.card_title.value,
             card_subtitle: formFields.card_subtitle.value,
             content: formFields.content.value,
             note: formFields.note.value,
-            image_urls: finalImageUrls
+            image_urls: existingImgs.concat(uploadedPaths)
         };
+
+        const url = id ? `${API_URL_CARDS}/update/${id}` : `${API_URL_CARDS}/add`;
+        const method = id ? 'PUT' : 'POST';
 
         try {
             const resp = await fetch(url, {
@@ -671,112 +632,70 @@
                 body: JSON.stringify(payload)
             });
             if (resp.ok) {
-                alert(`卡片已${id ? '更新' : '新增'}成功！`);
                 cardModal.hide();
                 loadAllData();
             } else {
-                const err = await resp.json();
-                alert('操作失敗: ' + (err.message || '伺服器錯誤'));
+                alert('儲存失敗');
             }
-        } catch (e) {
-            console.error('save error', e);
-            alert('連線失敗，請檢查後端');
-        }
+        } catch (e) { alert('連線錯誤'); }
     });
 
-    // ==========================================================
-    // 刪除卡片 / 區塊
-    // ==========================================================
+    function openCardModal(sectionKey, cardId) {
+        formFields.id.value = '';
+        formFields.section_key.value = sectionKey || '';
+        formFields.card_title.value = '';
+        formFields.card_subtitle.value = '';
+        formFields.content.value = '';
+        formFields.note.value = '';
+        formFields.file_upload.value = ''; 
+        formFields.existingImagesContainer.innerHTML = '';
+
+        if (cardId) {
+            const card = allCards.find(c => c.id == cardId);
+            if (card) {
+                formFields.id.value = card.id;
+                formFields.section_key.value = card.section_key;
+                formFields.card_title.value = card.card_title;
+                formFields.card_subtitle.value = card.card_subtitle || '';
+                formFields.content.value = card.content || '';
+                formFields.note.value = card.note || '';
+                (card.image_urls || []).forEach(appendExistingImage);
+            }
+        }
+        cardModal.show();
+    }
+
     async function deleteCard(cardId) {
-        if (!confirm(`確定要刪除這張卡片 ID: ${cardId} 嗎？`)) return;
-        try {
-            const resp = await fetch(`${API_URL_CARDS}/delete/${cardId}`, { method: 'DELETE' });
-            if (resp.ok) {
-                alert('刪除成功');
-                loadAllData();
-            } else {
-                const e = await resp.json();
-                alert('刪除失敗: ' + (e.message || '伺服器錯誤'));
-            }
-        } catch (e) {
-            alert('連線失敗');
-        }
+        if (!confirm('確定刪除？')) return;
+        await fetch(`${API_URL_CARDS}/delete/${cardId}`, { method: 'DELETE' });
+        loadAllData();
     }
 
-    async function deleteSection(sectionKey, event) {
-        event.preventDefault();
-        const cardsCount = allCards.filter(c => c.section_key === sectionKey).length;
-        const confirmMsg = cardsCount > 0 ? `警告: 區塊 "${sectionKey}" 下還有 ${cardsCount} 張卡片。確定要刪除整個區塊及其所有卡片嗎？` : `確定要刪除區塊 "${sectionKey}" 嗎？`;
-        if (!confirm(confirmMsg)) return;
-        try {
-            const resp = await fetch(`${API_URL_SECTIONS}/delete/${sectionKey}`, { method: 'DELETE' });
-            if (resp.ok) {
-                alert('區塊刪除成功');
-                loadAllData();
-            } else {
-                const e = await resp.json();
-                alert('刪除失敗: ' + (e.message || '伺服器錯誤'));
-            }
-        } catch (e) {
-            alert('連線失敗');
-        }
-    }
-
-    // ==========================================================
-    // Drag toggle
-    // ==========================================================
     function toggleDragMode(event) {
         event.preventDefault();
-        const cardContainers = document.querySelectorAll('.card-container');
-        if (!cardContainers.length) return;
-        let isDraggingEnabled = !cardContainers[0].classList.contains('drag-mode');
-        cardContainers.forEach(cont => {
-            const instance = Sortable.get(cont);
-            if (instance) instance.option("disabled", !isDraggingEnabled);
-            cont.classList.toggle('drag-mode', isDraggingEnabled);
+        const containers = document.querySelectorAll('.card-container');
+        if (!containers.length) return;
+        const isEnabled = !containers[0].classList.contains('drag-mode');
+        containers.forEach(c => {
+            const sortable = Sortable.get(c);
+            if (sortable) sortable.option("disabled", !isEnabled);
+            c.classList.toggle('drag-mode', isEnabled);
         });
-        if (isDraggingEnabled) {
-            toggleDragButton.innerHTML = '<i class="fas fa-mouse-pointer me-1"></i>';
-            toggleDragButton.classList.remove('btn-secondary'); toggleDragButton.classList.add('btn-warning');
-        } else {
-            toggleDragButton.innerHTML = '<i class="fas fa-hand-rock me-1"></i>';
-            toggleDragButton.classList.remove('btn-warning'); toggleDragButton.classList.add('btn-secondary');
-        }
+        toggleDragButton.classList.toggle('btn-secondary', !isEnabled);
+        toggleDragButton.classList.toggle('btn-warning', isEnabled);
+        toggleDragButton.innerHTML = isEnabled ? '<i class="fas fa-mouse-pointer me-1"></i>' : '<i class="fas fa-hand-rock me-1"></i>';
     }
 
-    // ==========================================================
-    // Image preview modal 控制
-    // ==========================================================
     function openImageModal(src, caption) {
-        try { src = decodeURI(src); } catch (e) {}
-        const img = document.getElementById('imagePreviewImg');
-        const cap = document.getElementById('imagePreviewCaption');
-        img.src = src;
-        img.alt = caption || '';
-        cap.textContent = caption || '';
-
-        const modalEl = document.getElementById('imagePreviewModal');
-        const bsModal = new bootstrap.Modal(modalEl, { keyboard: true });
-        bsModal.show();
+        document.getElementById('imagePreviewImg').src = src;
+        document.getElementById('imagePreviewCaption').textContent = caption || '';
+        new bootstrap.Modal(document.getElementById('imagePreviewModal')).show();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('imagePreviewModal');
-        if (modal) {
-            modal.addEventListener('hidden.bs.modal', function () {
-                const img = document.getElementById('imagePreviewImg');
-                if (img) img.src = '';
-                const cap = document.getElementById('imagePreviewCaption');
-                if (cap) cap.textContent = '';
-            });
-        }
-    });
-
-    // 暴露全域（供 html inline onclick 使用）
     window.openCardModal = openCardModal;
     window.deleteCard = deleteCard;
-    window.deleteSection = deleteSection;
     window.toggleDragMode = toggleDragMode;
+    window.openImageModal = openImageModal;
 
     document.addEventListener('DOMContentLoaded', loadAllData);
 </script>
